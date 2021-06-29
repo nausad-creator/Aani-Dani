@@ -607,7 +607,11 @@ body{background-color:#f0f0f0;}
 .reviewSection{padding:0 15px;}
 .borleft{border-left:1px solid #eee;}
 
-
+.brandcamp a{color:#777;}
+.coponCode .apply-btn{white-space: nowrap;padding:10px 20px;}
+.paymentDetails{padding:15px;border:1px solid #D4D4D4;}
+.NTPr{font-size:18px;font-weight:bold;color:#000;}
+.totalPr{font-size:17px;}
 
 .review_show{padding:15px;border-bottom: 1px solid #eee;}
 .review_show .userimg{margin-right:15px;}

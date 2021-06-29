@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subject, of, merge } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
@@ -12,7 +12,7 @@ import { SubSink } from 'subsink';
   styles: [
   ], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SharedComponent implements OnInit {
+export class SharedComponent implements OnInit, OnDestroy {
   data = {
     loginuserID: '1',
     languageID: '1',
@@ -31,9 +31,7 @@ export class SharedComponent implements OnInit {
   constructor(
     readonly router: Router,
     private root: RootService,
-    private auth: AuthenticationService,
-    private route: ActivatedRoute
-  ) {
+    private auth: AuthenticationService  ) {
     // getting auth user data
     this.subs.add(this.auth.user.subscribe(x => {
       if (x) {
@@ -50,9 +48,15 @@ export class SharedComponent implements OnInit {
     return this.root.productLists(JSON.stringify(this.data)).pipe(map((res) => res), take(1),
       catchError(() => of([]))) as Observable<ProductList[]>;
   }
+  getCategories = () => {
+		return this.root.getCategories('').pipe(map((res) => res), take(1),
+			catchError(() => of([]))) as Observable<Category[]>;
+	}
   ngOnInit(): void {
     // categories
-    this.category$ = this.route.snapshot.data['category'];
+		const initialCategory$ = this.root.categories as Observable<Category[]>;
+		const updatesCategory$ = this.forceReload$.pipe(mergeMap(() => this.getCategories() as Observable<Category[]>));
+		this.category$ = merge(initialCategory$, updatesCategory$);
     // products
     const initialProducts$ = this.root.productList(JSON.stringify(this.data)) as Observable<ProductList[]>;
     const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList[]>));

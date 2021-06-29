@@ -10,6 +10,11 @@ import { SortHeaderComponent } from './sort-header/sort-header.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SkeletonComponent } from './skeleton/skeleton.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -19,13 +24,18 @@ import { RouterModule } from '@angular/router';
     FilterByShapeComponent,
     TopSellingComponent,
     ItemsComponent,
-    SortHeaderComponent
+    SortHeaderComponent,
+    SkeletonComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgSelectModule,
+    NgxPaginationModule,
+	  LazyLoadImageModule,
+	  NgxSkeletonLoaderModule,
     RouterModule.forChild([
       {
         path: '', component: SharedListComponent

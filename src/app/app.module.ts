@@ -8,16 +8,18 @@ import { AppComponent } from './app.component';
 import * as $ from 'jquery';
 import { CategoryResolver } from './resolver.service';
 import { FooterComponent } from './footer/footer.component';
-import { TopBarComponent } from './header/top-bar/top-bar.component';
 import { HeaderComponent } from './header/header.component';
 import { UserModalComponent } from './header/user-modal/user-modal.component';
 import { ScrollToTopComponent } from './footer/scroll-to-top/scroll-to-top.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
-    TopBarComponent,
     HeaderComponent,
     UserModalComponent,
     ScrollToTopComponent
@@ -29,6 +31,10 @@ import { ScrollToTopComponent } from './footer/scroll-to-top/scroll-to-top.compo
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgSelectModule,
+    NgxPaginationModule,
+	  LazyLoadImageModule,
+	  NgxSkeletonLoaderModule
   ],
   providers: [CategoryResolver],
   bootstrap: [AppComponent]

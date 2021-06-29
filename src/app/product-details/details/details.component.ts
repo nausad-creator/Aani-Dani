@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ProductList } from 'src/app/interface';
 
 @Component({
-  selector: 'app-details',
-  template: `
+	selector: 'app-details',
+	template: `
     <div class="prInfo row align-items-center">
 					<div class="col-lg-5 col-md-5">
-						<div class="bigIng"><img src="assets/images/product-big.jpg" alt="product"></div>	
+						<div class="bigIng" *ngIf="product"><img offset="100"
+									style="width: 552px; height: 343px"
+            						defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
+            						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product.productImage}}"
+            						[errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image"></div>	
 					</div>	
 					<div class="col-lg-7 col-md-7">	
 						<div class="detailInfo">
-							<h4 class=""><b>Graduation Cake - Chocolate</b></h4>	
+							<h4 class="" *ngIf="product"><b>{{product.productName}}</b></h4>	
 							<div class="productInfo">
 								<div class="ratings">
 				  					<i class="fas fa-star"></i>
@@ -19,11 +24,11 @@ import { Component, OnInit } from '@angular/core';
 				  					<i class="far fa-star"></i>
 				  					<span>105</span>
 				  				</div>
-				  				<p class="salinginfo">110 people bought this</p>
+				  				<p class="salinginfo" *ngIf="product">{{(product.productSoldCount | number) + ' people bought this'}}</p>
 			  				</div>
 			  				<div class="d-flex align-items-center detailPrice">
-				  				<div class="price_text">180.00 SR</div>
-					  			<div class="mrp_text">200.00 SR</div>					
+				  				<div class="price_text" *ngIf="product">{{(product.productPrice | number) + ' SR'}}</div>
+					  			<div class="mrp_text" *ngIf="product">{{(product.productPriceVat | number) + ' SR'}}</div>					
 				  			</div>
 				  			<div class="form-group select_unit mb-2 mt-2">
 				  				<select class="form-control">
@@ -58,14 +63,14 @@ import { Component, OnInit } from '@angular/core';
 					</div>	
 				</div>	
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class DetailsComponent implements OnInit {
+	@Input() product: ProductList;
+	constructor() { }
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

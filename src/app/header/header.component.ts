@@ -1,90 +1,74 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Category } from 'src/app/interface';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'app-header',
 	template: `
-  <app-top-bar></app-top-bar> <!-- Top Bar -->
-      <!-- Header -->
-  <header id="header">
+  	<!-- Top Bar -->
+  <section id="topbar" class="">
     <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          		<ul>
-						  <li><a routerLink="products" *ngFor="let category of categories">{{category.categoryName | titlecase}}</a></li>
-		          		</ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="products">{{category.categoryName | titlecase}}</a></li>		  
-		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
+      <div class="row align-items-center">
+	      <div class="left-siteinfo col-md-6 mr-auto d-flex align-items-center">
+		  	<div class="logo"> <a routerLink='/'><img src="assets/images/logo.png" alt="AaniDani" class="img-fluid"></a>
+		  	</div> 
+			<div>
+				<form class="navbar-form searchloacation">
+				  	<div class="searproduct">
+				  		<div class="form-group d-flex align-items-center mb-0">
+				  			<span class="search_addons"><i class="fas fa-search"></i></span>
+				  			<input type="text" class="form-control" name="searchTop" id="searchTop" placeholder="Search products…">	
+				  			<a href="#" class="search_btn"><span>Search</span> <i class="fas fa-search"></i></a>  
+				  		</div>	
+				  	</div>	
+				</form>
+			</div>		      
+	      </div>
+	      <div class="right-links col-md-6 d-flex spcial_lins_top justify-content-end">	  	
+			<div class="dropdown_language pt-1">
+				<select class="form-control custom-select">
+					<option value="english">English</option>
+					<option value="arabic">Arabic</option>
+					<option value="french">French</option>				
+				</select>
+			</div>
+			<div class="callUs">
+				<a href="tel:920007709" class="d-flex">
+					<div class="callicon align-self-center pt-2"><i class="icofont-headphone-alt"></i></div>
+					<div class="callnumber"><small>CALL US</small> <h6 class="mb-0">920007709</h6></div>
+				</a>
+			</div>
+			<div class="signbtn">
+				<div class="dropdown userDropDwn">
+					<a href="#" class="btn user-cart-btrn dropdown-toggle" data-toggle="dropdown">  <i class="icofont-ui-user"></i></a>
+					<div class="dropdown-menu customUserMenu">
+						<a href="#" class="btn"><i class="icofont-ui-user"></i> My Account</a>
+						<a href="#" class="btn"><i class="icofont-star"></i> My Reviews</a>
+						<a href="#" class="btn"><i class="icofont-heart"></i> My Wishlist</a>
+						<a href="#" class="btn"><i class="icofont-notification"></i> Notifications</a>
+						<a href="#" class="btn"><i class="icofont-logout"></i> Logout</a>
+					</div>	
+				</div>
+			</div>
+			<div class="cart-topbtn d-flex">
+				<a routerLink="/my-cart" class="btn user-cart-btrn"><i class="fas fa-shopping-basket"></i>  <span class="counter-addon">1</span></a>
+				<span class="cartamount align-self-center">165.00 SR</span>
+			</div>		
+	      </div>
+      </div>
     </div>
-  </header>
-  <!-- End Header -->
+  </section>
   `,
 	styles: [
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-	@Input() categories: Category[] = []
 	constructor() { }
-
 	ngOnInit(): void {
-		jQuery(() => {
-			// Mobile Navigation
-			if ($('.nav-menu').length) {
-				var $mobile_nav = $('.nav-menu').clone().prop({
-					class: 'mobile-nav d-lg-none'
-				});
-				$('body').append($mobile_nav);
-				$('body').prepend('<button type="button" class="mobile-nav-toggle d-lg-none"><i class="icofont-navigation-menu"></i></button>');
-				$('body').append('<div class="mobile-nav-overly"></div>');
-
-				$(document).on('click', '.mobile-nav-toggle', function (e) {
-					$('body').toggleClass('mobile-nav-active');
-					$('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
-					$('.mobile-nav-overly').toggle();
-				});
-
-				$(document).on('click', '.mobile-nav .drop-down > a', function (e) {
-					e.preventDefault();
-					$(this).next().slideToggle(300);
-					$(this).parent().toggleClass('active');
-				});
-
-				$(document).on('click', function (e) {
-					var container = $(".mobile-nav, .mobile-nav-toggle");
-					if (!container.is(e.target.nodeName) && container.has(e.target.nodeName).length === 0) {
-						if ($('body').hasClass('mobile-nav-active')) {
-							$('body').removeClass('mobile-nav-active');
-							$('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
-							$('.mobile-nav-overly').fadeOut();
-						}
-					}
-				});
-			} else if ($(".mobile-nav, .mobile-nav-toggle").length) {
-				$(".mobile-nav, .mobile-nav-toggle").hide();
-			}
-			// Stick the header at top on scroll
-			($("#header") as any).sticky({
-				topSpacing: 0,
-				zIndex: '50'
+		$(function () {
+			$(".dropdown-menu li a").on('click', function () {
+				var selText = $(this).html();
+				$(this).parents('.input-group-btn').find('.btn-search').html(selText);
 			});
-			// Real view height for mobile devices
-			if (window.matchMedia("(max-width: 767px)").matches) {
-				($('#hero') as any).css({
-					height: $(window).height()
-				});
-			}
 		});
 	}
-
 }

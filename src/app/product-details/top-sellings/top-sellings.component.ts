@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { SimilarProducts } from 'src/app/interface';
 
 @Component({
-  selector: 'app-top-sellings',
-  template: `
+	selector: 'app-top-sellings',
+	template: `
     <div class="category-section">
 				      		<div class="card-header bg-white">
 						        <div class="section-title row pb-0">
@@ -118,36 +119,36 @@ import { Component, OnInit } from '@angular/core';
 							</div>
 					    </div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class TopSellingsComponent implements OnInit {
+	@Input() similarproduct: SimilarProducts[] = [];
+	constructor() { }
 
-  constructor() { }
-
-  ngOnInit(): void {
-    jQuery(() => {
-      ($(".TopSaling-carousel") as any).owlCarousel({
-        dots: true,
-        loop: false,
-        nav: true,
-        margin: 0,
-        navText: ["<i class='icofont-rounded-left'></i>", "<i class='icofont-rounded-right'></i>"],
-        responsive: {
-          0: {
-            items: 1
-          },
-          767: {
-            items: 1
-          },
-          1000: {
-            items: 1
-          },
-          1200: {
-            items: 1
-          }
-        }
-      });
-    })
-  }
+	ngOnInit(): void {
+		jQuery(() => {
+			($(".TopSaling-carousel") as any).owlCarousel({
+				dots: true,
+				loop: false,
+				nav: true,
+				margin: 0,
+				navText: ["<i class='icofont-rounded-left'></i>", "<i class='icofont-rounded-right'></i>"],
+				responsive: {
+					0: {
+						items: 1
+					},
+					767: {
+						items: 1
+					},
+					1000: {
+						items: 1
+					},
+					1200: {
+						items: 1
+					}
+				}
+			});
+		})
+	}
 }

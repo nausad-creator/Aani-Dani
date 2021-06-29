@@ -1,25 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailsComponent } from './details/details.component';
-import { DescriptionsAndReviewComponent } from './descriptions-and-review/descriptions-and-review.component';
-import { TopSellingsComponent } from './top-sellings/top-sellings.component';
-import { SharedComponent } from './shared/shared.component';
+import { CartComponent } from './cart/cart.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { OffersComponent } from './offers/offers.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { SharedDetailsComponent } from './shared-details/shared-details.component';
+import { SharedBillingComponent } from './shared-billing/shared-billing.component';
+import { SharedBestSellingComponent } from './shared-best-selling/shared-best-selling.component';
+
 
 @NgModule({
   declarations: [
-    DetailsComponent,
-    DescriptionsAndReviewComponent,
-    TopSellingsComponent,
-    SharedComponent,
-    OffersComponent
+    CartComponent,
+    SharedDetailsComponent,
+    SharedBillingComponent,
+    SharedBestSellingComponent
   ],
   imports: [
     CommonModule,
@@ -32,9 +31,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 	  NgxSkeletonLoaderModule,
     RouterModule.forChild([
       {
-        path: '', component: SharedComponent
+        path: '', component: CartComponent
       },
     ]),
   ]
 })
-export class ProductDetailsModule { }
+export class CartModule { }

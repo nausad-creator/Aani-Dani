@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ProductList } from 'src/app/interface';
 
 @Component({
-  selector: 'app-descriptions-and-review',
-  template: `
+	selector: 'app-descriptions-and-review',
+	template: `
     <div class="reviewSection">
 		      				<ul class="nav nav-tabs" id="myTab" role="tablist">
 							  <li class="nav-item">
@@ -128,14 +129,14 @@ import { Component, OnInit } from '@angular/core';
 							</div>
 		      	</div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class DescriptionsAndReviewComponent implements OnInit {
+	@Input() product: ProductList[] = [];
+	constructor() { }
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

@@ -1,0 +1,92 @@
+{
+  "/category/get-category-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/products/get-product-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-registrationd/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-login/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/otp-verification/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/otp-resend/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/check-user-duplication/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-forgot-password/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/reset-password/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-home/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/language/get-language-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/city/get-city-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/country/get-country-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/area/get-area-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/nationality/get-nationality-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  }
+}

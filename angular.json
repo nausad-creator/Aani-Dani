@@ -22,19 +22,40 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "ngx-google-places-autocomplete",
+              "rxjs/internal/operators/map"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/css/icofont.min.css",
+              "src/assets/css/animate.min.css",
+              "src/assets/css/owl.carousel.min.css",
+              "src/assets/css/style.css",
+              "src/assets/css/magnific-popup.css",
+              "src/assets/css/ion.rangeSlider.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.min.js",
+              "src/assets/js/bootstrap.bundle.min.js",
+              "src/assets/js/validate.js",
+              "src/assets/js/jquery.sticky.js",
+              "src/assets/js/owl.carousel.min.js",
+              "src/assets/js/jquery.waypoints.min.js",
+              "src/assets/js/counterup.min.js",
+              "src/assets/js/magnific-popup.min.js",
+              "src/assets/js/ion.rangeSlider.min.js",
+              "src/assets/js/handleCounter.js"
+            ]
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
+              "budgets": [{
                   "type": "initial",
                   "maximumWarning": "500kb",
                   "maximumError": "1mb"
@@ -45,12 +66,10 @@
                   "maximumError": "4kb"
                 }
               ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }],
               "outputHashing": "all"
             },
             "development": {
@@ -68,10 +87,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "aanidani:build:production"
+              "browserTarget": "aanidani:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
-              "browserTarget": "aanidani:build:development"
+              "browserTarget": "aanidani:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -1,9 +1,13 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
+// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  cookieDomain: 'http://164.52.209.69/menukard/', // -<< must be the domain of deployed app
+  apiBaseUrl: 'http://164.52.209.69/kedar/backend/web/index.php/v1/',
+  fileUrl: 'http://164.52.209.69/kedar/backend/web/uploads/users/',
+  fileVideoUrl: 'http://164.52.209.69/kedar/backend/web/uploads/users/'
 };
 
 /*

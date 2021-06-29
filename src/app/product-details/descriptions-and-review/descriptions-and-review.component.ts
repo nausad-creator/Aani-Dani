@@ -1,0 +1,141 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-descriptions-and-review',
+  template: `
+    <div class="reviewSection">
+		      				<ul class="nav nav-tabs" id="myTab" role="tablist">
+							  <li class="nav-item">
+							    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Discription" role="tab" aria-controls="home" aria-selected="true">Discription</a>
+							  </li>
+							  <li class="nav-item">
+							    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Reviews(6)</a>
+							  </li>							  
+							</ul>
+							<div class="tab-content" id="myTabContent">
+							  <div class="tab-pane fade show active" id="Discription" role="tabpanel" aria-labelledby="home-tab">
+							  	<div class="p-3">
+							  		<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+							  	</div>
+							  </div>
+
+							  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+							  	<div class="review_group">
+								  	<div class="review_show">
+								  		<div class="d-flex">
+								  			<div class="userimg"><img src="assets/images/pr-img1.png" alt=""></div>
+								  			<div class="userreviesd">	
+								  				<h6>John Doe</h6>
+												<div class="ratings">
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star-half-alt"></i>
+								  					<i class="far fa-star"></i>
+								  					<span>4.5</span>
+								  				</div>
+								  				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+								  			</div>	
+								  		</div>	
+								  	</div>
+								  	<div class="review_show">
+								  		<div class="d-flex">
+								  			<div class="userimg"><img src="assets/images/pr-img1.png" alt=""></div>
+								  			<div class="userreviesd">	
+								  				<h6>John Doe</h6>
+												<div class="ratings">
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star-half-alt"></i>
+								  					<i class="far fa-star"></i>
+								  					<span>4.5</span>
+								  				</div>
+								  				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+								  			</div>	
+								  		</div>	
+								  	</div>
+								  	<div class="review_show">
+								  		<div class="d-flex">
+								  			<div class="userimg"><img src="assets/images/pr-img1.png" alt=""></div>
+								  			<div class="userreviesd">	
+								  				<h6>John Doe</h6>
+												<div class="ratings">
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star"></i>
+								  					<i class="fas fa-star-half-alt"></i>
+								  					<i class="far fa-star"></i>
+								  					<span>4.5</span>
+								  				</div>
+								  				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+								  			</div>	
+								  		</div>	
+								  	</div>	
+							  	</div>
+							  	<div class="write_review">
+							  		<form action="#" method="post" id="commentform" class="comment-form">
+							  			<div class="form-group">
+							  				<label for="Title">Review Title</label>
+						  					<input type="text" id="Title" class="form-control">
+						  				</div>	
+						  				<div class="form-group">
+							  				<label for="comment" class="d-block">Your Review</label>
+						  					<textarea class="form-control" id="comment" name="comment" rows="2"></textarea>
+						  				</div>
+						  				<div class="selectReviw form-group">
+						  					<label for="comment">You're reviewing: Duis sodales tortor tortor Culturele . How do you rate this product? *</label>
+						  					<div class="radioGRP">
+						  						<div class="form-check-inline">
+												  <label class="form-check-label">
+												    <input type="radio" class="form-check-input" name="optradio">
+												    <div class="ratings"><i class="fas fa-star"></i></div>	
+												  </label>
+												</div>
+												<div class="form-check-inline">
+												  <label class="form-check-label">
+												    <input type="radio" class="form-check-input" name="optradio">
+												    <div class="ratings"><i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+												  </label>
+												</div>
+												<div class="form-check-inline disabled">
+												  <label class="form-check-label">
+												    <input type="radio" class="form-check-input" name="optradio">
+												    <div class="ratings"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+												  </label>
+												</div>
+												<div class="form-check-inline disabled">
+												  <label class="form-check-label">
+												    <input type="radio" class="form-check-input" name="optradio">
+												    <div class="ratings"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+												  </label>
+												</div>
+												<div class="form-check-inline disabled">
+												  <label class="form-check-label">
+												    <input type="radio" class="form-check-input" name="optradio">
+												    <div class="ratings"><i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i></div>
+												  </label>
+												</div>
+						  					</div>	
+						  				</div>	
+
+						  				<div class="pt-3 pb-3">
+											<a href="javascript:voil(0)" class="addcart-btn shopingcart-tbtn btn"> Submit Review</a>
+										</div>
+							  		</form>	
+							  	</div>	
+							  </div>
+							</div>
+		      	</div>
+  `,
+  styles: [
+  ]
+})
+export class DescriptionsAndReviewComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}

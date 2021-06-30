@@ -6,7 +6,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import * as $ from 'jquery';
-import { CategoryResolver } from './resolver.service';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { UserModalComponent } from './header/user-modal/user-modal.component';
@@ -15,6 +14,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { RootService } from './root.service';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 @NgModule({
   declarations: [
@@ -31,12 +32,13 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    CarouselModule,
     NgSelectModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,
 	  NgxSkeletonLoaderModule
   ],
-  providers: [CategoryResolver],
+  providers: [RootService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

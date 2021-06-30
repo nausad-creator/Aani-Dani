@@ -1,0 +1,31 @@
+<!-- Header -->
+<header id="header">
+    <div class="container">
+	    <div class="">		    
+	      <div class="menu-content">
+	      	<div class="main-menu d-flex align-items-center">
+		      <nav class="nav-menu d-none d-lg-block" *ngIf="category$ | async as categories">
+		        <ul>
+		          <li class="drop-down categorymenu">
+		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
+		          		<ul>
+						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}" *ngFor="let category of categories">{{category.categoryName | titlecase}}</a></li>
+		          		</ul>	
+		          </li>
+		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">{{category.categoryName | titlecase}}</a></li>		  
+		        </ul>
+		      </nav><!-- .nav-menu -->			
+			</div> 			
+		  </div>
+		</div>  	  
+    </div>
+  </header>
+  <!-- End Header -->
+<app-banner></app-banner>  <!-- Hero Section -->
+<main id="main">
+    <app-best-selling [products]="bestselling" *ngIf="!loaderProduct"></app-best-selling>
+	<app-skeleton *ngIf="loaderProduct"></app-skeleton>
+    <app-offers></app-offers>  
+    <app-most-popular-best-seller [categories]="categories"></app-most-popular-best-seller>
+    <app-our-partners></app-our-partners>
+</main><!-- End #main -->

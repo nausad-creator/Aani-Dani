@@ -18,7 +18,7 @@ import { SimilarProducts } from 'src/app/interface';
       <div class="">
         <owl-carousel-o [options]="caseOptions">
             <ng-template carouselSlide *ngFor="let item of similarproduct">
-              <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item.categoryID, productID: item.productID})">
+              <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item.categoryID, productID: item.productID}); onScroll()">
               <img offset="50" class="w-auto m-auto"
                     defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
                     lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
@@ -87,6 +87,9 @@ export class TopSellingsComponent implements OnInit {
 		}
 	};
 	@Output() change = new EventEmitter<{categoryID: string, productID: string}>();
+  onScroll = () => {
+    window.scroll(0, 0);
+  }
 	constructor() { }
 	ngOnInit(): void {
 	}

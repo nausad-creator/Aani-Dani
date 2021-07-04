@@ -22,7 +22,10 @@ import { Category } from 'src/app/interface';
               <div class="slider_itemBox cursr">
                     <div class="form-row">
                         <div class="col-4">
-                            <div class="catImgBox"><img src="assets/images/product-5.jpg" alt="Cashew Whole"> </div>
+                            <div class="catImgBox"><img offset="50"
+            			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category.categoryImage}}"
+            			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category.categoryImage}}"
+            			[errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image"> </div>
                         </div>
                         <div class="content_textContent col-8">
                             <h5 class="text-dark mb-0">{{category.categoryName | titlecase}}</h5>
@@ -38,7 +41,7 @@ import { Category } from 'src/app/interface';
                                 <p class="salinginfo text-left">Min AED 50  <span class="pl-3">27 MINS</span></p>
                             </div>
                             <div class="explorBTN pt-2">
-                                <a href="#">Explore <i class="icofont-rounded-right"></i></a>
+                                <a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">Explore <i class="icofont-rounded-right"></i></a>
                             </div>
                         </div>	
                     </div>	

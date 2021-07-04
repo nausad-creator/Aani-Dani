@@ -45,7 +45,7 @@ import { SubSink } from 'subsink';
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event); loader=true" [categories]="category$ | async"></app-shop-by-category>
 						<app-filter-by-price></app-filter-by-price>
-						<app-filter-by-shape></app-filter-by-shape>
+						<!-- <app-filter-by-shape></app-filter-by-shape> -->
 						<app-top-selling></app-top-selling>
 					</div>
 					<br>

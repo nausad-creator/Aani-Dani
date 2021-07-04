@@ -4,7 +4,7 @@
 	    <div class="">		    
 	      <div class="menu-content">
 	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="category$ | async as categories">
+		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
@@ -23,9 +23,9 @@
   <!-- End Header -->
 <app-banner></app-banner>  <!-- Hero Section -->
 <main id="main">
-    <app-best-selling [products]="bestselling" *ngIf="!loaderProduct"></app-best-selling>
-	<app-skeleton *ngIf="loaderProduct"></app-skeleton>
+    <app-best-selling [products]="products" *ngIf="products$ | async as products"></app-best-selling>
+	<app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
     <app-offers></app-offers>  
-    <app-most-popular-best-seller [categories]="categories"></app-most-popular-best-seller>
+    <app-most-popular-best-seller [categories]="categories$ | async"></app-most-popular-best-seller>
     <app-our-partners></app-our-partners>
 </main><!-- End #main -->

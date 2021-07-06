@@ -1,9 +1,11 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Subject, Observable, of, merge, timer } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Category, ProductList } from 'src/app/interface';
+import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -16,15 +18,15 @@ import { SubSink } from 'subsink';
 	    <div class="">		    
 	      <div class="menu-content">
 	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="category$ | async as categories">
+		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
 		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}" *ngFor="let category of categories">{{category.categoryName | titlecase}}</a></li>
+						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">{{category.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			
@@ -39,7 +41,7 @@ import { SubSink } from 'subsink';
 		<div class="container">
 			<div class="card">
 				<app-details [product]="product"></app-details>
-				<app-offers></app-offers> 
+				<!-- <app-offers></app-offers>  -->
 		      	<div class="row">
 		      		<div class="col-md-8">
 		      			<app-descriptions-and-review [product]="product"></app-descriptions-and-review>	
@@ -76,7 +78,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 	};
 	loader = true;
 	forceReload$ = new Subject<void>();
-	category$: Observable<Category[]>;
+	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	subs = new SubSink();
 	products$: Observable<ProductList> = of(null);
 	product: ProductList;
@@ -85,6 +87,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 			catchError(() => of([]))) as Observable<ProductList>;
 	}
 	constructor(
+		private store: Store<State>,
 		readonly router: Router,
 		private root: RootService,
 		private auth: AuthenticationService,
@@ -150,18 +153,10 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
 	}
-	getCategories = () => {
-		return this.root.getCategories('').pipe(map((res) => res), take(1),
-			catchError(() => of([]))) as Observable<Category[]>;
-	}
 	ngOnInit(): void {
 		// query changes
 		this.data.productID = this.route.snapshot.queryParams.productID ? this.route.snapshot.queryParams.productID : '0';
 		this.data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
-		// categories
-		const initialCategory$ = this.root.categories as Observable<Category[]>;
-		const updatesCategory$ = this.forceReload$.pipe(mergeMap(() => this.getCategories() as Observable<Category[]>));
-		this.category$ = merge(initialCategory$, updatesCategory$);
 		this.products();
 	}
 	onChange = async (ids: {categoryID: string, productID: string}) => {
@@ -184,7 +179,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
 		this.subs.add(this.products$.subscribe((res: ProductList) => {
-					timer(800).subscribe(() => {
+					timer(500).subscribe(() => {
 						this.loader = false;
 						this.product = res;
 						this.cd.markForCheck();

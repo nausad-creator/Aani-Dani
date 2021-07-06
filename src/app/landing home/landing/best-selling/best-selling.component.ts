@@ -23,18 +23,9 @@ import { ProductList } from 'src/app/interface';
                   <img offset="50"
             			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
             			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-            			[errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image">
+            			[errorImage]="'assets/images/error_not_found.png'" [alt]="item.productName" [title]="item.productName">
                         <div class="content_textContent">
                             <h5 class="text-dark mb-0">{{item.productName}}</h5>
-                            <!-- <div class="form-group select_unit mb-2 mt-2">
-                                <select class="form-control">
-                                    <option>200 gm</option>
-                                    <option>500 gm</option>
-                                    <option>1 Kg</option>
-                                    <option>2 Kg</option>
-                                    <option>5 Kg</option>	
-                                </select>	
-                            </div> -->
                             <div class="d-flex align-items-center justify-content-center mt-2">
                                 <div class="price_text">{{(item.productPrice | number) + ' SR'}}</div>
                                 <div class="mrp_text">{{(item.productPriceVat | number) + ' SR'}}</div>					  		

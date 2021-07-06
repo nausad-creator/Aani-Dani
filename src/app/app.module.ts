@@ -20,8 +20,11 @@ import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
-import { BestSellingsEffects } from './effects/best-sellings.effects';
 import { CategoriesEffects } from './effects/categories.effects';
+import { HomeEffects } from './effects/home.effects';
+import { ProductsEffects } from './effects/products-list.effects';
+import { NgProgressModule } from 'ngx-progressbar';
+import { NgProgressHttpModule } from 'ngx-progressbar/http';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import { CategoriesEffects } from './effects/categories.effects';
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgProgressModule,
+    NgProgressHttpModule,
     FormsModule,
     CarouselModule,
     NgSelectModule,
@@ -45,7 +50,7 @@ import { CategoriesEffects } from './effects/categories.effects';
 	  NgxSkeletonLoaderModule,
 	  StoreModule.forRoot(reducers, { metaReducers }),
 	  !environment.production ? StoreDevtoolsModule.instrument() : [],
-	  EffectsModule.forRoot([BestSellingsEffects, CategoriesEffects])
+	  EffectsModule.forRoot([ProductsEffects, CategoriesEffects, HomeEffects])
   ],
   providers: [RootService],
   bootstrap: [AppComponent]

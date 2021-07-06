@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, Observable, of, merge } from 'rxjs';
-import { take, catchError, mergeMap, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Category } from 'src/app/interface';
-import { RootService } from 'src/app/root.service';
+import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { SubSink } from 'subsink';
 
 @Component({
@@ -16,15 +16,15 @@ import { SubSink } from 'subsink';
 	    <div class="">		    
 	      <div class="menu-content">
 	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="category$ | async as categories">
+		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
 		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID}" *ngFor="let category of categories">{{category.categoryName | titlecase}}</a></li>
+						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID}">{{category.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			
@@ -59,13 +59,12 @@ import { SubSink } from 'subsink';
 })
 export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
     loginuserID: string;
-    forceReload$ = new Subject<void>();
-    category$: Observable<Category[]>;
+    categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
     subs = new SubSink();
     constructor(
+        private store: Store<State>,
         readonly router: Router,
-        private root: RootService,
-        private auth: AuthenticationService    ) {
+        private auth: AuthenticationService) {
         // getting auth user data
         this.subs.add(this.auth.user.subscribe(x => {
             if (x) {
@@ -125,15 +124,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy(): void {
         this.subs.unsubscribe();
     }
-    getCategories = () => {
-        return this.root.getCategories('').pipe(map((res) => res), take(1),
-            catchError(() => of([]))) as Observable<Category[]>;
-    }
     ngOnInit(): void {
-        // categories
-        const initialCategory$ = this.root.categories as Observable<Category[]>;
-        const updatesCategory$ = this.forceReload$.pipe(mergeMap(() => this.getCategories() as Observable<Category[]>));
-        this.category$ = merge(initialCategory$, updatesCategory$);
     }
 }
 

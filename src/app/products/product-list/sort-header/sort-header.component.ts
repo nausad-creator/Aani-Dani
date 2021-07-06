@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-sort-header',
@@ -11,24 +11,76 @@ import { Component, Input, OnInit } from '@angular/core';
 							  <div class="col-md-6">	
 							  	<div class="sortby form-group d-flex align-items-center justify-content-end mb-0">
 							  		<label class="mr-3 mb-0" style="white-space:nowrap;">Sort By:</label>
-							  		<select class="form-control w-auto bg-white">
-							  			<option>Sort by popularity</option>
-							  			<option value="1">Popular Item</option>
-							  			<option value="2">Price low to high</option>
-							  			<option value="3">Price high to low</option>
-							  		</select>	
+							  		<ng-select (change)="sortBy.emit($event)" appearance="outline" [searchable]="false" [clearable]="true"
+                        			 class="custom" placeholder="Select to sort">
+                        			<ng-option *ngFor="let s of sorting" [value]="s.value">{{s.label}}</ng-option>
+                      				</ng-select>	
 							  	</div>	
 							  </div>				  	
 					        </div>
 				        </div>
   `,
 	styles: [
+		`.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
+    		width: 160px;
+			height: 40px;
+    		border-color: #E6E6E6;
+    		background-color: #fff!important;
+    		padding: .375rem .75rem;
+    		font-size: 1rem;
+    		font-weight: 400;
+    		line-height: 1.5;
+    		color: #495057;
+    		border: 1px solid #ced4da;
+    		border-radius: .25rem;
+    		transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+		  }
+		  
+		  .ng-select.ng-select-single.custom ::ng-deep .ng-select-container .ng-value-container .ng-input {
+			left: 0;
+			padding-left: 18px;
+			padding-right: 50px
+		  }
+
+		  .ng-select.custom ::ng-deep .ng-arrow-wrapper {
+    		width: 10px;
+    		padding-right: 0px;
+		 }
+		  
+		  .ng-select.custom ::ng-deep .ng-select-container .ng-value-container {
+			align-items: center;
+			padding-left: 0px;
+		  }
+		  
+		  .ng-select.ng-select-single.custom ::ng-deep .ng-value-container .ng-value {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		  }
+		  
+		  .ng-select.custom ::ng-deep .ng-clear-wrapper {
+			margin-top: 3px;
+			padding: 5px;
+		  }`
 	]
 })
 export class SortHeaderComponent implements OnInit {
-	@Input() categoryName: string;
+	@Input() categoryName?: string;
+	@Output() sortBy = new EventEmitter<string>();
+	sorting = [{
+		label: 'Sort by popularity',
+		value: 'productName ASC'
+	}, {
+		label: 'Popular Item',
+		value: 'productSoldCount ASC'
+	}, {
+		label: 'Price low to high',
+		value: 'productPrice ASC'
+	}, {
+		label: 'Price high to low',
+		value: 'productPrice DESC'
+	}]
 	constructor() { }
-
 	ngOnInit(): void {
 	}
 

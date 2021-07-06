@@ -21,11 +21,11 @@
     </div>
   </header>
   <!-- End Header -->
-<app-banner></app-banner>  <!-- Hero Section -->
+<app-banner [banner]="banner$ | async"></app-banner>  <!-- Hero Section -->
 <main id="main">
     <app-best-selling [products]="products" *ngIf="products$ | async as products"></app-best-selling>
 	<app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
-    <app-offers></app-offers>  
+    <!-- <app-offers></app-offers>   -->
     <app-most-popular-best-seller [categories]="categories$ | async"></app-most-popular-best-seller>
     <app-our-partners></app-our-partners>
 </main><!-- End #main -->

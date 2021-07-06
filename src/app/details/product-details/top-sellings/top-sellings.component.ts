@@ -22,7 +22,7 @@ import { SimilarProducts } from 'src/app/interface';
               <img offset="50" class="w-auto m-auto"
                     defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
                     lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-                    [errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image">
+                    [errorImage]="'assets/images/error_not_found.png'" [alt]="item.productName" [title]="item.productName">
                     <div class="content_textContent">
                         <h5 class="text-dark mb-0">{{item.productName}}</h5>
                         <!-- <div class="form-group select_unit mb-2 mt-2">

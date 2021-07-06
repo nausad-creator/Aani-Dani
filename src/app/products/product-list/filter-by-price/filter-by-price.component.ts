@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-filter-by-price',
@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 							<div class="pricecontent">
 								<form>
 									 <div class="form-group">
-									   	 <input type="text" id="example_id" name="example_name" value="" />
+									   	 <input type="text" #price id="example_id" name="example_name" value="" />
 									 </div>
-									 <a href="javascript:voil(0)" class="addcart-btn shopingcart-tbtn btn"> Filter</a>
+									 <a (click)="filterByPrice.emit(price.value)" class="addcart-btn shopingcart-tbtn btn"> Filter</a>
 								 </form>
 							</div>	
 				</div>
@@ -19,9 +19,8 @@ import { Component, OnInit } from '@angular/core';
 	]
 })
 export class FilterByPriceComponent implements OnInit {
-
+	@Output() filterByPrice = new EventEmitter<string>();
 	constructor() { }
-
 	ngOnInit(): void {
 		jQuery(() => {
 			($("#example_id") as any).ionRangeSlider({
@@ -31,7 +30,6 @@ export class FilterByPriceComponent implements OnInit {
 				from: 200,
 				to: 500,
 				prefix: "SR "
-				//grid: true
 			});
 		});
 	}

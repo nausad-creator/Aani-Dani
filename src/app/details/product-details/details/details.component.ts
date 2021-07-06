@@ -10,7 +10,7 @@ import { ProductList } from 'src/app/interface';
 									style="width: 552px; height: 343px"
             						defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
             						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product.productImage}}"
-            						[errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image"></div>	
+            						[errorImage]="'assets/images/error_not_found.png'" [alt]="product.productName" [title]="product.productName"></div>	
 					</div>	
 					<div class="col-lg-7 col-md-7">	
 						<div class="detailInfo">
@@ -31,13 +31,6 @@ import { ProductList } from 'src/app/interface';
 					  			<div class="mrp_text" *ngIf="product">{{(product.productPriceVat | number) + ' SR'}}</div>					
 				  			</div>
 				  			<div class="form-group select_unit mb-2 mt-2">
-				  				<select class="form-control">
-				  					<option>200 gm</option>
-				  					<option>500 gm</option>
-				  					<option>1 Kg</option>
-				  					<option>2 Kg</option>
-				  					<option>5 Kg</option>	
-				  				</select>	
 				  			</div>
 				  			<div class="d-flex align-items-center detailBtn pt-2">
 				  				<div class="form-group mb-0">

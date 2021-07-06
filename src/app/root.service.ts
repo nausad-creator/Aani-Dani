@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { shareReplay, retry, catchError, map } from 'rxjs/operators';
-import { Category, Language, ProductList, Upload } from './interface';
+import { Banner, Category, Language, ProductList, Upload } from './interface';
 const CACHE_SIZE = 1;
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class RootService {
   categoryUrl = '/category/get-category-list';
   uploadFileUrl = '/users/file-upload';
   productListUrl = '/products/get-product-list';
+  userHomeUrl = '/users/user-home';
   // Behavior-subjects
   searchWord: Subject<string | boolean> = new BehaviorSubject<string | boolean>('');
   searchWord$ = this.searchWord.asObservable();
@@ -39,6 +40,32 @@ export class RootService {
         shareReplay(CACHE_SIZE));
     }
     return this.language$;
+  }
+  home = (temp: string): Observable<{
+    banners: Banner[];
+    category: Category[];
+    bestsealling: ProductList[];
+  }[]> => {
+    const form = new FormData();
+    const json = `[{
+      "loginuserID":"${JSON.parse(temp).loginuserID}",
+      "languageID":"${JSON.parse(temp).languageID}",
+      "cityName":"${JSON.parse(temp).cityName}",
+      "latitude":"${JSON.parse(temp).latitude}",
+      "longitude":"${JSON.parse(temp).longitude}",
+      "apiType":"Android",
+      "apiVersion":"1.0"
+    }]`;
+    form.append('json', json);
+    return this.http
+      .post<{
+        banners: Banner[];
+        category: Category[];
+        bestsealling: ProductList[];
+        message: string;
+        status: string;
+      }[]>(`${this.userHomeUrl}`, form, this.httpOptions)
+      .pipe(map(r => r), shareReplay(), retry(2), catchError(this.handleError));
   }
   getLanguage = (): Observable<Language[]> => {
     const form = new FormData();

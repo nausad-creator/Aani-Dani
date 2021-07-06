@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
+import { Banner } from 'src/app/interface';
 
 @Component({
   selector: 'app-banner',
@@ -9,105 +11,88 @@ import { Component, OnInit } from '@angular/core';
       <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
         <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
         <div class="carousel-inner" role="listbox">
-          <!-- Slide 1 -->
-          <div class="carousel-item active" style="background: url(assets/images/banner-img-1.jpg)">
+          <!-- Slides -->
+          <owl-carousel-o 
+          [options]="caseOptions" 
+          (translated)="getPassedData($event)">
+          <ng-container *ngFor="let item of banner">
+          <ng-template carouselSlide [id]="item?.bannerID">
+          <div class="carousel-item active" [style.background-image]="'url(http://164.52.209.69/aanidani/backend/web/uploads/banners/'+item?.bannerImage+')'" lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/banners/{{item?.bannerImage}}">
             <div class="carousel-container">
               <div class="carousel-content">
-                <h2 class="animated fadeInDown text-white mb-3">Happiness In <br>Every Bite</h2>
-				        <div class="slider-button animated fadeInUp"><a href="#" class="shopnow-btn btn">Shop Now</a></div>
+                <!-- <h2 class="animated fadeInDown mb-3">{{item?.bannerName}}</h2>
+				        <div class="slider-button animated fadeInUp"><a href="#" class="shopnow-btn btn">Shop Now</a></div> -->
               </div>
             </div>
           </div>
-          <!-- Slide 2 -->
-          <div class="carousel-item" style="background: url(assets/images/banner-img-1.jpg)">
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2 class="animated fadeInDown text-white mb-3">Happiness In <br>Every Bite</h2>
-                <div class="slider-button animated fadeInUp"><a href="#" class="shopnow-btn btn">Shop Now</a></div>             
-              </div>
-            </div>
-          </div>
-          <!-- Slide 3 -->
-          <div class="carousel-item" style="background: url(assets/images/banner-img-1.jpg)">
-            <div class="carousel-container">
-              <div class="carousel-content">
-                <h2 class="animated fadeInDown text-white mb-3">Happiness In <br>Every Bite</h2>
-                <div class="slider-button animated fadeInUp"><a href="#" class="shopnow-btn btn">Shop Now</a></div>
-              </div>
-            </div>
-          </div>
+          </ng-template>
+          </ng-container>
+        </owl-carousel-o> 
         </div>
-
-        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon icofont-rounded-left" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
-          <span class="carousel-control-next-icon icofont-rounded-right" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
       </div>
     </div>
   </section><!-- End Hero -->
   `,
   styles: [
-  ]
+  ], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BannerComponent implements OnInit {
-
+  @Input() banner: Banner[] = [];
+  caseOptions: OwlOptions = {
+    loop: false,
+    dots: true,
+    dotsEach: 3,
+    slideBy: 3,
+    animateIn: '',
+    animateOut: '',
+    nav: true,
+    navSpeed: 700,
+    navText: ["<a class='carousel-control-prev' role='button' data-slide='prev'> <span class='carousel-control-prev-icon icofont-rounded-left' aria-hidden='true'></span> <span class='sr-only'>Previous</span> </a>", "<a class='carousel-control-next' role='button' data-slide='next'><span class='carousel-control-next-icon icofont-rounded-right' aria-hidden='true'></span><span class='sr-only'>Next</span></a>"],
+    responsive: {
+      0: {
+        items: 1
+      },
+      400: {
+        items: 1,
+      },
+      740: {
+        items: 1,
+      },
+      940: {
+        items: 1,
+      },
+      1000: {
+				items: 1,
+			},
+			1200: {
+				items: 1,
+			}
+    },
+  };
+  activeSlides: SlidesOutputData;
   constructor() { }
-
+  getPassedData(data: SlidesOutputData) {
+    this.activeSlides = data;
+    this.caseOptions.animateIn = `<li data-target='#${data.slides[0].id}' data-slide-to='" + ${data.startPosition} + "' class='active'></li>`
+  }
   ngOnInit(): void {
     this.jquery();
   }
   jquery = () => {
     jQuery(() => {
-      ($('.client_review_part') as any).owlCarousel({
-        items: 1,
-        loop: true,
-        dots: true,
-        autoplay: true,
-        autoplayHoverPause: true,
-        autoplayTimeout: 15000,
-        nav: false,
-        navText: ['<i class=\'ti-angle-left\'></i>', '<i class=\'ti-angle-right\'></i>'],
-        smartSpeed: 2000,
-        responsive: {
-          0: {
-            nav: true,
-            mouseDrag: false
-          },
-          600: {
-            nav: true,
-            mouseDrag: false
-          },
-          1000: {
+      // Intro carousel
+      const heroCarousel = $("#heroCarousel");
+      const heroCarouselIndicators = $("#hero-carousel-indicators");
+      heroCarousel.find(".carousel-inner").children(".carousel-item").each(function (index) {
+        (index === 0) ?
+          heroCarouselIndicators.append("<li data-target='#heroCarousel' data-slide-to='" + index + "' class='active'></li>") :
+          heroCarouselIndicators.append("<li data-target='#heroCarousel' data-slide-to='" + index + "'></li>");
 
-          }
-        }
       });
-      ($('.testimonials-carousel') as any).owlCarousel({
-        loop: true,
-        nav: true,
-        margin: 10,
-        items: 2,
-        responsiveClass: true,
-        navText: ['<i class=\'ti-angle-left\'></i>', '<i class=\'ti-angle-right\'></i>'],
-        responsive: {
-          0: {
-            items: 1,
-            nav: true
-          },
-          600: {
-            items: 1,
-            nav: false
-          },
-          1000: {
-            items: 2,
-            nav: true,
-            loop: false
-          }
-        }
+      heroCarousel.on('slid.bs.carousel', function (e) {
+        $(this).find('h2').addClass('animated fadeInDown');
+        $(this).find('p').addClass('animated fadeInUp');
+        $(this).find('.btn-get-started').addClass('animated fadeInUp');
       });
     });
   }

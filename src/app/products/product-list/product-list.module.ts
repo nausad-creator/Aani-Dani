@@ -15,6 +15,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgProgressModule } from 'ngx-progressbar';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    NgProgressModule,
     FormsModule,
     NgSelectModule,
     NgxPaginationModule,

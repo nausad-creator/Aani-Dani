@@ -6,10 +6,24 @@ export interface Category {
 	categoryCreatedDate: string;
 	categoryDisplayOrder: string;
 }
+export interface Home{
+	banners: Banner[];
+	category: Category[];
+	bestsealling: ProductList[];
+}
 export interface Upload {
 	fileName: string;
 	status: string;
 	message: string;
+}
+export interface Banner {
+	bannerID: string;
+	bannerName: string;
+	bannerURL: string;
+	bannerImage: string;
+	bannerType: string;
+	bannerTypeID: string;
+	categoryName: string;
 }
 export interface ProductList {
 	productID: string;

@@ -4,8 +4,12 @@ import { Observable, Subject, of, merge, timer } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Category, ProductList } from 'src/app/interface';
+import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
+import { data } from 'src/app/global';
+import { dataChange } from 'src/app/global';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'app-shared-list',
@@ -16,15 +20,15 @@ import { SubSink } from 'subsink';
 	    <div class="">		    
 	      <div class="menu-content">
 	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="category$ | async as categories">
+		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
 		          		<ul>
-						  <li><a class="cursr" (click)="onChange({categoryID: category.categoryID, categoryName: category.categoryName}); loader=true" *ngFor="let category of categories">{{category.categoryName | titlecase}}</a></li>
+						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName}); loader=true" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category.categoryID, categoryName: category.categoryName}); loader=true">{{category.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName}); loader=true">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			
@@ -43,8 +47,8 @@ import { SubSink } from 'subsink';
 						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
 					</div>	
 					<div class="filterSection">
-						<app-shop-by-category (change)="onChange($event); loader=true" [categories]="category$ | async"></app-shop-by-category>
-						<app-filter-by-price></app-filter-by-price>
+						<app-shop-by-category (change)="onChange($event); loader=true" [categories]="categories$ | async"></app-shop-by-category>
+						<app-filter-by-price (filterByPrice)="onFilter($event);"></app-filter-by-price>
 						<!-- <app-filter-by-shape></app-filter-by-shape> -->
 						<app-top-selling></app-top-selling>
 					</div>
@@ -52,7 +56,7 @@ import { SubSink } from 'subsink';
 				</div>
 				<div class="lefprolist mb-3 col-lg-9 col-md-8">	
 					<div class="category_slider card">
-						<app-sort-header [categoryName]="data.categoryName"></app-sort-header>
+						<app-sort-header (sortBy)="onSort($event);" [categoryName]="route.snapshot.queryParams?.categoryName"></app-sort-header>
 						<div class="sparetor_title">
 				    <h5 class="mb-0">Item (90)</h5>
 				    </div>
@@ -70,33 +74,19 @@ import { SubSink } from 'subsink';
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
-	data = {
-		loginuserID: '1',
-		languageID: '1',
-		searchWord: '',
-		productID: '0',
-		subcatID: '0',
-		categoryID: '0',
-		categoryName: '',
-		searchkeyword: '',
-		cityName: '',
-		minPrice: '',
-		maxPrice: '',
-		sortBy: '',
-		page: '0',
-		pagesize: '50',
-	};
+	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	constructor(
+		private store: Store<State>,
 		readonly router: Router,
 		private root: RootService,
 		private auth: AuthenticationService,
-		private route: ActivatedRoute,
+		public route: ActivatedRoute,
 		private cd: ChangeDetectorRef
 	) {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
-				this.data.loginuserID = x.restaurantID ? x.restaurantID : '1';
+				data.loginuserID = x.restaurantID ? x.restaurantID : '1';
 			}
 		}));
 	}
@@ -110,56 +100,70 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	subs = new SubSink();
 	product: ProductList[];
 	products$: Observable<ProductList[]> = of(null);
-	category$: Observable<Category[]>;
 	forceReload$ = new Subject<void>();
-	getProducts = () => {
-		return this.root.productLists(JSON.stringify(this.data)).pipe(map((res) => res), take(1),
+	getProducts = (t: string) => {
+		return this.root.productLists(t).pipe(map((res) => res), take(1),
 			catchError(() => of([]))) as Observable<ProductList[]>;
-	}
-	getCategories = () => {
-		return this.root.getCategories('').pipe(map((res) => res), take(1),
-			catchError(() => of([]))) as Observable<Category[]>;
 	}
 	ngOnInit(): void {
 		// query changes
-		this.data.categoryID = this.route.snapshot.queryParams.categoryID ? this.route.snapshot.queryParams.categoryID : '0';
-		this.data.categoryName = this.route.snapshot.queryParams.categoryName ? this.route.snapshot.queryParams.categoryName : 'null';
-		this.data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
-		// categories
-		const initialCategory$ = this.root.categories as Observable<Category[]>;
-		const updatesCategory$ = this.forceReload$.pipe(mergeMap(() => this.getCategories() as Observable<Category[]>));
-		this.category$ = merge(initialCategory$, updatesCategory$);
-		this.products();
+		data.categoryID = this.route.snapshot.queryParams.categoryID ? this.route.snapshot.queryParams.categoryID : '0';
+		data.categoryName = this.route.snapshot.queryParams.categoryName ? this.route.snapshot.queryParams.categoryName : 'null';
+		data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
+		this.products(JSON.stringify(data));
 	}
-	onChange = async (category: {categoryID: string, categoryName: string}) => {
-		const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
-		this.router.navigate([], 
-		  {
-			relativeTo: this.route,
-			queryParams: queryParams, 
-			queryParamsHandling: 'merge', // remove to replace all query params by provided
-		  });
+	onChange = async (category: { categoryID: string, categoryName: string }) => {
 		// query changes
-		this.data.page = '0';
-		this.data.categoryID = category.categoryID ? category.categoryID : '0';
-		this.data.categoryName = category.categoryName ? category.categoryName : 'null';
-		this.products();
+		dataChange.page = '0';
+		dataChange.categoryID = category.categoryID ? category.categoryID : '0';
+		dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
+		this.products(JSON.stringify(dataChange));
+		// updating query-param
+		data.page = '0';
+		data.categoryID = category.categoryID ? category.categoryID : '0';
+		data.categoryName = category.categoryName ? category.categoryName : 'null';
+		const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
+		this.router.navigate([],
+			{
+				relativeTo: this.route,
+				queryParams: queryParams,
+				queryParamsHandling: 'merge', // remove to replace all query params by provided
+			});
 	}
-	products = () => {
+	products = (temp: string) => {
 		// products
-		const initialProducts$ = this.getProducts() as Observable<ProductList[]>;
-		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList[]>));
+		const initialProducts$ = this.getProducts(temp) as Observable<ProductList[]>;
+		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<ProductList[]>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
 		this.subs.add(this.products$.subscribe((res: ProductList[]) => {
-					timer(800).subscribe(() => {
-						this.loader = false;
-						this.product = res;
-						this.cd.markForCheck();
-					  });
-				}, (err) => {
-					this.loader = false;
-					console.error(err);
-				}));
+			timer(500).subscribe(() => {
+				this.product = res;
+				this.loader = false;
+				this.cd.markForCheck();
+			});
+		}, (err) => {
+			this.loader = false;
+			console.error(err);
+		}));
+	}
+	onFilter = ($temp: string) => {
+		data.minPrice = $temp.split(';')[0];
+		data.maxPrice = $temp.split(';')[1];
+		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
+				this.product = res;
+				this.cd.markForCheck();
+		}, (err) => {
+			console.error(err);
+		});
+	}
+	onSort = ($temp: string) => {
+		data.sortBy = $temp ? $temp : '';
+		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
+				this.product = res;
+				this.cd.markForCheck();
+		}, (err) => {
+			console.error(err);
+		});
 	}
 	jquery = () => {
 		jQuery(() => {

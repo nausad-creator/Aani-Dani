@@ -25,7 +25,7 @@ import { Category } from 'src/app/interface';
                             <div class="catImgBox"><img offset="50"
             			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category.categoryImage}}"
             			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category.categoryImage}}"
-            			[errorImage]="'assets/images/error_not_found.png'" alt="category-file" title="file_item_image"> </div>
+            			[errorImage]="'assets/images/error_not_found.png'" [alt]="category.categoryName" [title]="category.categoryName"> </div>
                         </div>
                         <div class="content_textContent col-8">
                             <h5 class="text-dark mb-0">{{category.categoryName | titlecase}}</h5>

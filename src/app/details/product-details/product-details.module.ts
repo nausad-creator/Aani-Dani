@@ -14,6 +14,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SkeletonComponent } from './skeleton/skeleton.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     ReactiveFormsModule,
     FormsModule,
     CarouselModule,
+    HeaderModule,
     NgSelectModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,

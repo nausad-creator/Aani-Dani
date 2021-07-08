@@ -11,6 +11,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedDetailsComponent } from './shared-details/shared-details.component';
 import { SharedBillingComponent } from './shared-billing/shared-billing.component';
 import { SharedBestSellingComponent } from './shared-best-selling/shared-best-selling.component';
+import { HeaderModule } from '../header/header.module';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { SharedBestSellingComponent } from './shared-best-selling/shared-best-se
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    HeaderModule,
     NgSelectModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,

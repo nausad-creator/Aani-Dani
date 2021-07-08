@@ -9,9 +9,7 @@ import { Component, OnInit } from '@angular/core';
   ]
 })
 export class ScrollToTopComponent implements OnInit {
-
   constructor() { }
-
   ngOnInit(): void {
     jQuery(() => {
       $('.back-to-top').on('click', function() {

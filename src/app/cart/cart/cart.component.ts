@@ -10,6 +10,7 @@ import { SubSink } from 'subsink';
 @Component({
     selector: 'app-cart',
     template: `
+  <app-header></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -53,6 +54,8 @@ import { SubSink } from 'subsink';
    <app-shared-best-selling></app-shared-best-selling>
 
 </main><!-- End #main -->
+<app-footer></app-footer> <!-- Footer Section -->
+<app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
     styles: [
     ]
@@ -68,7 +71,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
         // getting auth user data
         this.subs.add(this.auth.user.subscribe(x => {
             if (x) {
-                this.loginuserID = x.restaurantID ? x.restaurantID : '1';
+                this.loginuserID = '1';
             }
         }));
     }

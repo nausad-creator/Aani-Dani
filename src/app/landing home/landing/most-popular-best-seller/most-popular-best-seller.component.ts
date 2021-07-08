@@ -31,14 +31,6 @@ import { Category } from 'src/app/interface';
                             <h5 class="text-dark mb-0">{{category.categoryName | titlecase}}</h5>
                             <div class="pb-2">About Cake</div>
                             <div class="productInfo">
-                                <div class="ratings">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i> <small class="text-muted">105</small>
-                                </div>
-                                <p class="salinginfo text-left">Min AED 50  <span class="pl-3">27 MINS</span></p>
                             </div>
                             <div class="explorBTN pt-2">
                                 <a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">Explore <i class="icofont-rounded-right"></i></a>

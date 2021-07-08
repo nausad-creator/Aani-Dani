@@ -5,10 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FooterComponent } from './footer/footer.component';
-import { HeaderComponent } from './header/header.component';
-import { UserModalComponent } from './header/user-modal/user-modal.component';
-import { ScrollToTopComponent } from './footer/scroll-to-top/scroll-to-top.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -25,14 +21,13 @@ import { HomeEffects } from './effects/home.effects';
 import { ProductsEffects } from './effects/products-list.effects';
 import { NgProgressModule } from 'ngx-progressbar';
 import { NgProgressHttpModule } from 'ngx-progressbar/http';
+import { HeaderModule } from './header/header.module';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    FooterComponent,
-    HeaderComponent,
-    UserModalComponent,
-    ScrollToTopComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +35,8 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http';
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    ModalModule.forRoot(),
+    HeaderModule,
     NgProgressModule,
     NgProgressHttpModule,
     FormsModule,
@@ -48,6 +45,14 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http';
     NgxPaginationModule,
 	  LazyLoadImageModule,
 	  NgxSkeletonLoaderModule,
+    ToastrModule.forRoot(
+        {
+          positionClass: 'toast-center-center',
+          timeOut: 3000,
+          preventDuplicates: true,
+          maxOpened: 1,
+          easeTime: 0,
+        }),
 	  StoreModule.forRoot(reducers, { metaReducers }),
 	  !environment.production ? StoreDevtoolsModule.instrument() : [],
 	  EffectsModule.forRoot([ProductsEffects, CategoriesEffects, HomeEffects])

@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 @Component({
 	selector: 'app-shared-list',
 	template: `
+	<app-header></app-header> <!-- Top Bar -->
 	<!-- Header -->
 	<header id="header">
     <div class="container">
@@ -48,7 +49,7 @@ import { Store } from '@ngrx/store';
 					</div>	
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event); loader=true" [categories]="categories$ | async"></app-shop-by-category>
-						<app-filter-by-price (filterByPrice)="onFilter($event);"></app-filter-by-price>
+						<app-filter-by-price [preventAbuse]="preventAbuse" (filterByPrice)="onFilter($event); preventAbuse=true"></app-filter-by-price>
 						<!-- <app-filter-by-shape></app-filter-by-shape> -->
 						<app-top-selling></app-top-selling>
 					</div>
@@ -69,6 +70,8 @@ import { Store } from '@ngrx/store';
     </section>
     <!--end Listing area-->
   </main><!-- End #main -->
+  <app-footer></app-footer> <!-- Footer Section -->
+  <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
@@ -86,7 +89,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
-				data.loginuserID = x.restaurantID ? x.restaurantID : '1';
+				data.loginuserID = '1';
 			}
 		}));
 	}
@@ -97,6 +100,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.subs.unsubscribe();
 	}
 	loader = true;
+	preventAbuse: boolean;
 	subs = new SubSink();
 	product: ProductList[];
 	products$: Observable<ProductList[]> = of(null);
@@ -151,6 +155,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		data.maxPrice = $temp.split(';')[1];
 		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
 				this.product = res;
+				this.preventAbuse = false;
 				this.cd.markForCheck();
 		}, (err) => {
 			console.error(err);

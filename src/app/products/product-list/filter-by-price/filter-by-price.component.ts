@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
 	selector: 'app-filter-by-price',
@@ -10,16 +10,21 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 									 <div class="form-group">
 									   	 <input type="text" #price id="example_id" name="example_name" value="" />
 									 </div>
-									 <a (click)="filterByPrice.emit(price.value)" class="addcart-btn shopingcart-tbtn btn"> Filter</a>
+									 <a (click)="filterByPrice.emit(price.value); preventAbuse=true" class="addcart-btn shopingcart-tbtn btn" [ngClass]="{'disabled' : preventAbuse}"> {{ preventAbuse ? 'Wait..' : 'Filter' }}</a>
 								 </form>
-							</div>	
+							</div>
 				</div>
   `,
 	styles: [
+		`.disabled {
+			color: gray;
+			cursor: not-allowed;
+		}`
 	]
 })
 export class FilterByPriceComponent implements OnInit {
 	@Output() filterByPrice = new EventEmitter<string>();
+	@Input() preventAbuse: boolean;
 	constructor() { }
 	ngOnInit(): void {
 		jQuery(() => {

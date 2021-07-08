@@ -11,11 +11,12 @@ export class UserGuard implements CanActivate {
   canActivate(
 	route: ActivatedRouteSnapshot,
 	state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
-	const currentUser = this.service.isAuthenticated();
-	if (currentUser) {
 		return true;
-	} else {
-		return this.router.createUrlTree(['/'], { queryParams: { auth: false } });
-	}
+	// const currentUser = this.service.isAuthenticated();
+	// if (currentUser) {
+	// 	return true;
+	// } else {
+	// 	return this.router.createUrlTree(['/'], { queryParams: { auth: false } });
+	// }
   }
 }

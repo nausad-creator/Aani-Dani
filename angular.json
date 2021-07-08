@@ -40,6 +40,7 @@
               "src/assets/css/magnific-popup.css",
               "src/assets/css/ion.rangeSlider.min.css",
               "src/assets/css/ngSelect.css",
+              "src/assets/css/toastr.css",
               "src/styles.css"
             ],
             "scripts": [

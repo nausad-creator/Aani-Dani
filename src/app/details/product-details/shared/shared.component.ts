@@ -12,6 +12,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	template: `
+  <app-header></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -56,6 +57,8 @@ import { SubSink } from 'subsink';
 	<app-skeleton *ngIf="loader"></app-skeleton>
     <!--end Listing area-->
   </main><!-- End #main -->
+  <app-footer></app-footer> <!-- Footer Section -->
+  <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
@@ -97,7 +100,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
-				this.data.loginuserID = x.restaurantID ? x.restaurantID : '1';
+				this.data.loginuserID = '1';
 			}
 		}));
 	 }

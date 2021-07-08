@@ -16,6 +16,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgProgressModule } from 'ngx-progressbar';
+import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { NgProgressModule } from 'ngx-progressbar';
     NgProgressModule,
     FormsModule,
     NgSelectModule,
+    HeaderModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,
 	  NgxSkeletonLoaderModule,

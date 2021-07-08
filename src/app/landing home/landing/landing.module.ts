@@ -15,6 +15,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     ReactiveFormsModule,
     FormsModule,
     NgSelectModule,
+    HeaderModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,
 	  NgxSkeletonLoaderModule,

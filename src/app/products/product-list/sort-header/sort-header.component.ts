@@ -68,17 +68,14 @@ export class SortHeaderComponent implements OnInit {
 	@Input() categoryName?: string;
 	@Output() sortBy = new EventEmitter<string>();
 	sorting = [{
-		label: 'Sort by popularity',
-		value: 'productName ASC'
-	}, {
 		label: 'Popular Item',
-		value: 'productSoldCount ASC'
+		value: 'popular'
 	}, {
 		label: 'Price low to high',
-		value: 'productPrice ASC'
+		value: 'pricelowhigh'
 	}, {
 		label: 'Price high to low',
-		value: 'productPrice DESC'
+		value: 'pricehighlow'
 	}]
 	constructor() { }
 	ngOnInit(): void {

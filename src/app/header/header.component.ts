@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { SubSink } from 'subsink';
+import { LoginComponent } from './onboarding/login.component';
+import { data } from 'src/app/global';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
 	selector: 'app-header',
@@ -36,15 +41,16 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 					<div class="callnumber"><small>CALL US</small> <h6 class="mb-0">920007709</h6></div>
 				</a>
 			</div>
-			<div class="signbtn">
+			<div class="signbtn" *ngIf="!isLoggedID"><a (click)="openLogin()" data-toggle="modal" class="btn user-cart-btrn"><i class="icofont-ui-user"></i></a></div>
+			<div class="signbtn" *ngIf="isLoggedID">
 				<div class="dropdown userDropDwn">
 					<a href="#" class="btn user-cart-btrn dropdown-toggle" data-toggle="dropdown">  <i class="icofont-ui-user"></i></a>
 					<div class="dropdown-menu customUserMenu">
-						<a href="#" class="btn"><i class="icofont-ui-user"></i> My Account</a>
-						<a href="#" class="btn"><i class="icofont-star"></i> My Reviews</a>
-						<a href="#" class="btn"><i class="icofont-heart"></i> My Wishlist</a>
-						<a href="#" class="btn"><i class="icofont-notification"></i> Notifications</a>
-						<a href="#" class="btn"><i class="icofont-logout"></i> Logout</a>
+						<a routerLink="/user" routerLinkActive="active" class="btn"><i class="icofont-ui-user"></i> My Account</a>
+						<a routerLink="/user/my-review" routerLinkActive="active" class="btn"><i class="icofont-star"></i> My Reviews</a>
+						<a routerLink="/user/my-wishlist" routerLinkActive="active" class="btn"><i class="icofont-heart"></i> My Wishlist</a>
+						<a routerLink="/user/notifications" routerLinkActive="active" class="btn"><i class="icofont-notification"></i> Notifications</a>
+						<a (click)="logout();" class="btn"><i class="icofont-logout"></i> Logout</a>
 					</div>	
 				</div>
 			</div>
@@ -62,13 +68,58 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent implements OnInit {
-	constructor() { }
+	subs = new SubSink();
+	isLoggedID: boolean;
+	bsModal: BsModalRef;
+	constructor(
+		private modal: BsModalService,
+		private auth: AuthenticationService,
+		private cd: ChangeDetectorRef	) { }
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
+	}
+	openLogin = () => {
+		this.bsModal = this.modal.show(LoginComponent, { id: 99 });
+		this.bsModal.content.event.subscribe((res: { data: string; }) => {
+			if (res.data === 'Confirmed') {
+				this.checkStatus();
+			} else {
+				console.error(res.data);
+			}
+		});
+	}
+	checkStatus = () => {
+		// getting auth user data
+		this.subs.add(this.auth.user.subscribe(user => {
+			if (user) {
+				data.loginuserID = user.userID
+				this.isLoggedID = true;
+				this.cd.markForCheck();
+			}
+			if (user === null) {
+				data.loginuserID = '0'
+				this.isLoggedID = false;
+				this.cd.markForCheck();
+			}
+		}));
+	}
 	ngOnInit(): void {
+		this.checkStatus();
 		$(function () {
 			$(".dropdown-menu li a").on('click', function () {
 				var selText = $(this).html();
 				$(this).parents('.input-group-btn').find('.btn-search').html(selText);
 			});
 		});
+	}
+	logout = () => {
+		// clear all localstorages and redirect to main public page
+		if (this.subs) {
+			this.subs.unsubscribe();
+		}
+		this.auth.logout();
+		setTimeout(() => {
+			this.checkStatus();
+		}, 100);
 	}
 }

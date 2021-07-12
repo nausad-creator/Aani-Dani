@@ -8,10 +8,16 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { SharedOrderComponent } from './my-orders/shared-order.component';
+import { SideFilterComponent } from './my-orders/shared-side-filter.component';
+import { SkeletonComponent } from './skeleton/skeleton.component';
 
 @NgModule({
   declarations: [
-    MyOrdersComponent
+    MyOrdersComponent,
+    SharedOrderComponent,
+    SideFilterComponent,
+    SkeletonComponent
   ],
   imports: [
     CommonModule,

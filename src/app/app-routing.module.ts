@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { UserGuard } from './user.guard';
 
 const routes: Routes = [
   {
@@ -19,12 +20,17 @@ const routes: Routes = [
     loadChildren: () => import('./details/product-details/product-details.module').then((m) => m.ProductDetailsModule)
   },
   {
-    path: 'my-cart',
+    path: 'cart',
     loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule)
   },
   {
     path: 'user',
-    loadChildren: () => import('./user/user.module').then((m) => m.UserModule)
+    loadChildren: () => import('./user/user.module').then((m) => m.UserModule),
+    canActivate: [UserGuard],
+  },
+  {
+    path: 'content',
+    loadChildren: () => import('./cms/cms.module').then((m) => m.CmsModule)
   }];
 
 @NgModule({

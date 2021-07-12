@@ -48,11 +48,11 @@ import { Component, OnInit } from '@angular/core';
     </div>
 	<div class="footerMenu">
 		<div class="container">
-			<a href="#">About Us</a>
-			<a href="#">Privacy Policy</a>
-			<a href="#">Terms & Conditions</a>
-			<a href="#">Contact Us</a>
-			<a href="#">FAQ</a>
+			<a routerLink="/content/about-us" routerLinkActive="active">About Us</a>
+			<a routerLink="/content/privacy-policy" routerLinkActive="active">Privacy Policy</a>
+			<a routerLink="/content/terms-and-conditions" routerLinkActive="active">Terms & Conditions</a>
+			<a routerLink="/content/contact-us" routerLinkActive="active">Contact Us</a>
+			<a routerLink="/content/faqs" routerLinkActive="active">FAQ</a>
 			<a href="#">Help</a>
 			<a href="#">Support</a>
 		</div>	

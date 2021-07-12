@@ -26,10 +26,10 @@ import { Store } from '@ngrx/store';
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
 		          		<ul>
-						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName}); loader=true" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
+						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName}); loader=true">{{category?.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			
@@ -48,7 +48,7 @@ import { Store } from '@ngrx/store';
 						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
 					</div>	
 					<div class="filterSection">
-						<app-shop-by-category (change)="onChange($event); loader=true" [categories]="categories$ | async"></app-shop-by-category>
+						<app-shop-by-category (change)="onChange($event);" [categories]="categories$ | async"></app-shop-by-category>
 						<app-filter-by-price [preventAbuse]="preventAbuse" (filterByPrice)="onFilter($event); preventAbuse=true"></app-filter-by-price>
 						<!-- <app-filter-by-shape></app-filter-by-shape> -->
 						<app-top-selling></app-top-selling>
@@ -117,22 +117,25 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.products(JSON.stringify(data));
 	}
 	onChange = async (category: { categoryID: string, categoryName: string }) => {
-		// query changes
-		dataChange.page = '0';
-		dataChange.categoryID = category.categoryID ? category.categoryID : '0';
-		dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
-		this.products(JSON.stringify(dataChange));
-		// updating query-param
-		data.page = '0';
-		data.categoryID = category.categoryID ? category.categoryID : '0';
-		data.categoryName = category.categoryName ? category.categoryName : 'null';
-		const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
-		this.router.navigate([],
-			{
-				relativeTo: this.route,
-				queryParams: queryParams,
-				queryParamsHandling: 'merge', // remove to replace all query params by provided
-			});
+		if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
+			// query changes
+			this.loader=true;
+			dataChange.page = '0';
+			dataChange.categoryID = category.categoryID ? category.categoryID : '0';
+			dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
+			this.products(JSON.stringify(dataChange));
+			// updating query-param
+			data.page = '0';
+			data.categoryID = category.categoryID ? category.categoryID : '0';
+			data.categoryName = category.categoryName ? category.categoryName : 'null';
+			const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
+			this.router.navigate([],
+				{
+					relativeTo: this.route,
+					queryParams: queryParams,
+					queryParamsHandling: 'merge', // remove to replace all query params by provided
+				});
+		}
 	}
 	products = (temp: string) => {
 		// products
@@ -154,9 +157,9 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		data.minPrice = $temp.split(';')[0];
 		data.maxPrice = $temp.split(';')[1];
 		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
-				this.product = res;
-				this.preventAbuse = false;
-				this.cd.markForCheck();
+			this.product = res;
+			this.preventAbuse = false;
+			this.cd.markForCheck();
 		}, (err) => {
 			console.error(err);
 		});
@@ -164,8 +167,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	onSort = ($temp: string) => {
 		data.sortBy = $temp ? $temp : '';
 		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
-				this.product = res;
-				this.cd.markForCheck();
+			this.product = res;
+			this.cd.markForCheck();
 		}, (err) => {
 			console.error(err);
 		});

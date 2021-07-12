@@ -9,11 +9,14 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedAddressComponent } from './saved-addresses/shared-address.component';
+import { MyFilterAdressPipe } from './saved-addresses/add.pipe';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 @NgModule({
   declarations: [
     SavedAddressesComponent,
-    SharedAddressComponent
+    SharedAddressComponent,
+    MyFilterAdressPipe
   ],
   imports: [
     CommonModule,
@@ -21,6 +24,7 @@ import { SharedAddressComponent } from './saved-addresses/shared-address.compone
     ReactiveFormsModule,
     FormsModule,
     NgSelectModule,
+    GooglePlaceModule,
     NgxPaginationModule,
     LazyLoadImageModule,
     NgxSkeletonLoaderModule,

@@ -39,7 +39,10 @@ import { Banner } from 'src/app/interface';
 export class BannerComponent implements OnInit {
   @Input() banner: Banner[] = [];
   caseOptions: OwlOptions = {
-    loop: false,
+    loop: true,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    autoplayHoverPause: true,
     dots: true,
     dotsEach: 3,
     slideBy: 3,

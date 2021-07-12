@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-scroll-to-top',
   template: `
-    <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+    <a class="back-to-top" style="cursor: pointer;"><i class="icofont-simple-up"></i></a>
   `,
   styles: [
   ]
@@ -11,9 +11,17 @@ import { Component, OnInit } from '@angular/core';
 export class ScrollToTopComponent implements OnInit {
   constructor() { }
   ngOnInit(): void {
+    // Back to top button
+  ($(window) as any).scroll(function() {
+    if ($(this).scrollTop() > 100) {
+      $('.back-to-top').fadeIn('slow');
+    } else {
+      $('.back-to-top').fadeOut('slow');
+    }
+  });
     jQuery(() => {
       $('.back-to-top').on('click', function() {
-        $("html, body").animate({scrollTop: 0}, 500);
+        $("html, body").animate({scrollTop: 0}, 100);
       });
     })
   }

@@ -508,7 +508,9 @@ ul.links_offers li a.active{color:#f90000!important;border-color:transparent!imp
 .shopingcart-tbtn{background-color:#0f0e0e;color:#ffffff;border-radius:8px;font-size:14px;padding:7px 20px;}
 .shopingcart-tbtn:hover{background-color:#333;color:#ffffff;}
 .remove_btn{background-color:#E1E1E1;margin-left:5px;height:36px;} 
-
+.slider_itemBoxskeleton{border-right:1px solid #eee;display:block;padding:15px;}
+.slider_itemBoxskeleton p{margin-bottom:0;margin-top:5px;text-align:center;color:#010101;font-size:14px;}
+.productListingPage .slider_itemBoxskeleton{border-bottom:1px solid #eee;text-align:center;}
 /*150621*/
 .content_textContent h5{font-size:18px;}
 .offer_label{background-color:#F47350;color:#fff;padding:3px 10px;position:absolute;top:5px;left:5px;}

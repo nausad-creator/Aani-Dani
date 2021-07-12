@@ -1,163 +1,178 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable, of, Subject, merge, timer } from 'rxjs';
+import { take, catchError, mergeMap, map } from 'rxjs/operators';
+import { AuthenticationService } from 'src/app/authentication.service';
+import { data, dataChange, order } from 'src/app/global';
+import { Orders } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-my-orders',
   template: `
     <!--start Listing area-->
-    <section id="product-list-section" class="pb-3 pt-4">
-		<div class="container">
-			<div class="row">			
-				<div class="col-lg-3 col-md-4">
-					<div class="Mobilefilter">
-						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
-					</div>	
-					<div class="filterSection">
-						<div class="filterLeftContent card">
-							<h5 class="mb-0">Order Placed</h5>	
-							<div class="listcategory">
-								<a href="#">Last 30 days</a>
-								<a href="#">Last 60 days</a>
-								<a href="#">Last 90 days</a>
-								<a href="#">Last 1 year</a>
-							</div>	
-						</div>
-						<div class="filterLeftContent mt-3 card">
-							<h5 class="mb-0 pb-2">Store Name</h5>
-							<div class="searchStore">
-								<span class="search_addons"><i class="fas fa-search"></i></span>
-								<input type="text" class="form-control bg-white" placeholder="Search">
-							</div>	
-							<div class="listcategory">
-								<a href="#">Al Nahdah</a>
-								<a href="#">Uthman</a>
-								<a href="#">Al Naeem</a>
-								<a href="#">Ash Shati</a>
-								<a href="#">Baghdadiyah</a>
-							</div>	
-						</div>
-						<div class="filterLeftContent mt-3 card">
-							<h5 class="mb-0">Order Type</h5>	
-							<div class="listcategory">
-								<a href="#">Order Type 1</a>
-								<a href="#">Order Type 2</a>
-								<a href="#">Order Type 3</a>
-							</div>	
-						</div>
-
-					</div>
-					<br>
-				</div>
-				
-				<div class="lefprolist mb-3 col-lg-9 col-md-8">	
-					<div class="category_slider card">
-						<div class="card-header bg-white">
-					        <div class="section-title row pb-0">
-							  <div class="col-md-6">		
-					          	<div class="brandcamp"><a href="index.html">Home > </a> <span> My Orders</span> </div>
-							  </div>
-							 				  	
-					        </div>
-				        </div>
-
-				        <div class="orderDetailSection">
-				        	<div class="orderDetailList">
-				        		<div class="headerOrder form-row m-0 align-items-center">
-				        			<div class="col-md-3 col-6">
-				        				<p class="mb-0">Order Placed <br> 24 Aug 2020</p>
-				        			</div>	
-				        			<div class="col-md-3 col-6">
-				        				<p class="mb-0">Total <br> 180.00 SR</p>
-				        			</div>
-				        			<div class="col-md-6 text-md-right mt-2 mt-md-0">
-				        				<p class="mb-0">Order # 403-6007027-2138715</p>
-				        				<div class="linksOrde">
-				        					<a class="mr-3" href="order-details.html">Order Details</a>
-				        					<a href="#">Invoice</a>
-				        				</div>	
-				        			</div>
-				        		</div>	
-				        		<div class="bodyOrder form-row m-0 align-items-center">
-				        			<div class="col-md-2 col-4">
-				        				<div class="smImg"><img src="assets/images/product-3.jpg" alt="product"></div>
-				        			</div>	
-				        			<div class="col-md-5 col-8">
-				        				<p class="mb-0">Graduation Cake - Chocolate</p>
-				        				<p class="mb-0 qty">1 kg x 1 qty</p>
-				        				<h6 class="mb-0"><b>180.00 SR</b></h6>
-				        			</div>
-				        			<div class="col-md-5 text-md-right">
-				        				<p class="mb-0">Delivery Expect by 20 Aug 2020</p>
-				        				<p class="mb-0">Your order has been placed</p>
-				        				<div class="linksOrde pt-2">
-				        					<button type="button" class="btn btn-outline-secondary m-1">Track Order</button>
-				        					<button type="button" class="btn btn-outline-secondary m-1">Reorder</button>
-				        				</div>	
-				        			</div>
-				        		</div>
-				        	</div>
-
-				        	<div class="orderDetailList">
-				        		<div class="headerOrder form-row m-0 align-items-center">
-				        			<div class="col-md-3 col-6">
-				        				<p class="mb-0">Order Placed <br> 20 Aug 2020</p>
-				        			</div>	
-				        			<div class="col-md-3 col-6">
-				        				<p class="mb-0">Total <br> 392.62 SR</p>
-				        			</div>
-				        			<div class="col-md-6 text-md-right mt-2 mt-md-0">
-				        				<p class="mb-0">Order # 403-6007027-2138715</p>
-				        				<div class="linksOrde">
-				        					<a class="mr-3" href="order-details.html">Order Details</a>
-				        					<a href="#">Invoice</a>
-				        				</div>	
-				        			</div>
-				        		</div>	
-				        		<div class="bodyOrder form-row m-0 align-items-center">
-				        			<div class="col-md-2 col-4">
-				        				<div class="smImg"><img src="assets/images/product-6.jpg" alt="product"></div>
-				        			</div>	
-				        			<div class="col-md-5 col-8">
-				        				<p class="mb-0">Red Velvet</p>
-				        				<p class="mb-0 qty">1 kg x 1 qty</p>
-				        				<h6 class="mb-0"><b>180.00 SR</b></h6>
-				        			</div>
-				        			<div class="col-md-5 text-md-right">
-				        				<p class="mb-0">Delivery Expect by 20 Aug 2020</p>
-				        				<p class="mb-0">Your Shipment cancelled</p>
-				        			</div>
-				        		</div>
-				        		<div class="bodyOrder form-row m-0 align-items-center">
-				        			<div class="col-md-2 col-4">
-				        				<div class="smImg"><img src="assets/images/product-3.jpg" alt="product"></div>
-				        			</div>	
-				        			<div class="col-md-5 col-8">
-				        				<p class="mb-0">Graduation Cake - Chocolate</p>
-				        				<p class="mb-0 qty">1 kg x 1 qty</p>
-				        				<h6 class="mb-0"><b>180.00 SR</b></h6>
-				        			</div>
-				        			<div class="col-md-5 text-md-right"></div>				        		
-				        		</div>
-				        		<div class="linksOrde p-3 btnReturn text-right">
-		        					<button type="button" class="btn btn-outline-secondary m-1">Returned</button>
-		        				</div>		
-				        	</div>
-				        </div>	
-					</div>				
-				</div>
-			</div>	
-		</div>		
-		
-    </section>
+	<section id="product-list-section" class="pb-3 pt-4">
+    <div class="container">
+        <div class="row">
+           <div class="col-lg-3 col-md-4">
+           <app-side-filter></app-side-filter>
+           </div>
+           <div class="lefprolist mb-3 col-lg-9 col-md-8">
+           <app-shared-order [orders]="ordersList" *ngIf="!loader"></app-shared-order>
+           <app-skeleton *ngIf="loader"></app-skeleton>
+           </div>
+        </div>	
+    </div>		
+	</section>
     <!--end Listing area-->
   `,
   styles: [
   ]
 })
 export class MyOrdersComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    readonly router: Router,
+    private root: RootService,
+    private auth: AuthenticationService,
+    public route: ActivatedRoute,
+    private cd: ChangeDetectorRef
+  ) {
+    // getting auth user data
+    this.subs.add(this.auth.user.subscribe(x => {
+      if (x) {
+        order.loginuserID = '1';
+      }
+    }));
   }
+  ngAfterViewInit(): void {
+    this.jquery();
+  }
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+  loader = true;
+  preventAbuse: boolean;
+  subs = new SubSink();
+  ordersList: Orders[];
+  orders$: Observable<Orders[]> = of(null);
+  forceReload$ = new Subject<void>();
+  getOrders = (t: string) => {
+    return this.root.orders(t).pipe(map((res) => res), take(1),
+      catchError(() => of([]))) as Observable<Orders[]>;
+  }
+  ngOnInit(): void {
+    // query changes
+    order.page = '0';
+    this.orders(JSON.stringify(order));
+  }
+  onChange = async (category: { categoryID: string, categoryName: string }) => {
+    if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
+      // query changes
+      this.loader = true;
+      dataChange.page = '0';
+      dataChange.categoryID = category.categoryID ? category.categoryID : '0';
+      dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
+      this.orders(JSON.stringify(dataChange));
+      // updating query-param
+      data.page = '0';
+      data.categoryID = category.categoryID ? category.categoryID : '0';
+      data.categoryName = category.categoryName ? category.categoryName : 'null';
+      const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
+      this.router.navigate([],
+        {
+          relativeTo: this.route,
+          queryParams: queryParams,
+          queryParamsHandling: 'merge', // remove to replace all query params by provided
+        });
+    }
+  }
+  orders = (temp: string) => {
+    // products
+    const initial$ = this.getOrders(temp) as Observable<Orders[]>;
+    const updates$ = this.forceReload$.pipe(mergeMap(() => this.getOrders(temp) as Observable<Orders[]>));
+    this.orders$ = merge(initial$, updates$);
+    this.subs.add(this.orders$.subscribe((res: Orders[]) => {
+      timer(500).subscribe(() => {
+        this.ordersList = res;
+        this.loader = false;
+        this.cd.markForCheck();
+      });
+    }, (err) => {
+      this.loader = false;
+      console.error(err);
+    }));
+  }
+  onFilter = ($temp: string) => {
+    this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
+      this.ordersList = res;
+      this.preventAbuse = false;
+      this.cd.markForCheck();
+    }, (err) => {
+      console.error(err);
+    });
+  }
+  onSort = ($temp: string) => {
+    data.sortBy = $temp ? $temp : '';
+    this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
+      this.ordersList = res;
+      this.cd.markForCheck();
+    }, (err) => {
+      console.error(err);
+    });
+  }
+  jquery = () => {
+    jQuery(() => {
+      // Mobile Navigation
+      if ($('.nav-menu').length) {
+        var $mobile_nav = $('.nav-menu').clone().prop({
+          class: 'mobile-nav d-lg-none'
+        });
+        $('body').append($mobile_nav);
+        $('body').prepend('<button type="button" class="mobile-nav-toggle d-lg-none"><i class="icofont-navigation-menu"></i></button>');
+        $('body').append('<div class="mobile-nav-overly"></div>');
 
+        $(document).on('click', '.mobile-nav-toggle', function (e) {
+          $('body').toggleClass('mobile-nav-active');
+          $('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
+          $('.mobile-nav-overly').toggle();
+        });
+
+        $(document).on('click', '.mobile-nav .drop-down > a', function (e) {
+          e.preventDefault();
+          $(this).next().slideToggle(300);
+          $(this).parent().toggleClass('active');
+        });
+
+        $(document).on('click', function (e) {
+          var container = $(".mobile-nav, .mobile-nav-toggle");
+          if (!container.is(e.target.nodeName) && container.has(e.target.nodeName).length === 0) {
+            if ($('body').hasClass('mobile-nav-active')) {
+              $('body').removeClass('mobile-nav-active');
+              $('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
+              $('.mobile-nav-overly').fadeOut();
+            }
+          }
+        });
+      } else if ($(".mobile-nav, .mobile-nav-toggle").length) {
+        $(".mobile-nav, .mobile-nav-toggle").hide();
+      }
+      // Stick the header at top on scroll
+      ($("#header") as any).sticky({
+        topSpacing: 0,
+        zIndex: '50'
+      });
+      // Real view height for mobile devices
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        ($('#hero') as any).css({
+          height: $(window).height()
+        });
+      }
+      // filter
+      $(".FilterHandale").on('click', function () {
+        $(".filterSection").toggleClass("ShowFilter");
+        $(this).toggleClass("ShowClose");
+      });
+    })
+  }
 }

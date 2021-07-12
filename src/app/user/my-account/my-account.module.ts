@@ -5,9 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { DpDatePickerModule } from 'ng2-date-picker';
 
 @NgModule({
   declarations: [
@@ -19,8 +18,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
     ReactiveFormsModule,
     FormsModule,
     NgSelectModule,
-    NgxPaginationModule,
-    LazyLoadImageModule,
+    DpDatePickerModule,
     NgxSkeletonLoaderModule,
     RouterModule.forChild([
       {

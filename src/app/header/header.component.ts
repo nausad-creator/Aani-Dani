@@ -55,7 +55,7 @@ import { AuthenticationService } from '../authentication.service';
 				</div>
 			</div>
 			<div class="cart-topbtn d-flex">
-				<a routerLink="/my-cart" class="btn user-cart-btrn"><i class="fas fa-shopping-basket"></i>  <span class="counter-addon">1</span></a>
+				<a routerLink="/cart" class="btn user-cart-btrn"><i class="fas fa-shopping-basket"></i>  <span class="counter-addon">1</span></a>
 				<span class="cartamount align-self-center">165.00 SR</span>
 			</div>		
 	      </div>

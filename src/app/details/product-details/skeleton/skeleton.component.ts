@@ -46,9 +46,9 @@ import { Component, OnInit } from '@angular/core';
                         <div class="tab-content" id="myTabContent">
                           <div class="tab-pane fade show active" id="Discription" role="tabpanel" aria-labelledby="home-tab">
                               <div class="p-3">
-                                <ngx-skeleton-loader count="5" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
-                                <ngx-skeleton-loader count="2" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
-                                <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '95%' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="5" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="2" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '95%' }"></ngx-skeleton-loader>
                               </div>
                           </div>
                         </div>

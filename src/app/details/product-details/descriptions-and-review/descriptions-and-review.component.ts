@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/authentication.service';
+import { data } from 'src/app/global';
 import { ProductList } from 'src/app/interface';
+import { SubSink } from 'subsink';
 
 @Component({
 	selector: 'app-descriptions-and-review',
@@ -15,8 +18,11 @@ import { ProductList } from 'src/app/interface';
 							</ul>
 							<div class="tab-content" id="myTabContent">
 							  <div class="tab-pane fade show active" id="Discription" role="tabpanel" aria-labelledby="home-tab">
-							  	<div class="p-3">
-							  		<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+							  	<div class="p-3" *ngIf="product.productDescription">
+							  		<p>{{product.productDescription}}</p>
+							  	</div>
+								  <div class="p-3" *ngIf="!product.productDescription">
+							  		<p class="text-center">No descriptions to show.</p>
 							  	</div>
 							  </div>
 
@@ -39,42 +45,8 @@ import { ProductList } from 'src/app/interface';
 								  			</div>	
 								  		</div>	
 								  	</div>
-								  	<div class="review_show">
-								  		<div class="d-flex">
-								  			<div class="userimg"><img src="assets/images/pr-img1.png" alt=""></div>
-								  			<div class="userreviesd">	
-								  				<h6>John Doe</h6>
-												<div class="ratings">
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star-half-alt"></i>
-								  					<i class="far fa-star"></i>
-								  					<span>4.5</span>
-								  				</div>
-								  				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-								  			</div>	
-								  		</div>	
-								  	</div>
-								  	<div class="review_show">
-								  		<div class="d-flex">
-								  			<div class="userimg"><img src="assets/images/pr-img1.png" alt=""></div>
-								  			<div class="userreviesd">	
-								  				<h6>John Doe</h6>
-												<div class="ratings">
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star"></i>
-								  					<i class="fas fa-star-half-alt"></i>
-								  					<i class="far fa-star"></i>
-								  					<span>4.5</span>
-								  				</div>
-								  				<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-								  			</div>	
-								  		</div>	
-								  	</div>	
 							  	</div>
-							  	<div class="write_review">
+							  	<div class="write_review" *ngIf="isLoggedID">
 							  		<form action="#" method="post" id="commentform" class="comment-form">
 							  			<div class="form-group">
 							  				<label for="Title">Review Title</label>
@@ -130,13 +102,32 @@ import { ProductList } from 'src/app/interface';
 		      	</div>
   `,
 	styles: [
-	]
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DescriptionsAndReviewComponent implements OnInit {
-	@Input() product: ProductList[] = [];
-	constructor() { }
-
+	@Input() product: ProductList;
+	subs = new SubSink();
+	isLoggedID: boolean;
+	constructor(
+		private auth: AuthenticationService,
+		private cd: ChangeDetectorRef
+	) { }
 	ngOnInit(): void {
+		this.checkStatus();
 	}
-
+	checkStatus = () => {
+		// getting auth user data
+		this.subs.add(this.auth.user.subscribe(user => {
+			if (user) {
+				data.loginuserID = user.userID
+				this.isLoggedID = true;
+				this.cd.markForCheck();
+			}
+			if (user === null) {
+				data.loginuserID = '0'
+				this.isLoggedID = false;
+				this.cd.markForCheck();
+			}
+		}));
+	}
 }

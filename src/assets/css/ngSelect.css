@@ -33,7 +33,7 @@
   } */
   
   .ng-select.ng-select-disabled>.ng-select-container {
-    background-color: #f9f9f9
+    background-color: #ECECEC;
   }
   
   .ng-select .ng-has-value .ng-placeholder {
@@ -92,7 +92,7 @@
   }
   
   .ng-select.ng-select-multiple.ng-select-disabled>.ng-select-container .ng-value-container .ng-value {
-    background-color: #f9f9f9;
+    background-color: #ECECEC;
     border: 1px solid #e6e6e6
   }
   
@@ -124,7 +124,7 @@
   }
   
   .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value.ng-value-disabled {
-    background-color: #f9f9f9
+    background-color: #ECECEC;
   }
   
   .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value.ng-value-disabled .ng-value-label {

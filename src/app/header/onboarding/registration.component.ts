@@ -135,7 +135,7 @@ export class RegistrationComponent implements OnInit {
 			this.markFormTouched(this.registerForm);
 			if (this.registerForm.valid && this.findInvalidControlsregister().length === 0) {
 				this.error = '';
-				this.preventAbuse = true
+				this.preventAbuse = true;
 				// checking for duplicate user!!!!
 				await this.duplicate(JSON.stringify(post)).then(async (r: {
 					status: string;

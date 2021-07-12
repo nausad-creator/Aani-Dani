@@ -6,6 +6,11 @@ export interface Category {
 	categoryCreatedDate: string;
 	categoryDisplayOrder: string;
 }
+export interface Nationality {
+	nationalityID: string;
+	nationalityName: string;
+	nationalityStatus: string;
+}
 export interface Home {
 	banners: Banner[];
 	category: Category[];
@@ -24,6 +29,16 @@ export interface Banner {
 	bannerType: string;
 	bannerTypeID: string;
 	categoryName: string;
+}
+export interface UserUpdate {
+	languageID: string;
+	loginuserID: string;
+	userFullName: string;
+	userEmail: string;
+	userMobile: string;
+	nationalityID: string;
+	userDOB: string;
+	userProfilePicture: string;
 }
 export interface ProductList {
 	productID: string;
@@ -177,10 +192,85 @@ export interface ADDRESS {
 	addressCreatedDate: string;
 	countryName: string;
 	cityName: string;
+	fullAddress: string;
 }
 export interface FORGOT {
 	userMobile: string;
 	userID: string;
 	status: string;
 	message: string;
+}
+export interface Orders {
+	orderID: string;
+	userID: string;
+	orderNo: string;
+	orderDate: string;
+	orderBillingAddress: string;
+	orderDeliveryAddress: string;
+	orderDeliveryLat: string;
+	orderDeliveryLong: string;
+	orderDeliveryCharges: string;
+	statusID: string;
+	orderStatusDate: string;
+	orderStatusRemark: string;
+	orderDiscountCode: string;
+	orderDiscount: string;
+	orderWalletAmt: string;
+	orderGrossAmt: string;
+	orderVAT: string;
+	orderNetAmount: string;
+	orderPaymentMode: string;
+	orderDeliveryType: string;
+	orderDeliveryDate: string;
+	orderPaymentStatus: string;
+	orderPaymentTransactionID: string;
+	orderNotes: string;
+	orderRatingPending: string;
+	userFullName: string;
+	userMobile: string;
+	statusName: string;
+	orderdetails: OrderDetails[],
+	timeline: [
+		{
+			orderstatusID: string;
+			orderID: string;
+			statusID: string;
+			orderstatusDate: string;
+			orderstatusRemark: string;
+			statusName: string;
+		}
+	]
+}
+export interface OrderDetails {
+	orderdetailsID: string;
+	orderID: string;
+	productID: string;
+	orderdetailsQty: string;
+	orderdetailsPrice: string;
+	statusID: string;
+	statusName: string;
+	categoryID: string;
+	subcatID: string;
+	productName: string;
+	productArabicNme: string;
+	productSKU: string;
+	productTag: string;
+	productDescription: string;
+	productPriceVat: string;
+	productPrice: string;
+	productMOQ: string;
+	productImage: string;
+	productPackagesize: string;
+	productReviewCount: string;
+	productRatingCount: string;
+	productRatingAvg: string;
+	productSoldCount: string;
+	productStatus: string;
+	productCreatedDate: string;
+	categoryName: string;
+}
+export interface ChangePassword {
+	userCurrentPassword: string;
+	userNewPassword: string;
+	userNewRePassword: string;
 }

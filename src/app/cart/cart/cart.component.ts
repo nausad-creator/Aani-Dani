@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Category } from 'src/app/interface';
-import { selectHomeCategoryList, State } from 'src/app/reducers';
+import { Category, ProductList } from 'src/app/interface';
+import { selectHomeBestSellingList, selectHomeCategoryList, State } from 'src/app/reducers';
 import { SubSink } from 'subsink';
 
 @Component({
@@ -51,7 +51,8 @@ import { SubSink } from 'subsink';
         </div>	
     </section>	
 
-   <app-shared-best-selling></app-shared-best-selling>
+   <app-shared-best-selling [products]="products" *ngIf="products$ | async as products"></app-shared-best-selling>
+   <app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
 
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->
@@ -63,6 +64,7 @@ import { SubSink } from 'subsink';
 export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
     loginuserID: string;
     categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
+    products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList);
     subs = new SubSink();
     constructor(
         private store: Store<State>,

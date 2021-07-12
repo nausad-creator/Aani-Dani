@@ -12,6 +12,8 @@ import { SharedDetailsComponent } from './shared-details/shared-details.componen
 import { SharedBillingComponent } from './shared-billing/shared-billing.component';
 import { SharedBestSellingComponent } from './shared-best-selling/shared-best-selling.component';
 import { HeaderModule } from '../header/header.module';
+import { SkeletonComponent } from './shared-best-selling/skeleton.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import { HeaderModule } from '../header/header.module';
     CartComponent,
     SharedDetailsComponent,
     SharedBillingComponent,
-    SharedBestSellingComponent
+    SharedBestSellingComponent,
+    SkeletonComponent
   ],
   imports: [
     CommonModule,
@@ -27,6 +30,7 @@ import { HeaderModule } from '../header/header.module';
     ReactiveFormsModule,
     FormsModule,
     HeaderModule,
+    CarouselModule,
     NgSelectModule,
     NgxPaginationModule,
 	  LazyLoadImageModule,

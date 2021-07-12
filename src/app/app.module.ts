@@ -10,6 +10,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { RootService } from './root.service';
+import * as $ from 'jquery';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -24,6 +25,13 @@ import { NgProgressHttpModule } from 'ngx-progressbar/http';
 import { HeaderModule } from './header/header.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
+import { CmsEffects } from './effects/cms.effect';
+import { NationalityEffects } from './effects/others.effects';
+import { DpDatePickerModule } from 'ng2-date-picker';
+import { AgmCoreModule } from '@agm/core';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { AuthenticationService } from './authentication.service';
+import { LocationService } from './location.service';
 
 @NgModule({
   declarations: [
@@ -43,21 +51,26 @@ import { ToastrModule } from 'ngx-toastr';
     CarouselModule,
     NgSelectModule,
     NgxPaginationModule,
-	  LazyLoadImageModule,
-	  NgxSkeletonLoaderModule,
+    LazyLoadImageModule,
+    NgxSkeletonLoaderModule,
+    DpDatePickerModule,
     ToastrModule.forRoot(
-        {
-          positionClass: 'toast-center-center',
-          timeOut: 3000,
-          preventDuplicates: true,
-          maxOpened: 1,
-          easeTime: 0,
-        }),
-	  StoreModule.forRoot(reducers, { metaReducers }),
-	  !environment.production ? StoreDevtoolsModule.instrument() : [],
-	  EffectsModule.forRoot([ProductsEffects, CategoriesEffects, HomeEffects])
+      {
+        positionClass: 'toast-center-center',
+        timeOut: 3000,
+        preventDuplicates: true,
+        maxOpened: 1,
+        easeTime: 0,
+      }),
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAV0j-imLFwoEcRaCTHDVl0o9Tj6Mj7fZM'
+    }),
+    GooglePlaceModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([ProductsEffects, CategoriesEffects, HomeEffects, CmsEffects, NationalityEffects])
   ],
-  providers: [RootService],
+  providers: [RootService, AuthenticationService, LocationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

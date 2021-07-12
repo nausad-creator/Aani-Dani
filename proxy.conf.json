@@ -94,5 +94,59 @@
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
+  },
+  "/cmspage/get-cmspage/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/faq/faq-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/orders/my-orders/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-update-profile/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/users/user-update-settings/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/useraddress/add-address/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/useraddress/update-address/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/useraddress/set-default-address/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/useraddress/delete-address/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
   }
 }

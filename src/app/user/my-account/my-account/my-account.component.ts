@@ -1,14 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DateTimeAdapter, MomentDateTimeAdapter, OWL_DATE_TIME_FORMATS, OWL_DATE_TIME_LOCALE } from '@danielmoncada/angular-datetime-picker';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { DatePickerDirective, IDatePickerDirectiveConfig } from 'ng2-date-picker';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Nationality, UserUpdate, USER_RESPONSE } from 'src/app/interface';
 import { selectNationalyList, State } from 'src/app/reducers';
-
+export const MY_CUSTOM_FORMATS = {
+	fullPickerInput: 'DD MMM, YYYY',
+	parseInput: 'DD MMM, YYYY',
+	datePickerInput: 'DD MMM, YYYY',
+	timePickerInput: 'LT',
+	monthYearLabel: 'MMM YYYY',
+	dateA11yLabel: 'LL',
+	monthYearA11yLabel: 'MMMM YYYY'
+	};
 @Component({
 	selector: 'app-my-account',
 	template: `
@@ -21,16 +30,16 @@ import { selectNationalyList, State } from 'src/app/reducers';
 						  			<form (ngSubmit)="onClickUpdate(profileForm.getRawValue())" [formGroup]="profileForm" method="post" role="form" class="ProfileForm NotEditable">
 						                <div class="form-row">
 						                  <div class="col-md-4 form-group">
-						                    <label for="fname">First Name<span class="required-field"></span></label>
+						                    <label for="fname">Full Name<span class="required-field"></span></label>
 						                    <input type="text" name="fname" #userFullNameInput (keyup)="onInputName(userFullNameInput.value)" formControlName="userFullName" class="form-control" id="fname" placeholder="Enter First Name">
 											<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('required')">Please enter name.</small>
 						 					<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('minlength')">Input fields will not be less than 3 characters.</small>
                       	 					<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('maxlength')">Input fields will not be more than 60 characters.</small>
 						                  </div>
-						                  <div class="col-md-4 form-group">
+						                  <!-- <div class="col-md-4 form-group">
 						                    <label for="lname">Last Name<span class="required-field"></span></label>
 						                    <input type="text" name="fname" class="form-control" id="lname" placeholder="Enter Last Name">
-						                  </div>
+						                  </div> -->
 						                </div>
 
 						                <div class="form-row">
@@ -44,22 +53,16 @@ import { selectNationalyList, State } from 'src/app/reducers';
 							                <div class="col-md-4 form-group">
 							                    <label for="nationlity">Nationality<span class="required-field"></span></label>
 												<ng-select [closeOnSelect]="true" [searchable]="true" bindLabel="nationalityName" bindValue="nationalityID" labelById="nationlity"
-                  								appearance="outline" formControlName="nationalityID" [items]="nationalities$ | async"
+                  								appearance="outline" #userNationInput formControlName="nationalityID" [items]="nationalities$ | async"
                   								[clearable]="true" class="custom" placeholder="Select Nationality">
                									 </ng-select>
 												<small class="text-danger small" *ngIf="profileForm.controls['nationalityID'].hasError('required')">Please select nationality.</small>
 							                </div>
 							                <div class="col-md-4 form-group">
 							                    <label for="date">Date of Birth<span class="required-field"></span></label>
-							                    <input #dateDirectivePicker="dpDayPicker" 
-                  								(keydown)="$event.preventDefault()" 
-                  								[theme]="'dp-material dp-main'" 
-                  								[mode]="'day'" 
-                  								[dpDayPicker]="configDate" 
-                  								class="form-control DateNobor"
-                   								placeholder="dd/mm/yyyy"
-												formControlName="userDOB" name="date" class="form-control" id="date">
-												<a [ngClass]="{'noPointer': profileForm.controls.userDOB.disabled}" class="pasword-hideshowLogin cursr"><i (click)="datePickerDirective.api.open()" class="fa fa-calendar"></i></a>
+							                    <input #userDOBInput (keydown)="$event.preventDefault()" class="form-control DateNobor" placeholder="dd/mm/yyyy" [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
+												<owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+												<a [ngClass]="{'noPointer': profileForm.controls.userDOB.disabled}" [owlDateTimeTrigger]="dt5" class="pasword-hideshowLogin cursr"><i class="fa fa-calendar"></i></a>
 												<small class="text-danger small" *ngIf="profileForm.controls['userDOB'].hasError('required')">Please select DOB.</small>
 							                </div>
 						                </div>
@@ -97,7 +100,7 @@ import { selectNationalyList, State } from 'src/app/reducers';
     	border-color: #E6E6E6;
     	height: calc(1.8em + .75rem + 2px);
       }
-	  .ng-select .ng-select-container.custom ::ng-deep .ng-placeholder {
+	  .ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
     	color:#C2C2C2;
   	   }
 	  .ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
@@ -117,28 +120,24 @@ import { selectNationalyList, State } from 'src/app/reducers';
         content: '*';
         color: rgb(247, 83, 83);
       }`
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	],
+	providers: [
+	{ provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE] },
+	{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS }]
+	, changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyAccountComponent implements OnInit {
 	user: USER_RESPONSE = localStorage.getItem('USER_LOGGED') ? JSON.parse(localStorage.getItem('USER_LOGGED')) : JSON.parse(sessionStorage.getItem('USER_LOGGED')) as USER_RESPONSE;
 	nationalities$: Observable<Nationality[]> = this.store.select(selectNationalyList);
 	profileForm: FormGroup;
 	preventAbuse = false;
+	maxDate = new Date();
 	@ViewChild('userFullNameInput', { static: false }) userFullName: ElementRef;
 	@ViewChild('userEmailInput', { static: false }) userEmail: ElementRef;
 	@ViewChild('userNameInput', { static: false }) userName: ElementRef;
 	@ViewChild('userMobileInput', { static: false }) userMobile: ElementRef;
-	@ViewChild('dateDirectivePicker') datePickerDirective: DatePickerDirective;
-	configDate: IDatePickerDirectiveConfig = {
-		weekDayFormat: 'dd',
-		showGoToCurrent: true,
-		appendTo: document.body,
-		closeOnSelectDelay: 0,
-		onOpenDelay: 0,
-		format: 'DD MMM, YYYY',
-		locale: moment.locale(),
-		max: moment(new Date(), 'DD/MM/YYYY').format('DD MMM, YYYY'),
-	  };
+	@ViewChild('userDOBInput', { static: false }) userDOBInput: ElementRef;
+	@ViewChild('userNationInput', { static: false }) userNationInput: NgSelectComponent;
 	constructor(
 		private fb: FormBuilder,
 		private toastr: ToastrService,
@@ -161,12 +160,12 @@ export class MyAccountComponent implements OnInit {
 	}
 	intialize = () => {
 		this.profileForm = this.fb.group({
-			nationalityID: [this.user.nationalityID && this.user.nationalityID !== '0' ? this.user.nationalityID : null],
-			userDOB: [this.user.userDOB ? moment(moment(`${this.user.userDOB}`).toDate(), 'DD/MM/YYYY').format('DD MMM, YYYY') : null],
 			loginuserID: [this.user.userID],
 			languageID: [this.user.languageID],
-			userEmail: [this.user.userEmail ? this.user.userEmail : null, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)],
 			userFullName: [this.user.userFullName ? this.user.userFullName : null],
+			userEmail: [this.user.userEmail ? this.user.userEmail : null, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)],
+			nationalityID: [this.user.nationalityID && this.user.nationalityID !== '0' ? this.user.nationalityID : null],
+			userDOB: [this.user.userDOB ? moment(`${this.user.userDOB}`).toDate() : null],
 			userMobile: [this.user.userMobile ? this.user.userMobile : null, Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
 			userProfilePicture: [this.user.userProfilePicture ? this.user.userProfilePicture : null],
 			countryCode: [this.user.userCountryCode]
@@ -238,6 +237,14 @@ export class MyAccountComponent implements OnInit {
 			}
 			if (key === 'userEmail' && !post[key] && !temp) {
 				this.userEmail.nativeElement.focus();
+				temp = true;
+			}
+			if (key === 'nationalityID' && !post[key] && !temp) {
+				this.userNationInput.focus();
+				temp = true;
+			}
+			if (key === 'userDOB' && !post[key] && !temp) {
+				this.userDOBInput.nativeElement.focus();
 				temp = true;
 			}
 			if (key === 'userMobile' && !post[key] && !temp) {

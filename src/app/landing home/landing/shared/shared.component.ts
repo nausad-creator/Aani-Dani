@@ -32,7 +32,7 @@ export class SharedComponent implements OnInit, OnDestroy {
 				productPackagesize: a.productPackagesize,
 				productReviewCount: a.productReviewCount,
 				productRatingCount: a.productRatingCount,
-				productRatingAvg: a.productRatingAvg,
+				productRatingAvg: a.productRatingAvg.split('.')[0],
 				productSoldCount: a.productSoldCount,
 				productStatus: a.productStatus,
 				productCreatedDate: a.productCreatedDate,

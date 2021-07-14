@@ -13,39 +13,32 @@ import { SubSink } from 'subsink';
 						<div class="bigIng" *ngIf="product"><img offset="100"
 									style="width: 552px; height: 343px"
             						defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
-            						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product.productImage}}"
-            						[errorImage]="'assets/images/error_not_found.png'" [alt]="product.productName" [title]="product.productName"></div>	
+            						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
+            						[errorImage]="'assets/images/error_not_found.png'" [alt]="product?.productName" [title]="product?.productName"></div>	
 					</div>	
 					<div class="col-lg-7 col-md-7">	
 						<div class="detailInfo">
-							<h4 class="" *ngIf="product"><b>{{product.productName}}</b></h4>	
+							<h4 class="" *ngIf="product"><b>{{product?.productName}}</b></h4>	
 							<div class="productInfo">
 								<div class="ratings">
-				  					<i class="fas fa-star"></i>
-				  					<i class="fas fa-star"></i>
-				  					<i class="fas fa-star"></i>
-				  					<i class="fas fa-star-half-alt"></i>
-				  					<i class="far fa-star"></i>
-				  					<span>105</span>
+                                <i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
+				  				<span>{{product?.productRatingCount | number}}</span>
 				  				</div>
-				  				<p class="salinginfo" *ngIf="product">{{(product.productSoldCount | number) + ' people bought this'}}</p>
+				  				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' people bought this'}}</p>
 			  				</div>
 			  				<div class="d-flex align-items-center detailPrice">
-				  				<div class="price_text" *ngIf="product">{{(product.productPrice | number) + ' SR'}}</div>
-					  			<div class="mrp_text" *ngIf="product">{{(product.productPriceVat | number) + ' SR'}}</div>					
+				  				<div class="price_text" *ngIf="product">{{(product?.productPrice | number) + ' SR'}}</div>
+					  			<div class="mrp_text" *ngIf="product">{{(product?.productPriceVat | number) + ' SR'}}</div>					
 				  			</div>
 				  			<div class="form-group select_unit mb-2 mt-2">
 				  			</div>
 				  			<div class="d-flex align-items-center detailBtn pt-1">
-				  				<!-- <div class="form-group mb-0">
-				  					<input type="number" id="quantity" class="form-control" min="1">				  					
-				  				</div>	 -->
-				  				<div class="cartbox" [ngClass]="{'show-counter': product.addedCartCount>0}">
+				  				<div class="cartbox" [ngClass]="{'show-counter': product?.addedCartCount>0}">
 									<a class="addcart-btn shopingcart-tbtn btn" (click)="addItemToCart(product);" id="addcart-1"> Add to Cart</a>
 									<div class="contercontern">
 									<div class="handle-counter d-flex" id="handleCounter">
 										<button (click)="deleteItemFromCart(product);" class="counter-minus btn">-</button>
-										<input type="text" [ngModel]="product.addedCartCount" readonly>
+										<input type="text" [ngModel]="product?.addedCartCount" readonly>
 										<button (click)="addItemToCart(product);" class="counter-plus btn">+</button>
 									</div>
 								</div>
@@ -72,6 +65,7 @@ import { SubSink } from 'subsink';
 })
 export class DetailsComponent implements OnInit {
 	@Input() product: ProductList;
+    stars: number[] = [1, 2, 3, 4, 5];
 	isLoggedIN: boolean;
     isLoggedID: string;
     subs = new SubSink();

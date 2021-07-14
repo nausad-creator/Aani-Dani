@@ -10,6 +10,9 @@ import { OtpComponent } from './onboarding/otp.component';
 import { ResetComponent } from './onboarding/reset.component';
 import { ForgotComponent } from './onboarding/forgot.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { OtpRegisterComponent } from './onboarding/otp.register.component';
 
 @NgModule({
   declarations: [
@@ -20,13 +23,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     RegistrationComponent,
     OtpComponent,
     ResetComponent,
-    ForgotComponent
+    ForgotComponent,
+    OtpRegisterComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgSelectModule
   ],
   exports: [
     HeaderComponent,

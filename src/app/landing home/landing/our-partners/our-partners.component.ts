@@ -15,28 +15,28 @@ import { Component, OnInit } from '@angular/core';
 
       <div class="category_slider">
           <div class="owl-carousel partner-carousel">
-          <a class="partnersItem text-center" target="_blank" href="#">
+          <a class="partnersItem text-center" target="_blank" href="https://www.mobily.com.sa/wps/portal/web/personal/mobile/neqaty/overview/neqaty-partners/neqaty-partners/">
                     <img src="assets/images/partners/Mobily.jpg" alt="partners"> 
                     <h5>MOBILY</h5>
             </a>
-            <a class="partnersItem text-center" target="_blank" href="#">
+            <a class="partnersItem text-center" target="_blank" href="https://www.saib.com.sa/en/">
                     <img src="assets/images/partners/SAIB.jpg" alt="partners"> 
                     <h5>SAIB</h5>
             </a>
 
-            <a class="partnersItem text-center" target="_blank" href="#">
+            <a class="partnersItem text-center" target="_blank" href="https://www.sabb.com/en/">
                     <img src="assets/images/partners/SABB.jpg" alt="partners"> 
                     <h5>SABB</h5>
             </a>
-            <a class="partnersItem text-center" target="_blank" href="#">
+            <a class="partnersItem text-center" target="_blank" href="https://www.riyadbank.com/en/">
                     <img src="assets/images/partners/RiyadBank.jpg" alt="partners"> 
                     <h5>Riyad Bank</h5>
             </a>
-            <a class="partnersItem text-center" target="_blank" href="#">
+            <a class="partnersItem text-center" target="_blank" href="https://www.bankaljazira.com/en-us/Personal-Banking/">
                     <img src="assets/images/partners/AljaziraBank.jpg" alt="partners"> 
                     <h5>Aljazira Bank</h5>
             </a>
-            <a class="partnersItem text-center" target="_blank" href="#">
+            <a class="partnersItem text-center" target="_blank" href="https://www.alrajhibank.com.sa/personal/">
                     <img src="assets/images/partners/AlRajhiBank.jpg" alt="partners"> 
                     <h5>Al Rajhi Bank</h5>
             </a>

@@ -52,8 +52,8 @@ import { SubSink } from 'subsink';
                         <app-skeleton-billing *ngIf="loader"></app-skeleton-billing>
                     </div>
                     <!-- when empty -->
-                    <div class="col-lg-12" style="margin-top: 20px; min-height: 180px" *ngIf="!loader">
-                            <div class="table-responsive" *ngIf="ordersList[0].orderdetails.length===0">
+                    <div class="col-lg-12" *ngIf="!loader">
+                            <div class="table-responsive" style="margin-top: 20px; min-height: 180px" *ngIf="ordersList[0].orderdetails.length===0">
                               <p class="text-center pt-20">Your cart is empty.</p>
                     </div>  
                     </div>
@@ -94,7 +94,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 				productPackagesize: a.productPackagesize,
 				productReviewCount: a.productReviewCount,
 				productRatingCount: a.productRatingCount,
-				productRatingAvg: a.productRatingAvg,
+				productRatingAvg: a.productRatingAvg.split('.')[0],
 				productSoldCount: a.productSoldCount,
 				productStatus: a.productStatus,
 				productCreatedDate: a.productCreatedDate,
@@ -144,7 +144,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
                             productPackagesize: a.productPackagesize,
                             productPrice: a.productPrice,
                             productPriceVat: a.productPriceVat,
-                            productRatingAvg: a.productRatingAvg,
+                            productRatingAvg: a.productRatingAvg.split('.')[0],
                             productRatingCount: a.productRatingCount,
                             productReviewCount: a.productReviewCount,
                             productSKU: a.productSKU,

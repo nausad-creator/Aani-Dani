@@ -89,7 +89,7 @@ export class ForgotComponent {
                   this.forgetForm.get('userEmail').patchValue('');
                   this.forgetPassword(JSON.stringify(this.forgetForm.value)).then((res: FORGOT) => {
                   this.preventAbuse = false
-            setTimeout(() => {
+                  setTimeout(() => {
                     this.forgetForm.reset();
                     this.openOTP({
                       userMobile: res.userMobile ? res.userMobile : post.userEmail,

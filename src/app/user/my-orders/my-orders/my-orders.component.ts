@@ -32,29 +32,28 @@ import { SubSink } from 'subsink';
 })
 export class MyOrdersComponent implements OnInit {
   constructor(
-    readonly router: Router,
-    private root: RootService,
-    private auth: AuthenticationService,
-    public route: ActivatedRoute,
-    private cd: ChangeDetectorRef
-  ) {
-    // getting auth user data
-    this.subs.add(this.auth.user.subscribe(user => {
-      if (user) {
-        order.loginuserID = user.userID;
-        this.cd.markForCheck();
-      }
-      if (user === null) {
-        order.loginuserID = '1';
-        this.cd.markForCheck();
-      }
+        readonly router: Router,
+        private root: RootService,
+        private auth: AuthenticationService,
+        public route: ActivatedRoute,
+        private cd: ChangeDetectorRef) {
+        // getting auth user data
+        this.subs.add(this.auth.user.subscribe(user => {
+          if (user) {
+                order.loginuserID = user.userID;
+                this.cd.markForCheck();
+          }
+          if (user === null) {
+                order.loginuserID = '1';
+                this.cd.markForCheck();
+          }
     }));
   }
   ngAfterViewInit(): void {
-    this.jquery();
+        this.jquery();
   }
   ngOnDestroy(): void {
-    this.subs.unsubscribe();
+        this.subs.unsubscribe();
   }
   loader = true;
   preventAbuse: boolean;
@@ -63,34 +62,34 @@ export class MyOrdersComponent implements OnInit {
   orders$: Observable<Orders[]> = of(null);
   forceReload$ = new Subject<void>();
   getOrders = (t: string) => {
-    return this.root.orders(t).pipe(map((res) => res), take(1),
-      catchError(() => of([]))) as Observable<Orders[]>;
+        return this.root.orders(t).pipe(map((res) => res), take(1),
+            catchError(() => of([]))) as Observable<Orders[]>;
   }
   ngOnInit(): void {
-    // query changes
-    order.page = '0';
-    this.orders(JSON.stringify(order));
+        // query changes
+        order.page = '0';
+        this.orders(JSON.stringify(order));
   }
   onChange = async (category: { categoryID: string, categoryName: string }) => {
-    if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
-      // query changes
-      this.loader = true;
-      dataChange.page = '0';
-      dataChange.categoryID = category.categoryID ? category.categoryID : '0';
-      dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
-      this.orders(JSON.stringify(dataChange));
-      // updating query-param
-      data.page = '0';
-      data.categoryID = category.categoryID ? category.categoryID : '0';
-      data.categoryName = category.categoryName ? category.categoryName : 'null';
-      const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
-      this.router.navigate([],
-        {
-          relativeTo: this.route,
-          queryParams: queryParams,
-          queryParamsHandling: 'merge', // remove to replace all query params by provided
-        });
-    }
+        if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
+          // query changes
+          this.loader = true;
+          dataChange.page = '0';
+          dataChange.categoryID = category.categoryID ? category.categoryID : '0';
+          dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
+          this.orders(JSON.stringify(dataChange));
+          // updating query-param
+          data.page = '0';
+          data.categoryID = category.categoryID ? category.categoryID : '0';
+          data.categoryName = category.categoryName ? category.categoryName : 'null';
+          const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
+          this.router.navigate([],
+            {
+              relativeTo: this.route,
+              queryParams: queryParams,
+              queryParamsHandling: 'merge', // remove to replace all query params by provided
+            });
+        }
   }
   orders = (temp: string) => {
     // products
@@ -98,33 +97,42 @@ export class MyOrdersComponent implements OnInit {
     const updates$ = this.forceReload$.pipe(mergeMap(() => this.getOrders(temp) as Observable<Orders[]>));
     this.orders$ = merge(initial$, updates$);
     this.subs.add(this.orders$.subscribe((res: Orders[]) => {
-      timer(500).subscribe(() => {
-        this.ordersList = res;
-        this.loader = false;
-        this.cd.markForCheck();
-      });
+                if (res) {
+                    timer(500).subscribe(() => {
+                    this.ordersList = res;
+                    this.loader = false;
+                    this.cd.markForCheck();
+                });
+              }
+              if (!res) {
+                    timer(500).subscribe(() => {
+                    this.ordersList = [];
+                    this.loader = false;
+                    this.cd.markForCheck();
+                });
+    }
     }, (err) => {
-      this.loader = false;
-      console.error(err);
+          this.loader = false;
+          console.error(err);
     }));
   }
   onFilter = ($temp: string) => {
-    this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
-      this.ordersList = res;
-      this.preventAbuse = false;
-      this.cd.markForCheck();
-    }, (err) => {
-      console.error(err);
-    });
+        this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
+          this.ordersList = res;
+          this.preventAbuse = false;
+          this.cd.markForCheck();
+        }, (err) => {
+          console.error(err);
+        });
   }
   onSort = ($temp: string) => {
-    data.sortBy = $temp ? $temp : '';
-    this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
-      this.ordersList = res;
-      this.cd.markForCheck();
-    }, (err) => {
-      console.error(err);
-    });
+        data.sortBy = $temp ? $temp : '';
+        this.getOrders(JSON.stringify(data)).subscribe((res: Orders[]) => {
+          this.ordersList = res;
+          this.cd.markForCheck();
+        }, (err) => {
+          console.error(err);
+        });
   }
   jquery = () => {
     jQuery(() => {

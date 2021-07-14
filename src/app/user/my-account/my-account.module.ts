@@ -6,7 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { DpDatePickerModule } from 'ng2-date-picker';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import { DpDatePickerModule } from 'ng2-date-picker';
     ReactiveFormsModule,
     FormsModule,
     NgSelectModule,
-    DpDatePickerModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     NgxSkeletonLoaderModule,
     RouterModule.forChild([
       {

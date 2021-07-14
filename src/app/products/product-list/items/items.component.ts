@@ -9,34 +9,30 @@ import { SubSink } from 'subsink';
     selector: 'app-items',
     template: `
   <div class="row productListingPage cursr" *ngIf="products">
-						    <div class="slider_itemBox col-lg-4 col-sm-6" (click)="clickOnNavigate({categoryID: item.categoryID, productID: item.productID})" *ngFor="let item of products">
+						    <div class="slider_itemBox col-lg-4 col-sm-6" (click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})" *ngFor="let item of products">
 						  		<img offset="50"
-            						defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-            						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-            						[errorImage]="'assets/images/error_not_found.png'" [alt]="item.productName" [title]="item.productName">
+            						defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
+            						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
+            						[errorImage]="'assets/images/error_not_found.png'" [alt]="item?.productName" [title]="item?.productName">
 						  		<div class="content_textContent">
-						  			<h5 class="text-dark mb-0">{{item.productName}}</h5>
+						  			<h5 class="text-dark mb-0">{{item?.productName}}</h5>
 						  			<div class="d-flex align-items-center justify-content-center mt-2">
-						  				<div class="price_text">{{(item.productPrice | number) + ' SR'}}</div>
-							  			<div class="mrp_text">{{(item.productPriceVat | number) + ' SR'}}</div>					  		
+						  				<div class="price_text">{{(item?.productPrice | number) + ' SR'}}</div>
+							  			<div class="mrp_text">{{(item?.productPriceVat | number) + ' SR'}}</div>					  		
 						  			</div>
 						  			<div class="productInfo">
 						  				<div class="ratings">
-						  					<i class="fas fa-star"></i>
-						  					<i class="fas fa-star"></i>
-						  					<i class="fas fa-star"></i>
-						  					<i class="fas fa-star-half-alt"></i>
-						  					<i class="far fa-star"></i>
+                                          <i [ngClass]="star <= item?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
 						  				</div>
-						  				<p class="salinginfo">{{(item.productSoldCount | number) + ' people bought this'}}</p>
+						  				<p class="salinginfo">{{(item?.productSoldCount | number) + ' people bought this'}}</p>
 						  			</div>		
 						  			
-						  			<div class="cartbox" [ngClass]="{'show-counter': item.addedCartCount>0}">
+						  			<div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
 									  <a class="addcart-btn shopingcart-tbtn btn" (click)="addItemToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> Add to Cart</a>
                               		<div class="contercontern">
                                       <div class="handle-counter d-flex" id="handleCounter">
 										<button (click)="deleteItemFromCart(item); $event.stopPropagation();" class="counter-minus btn">-</button>
-										<input type="text" [ngModel]="item.addedCartCount" readonly>
+										<input type="text" [ngModel]="item?.addedCartCount" readonly>
 										<button (click)="addItemToCart(item); $event.stopPropagation();" class="counter-plus btn">+</button>
 									</div>
 									</div>
@@ -50,6 +46,7 @@ import { SubSink } from 'subsink';
 })
 export class ItemsComponent implements OnInit {
     @Input() products: ProductList[] = [];
+    stars: number[] = [1, 2, 3, 4, 5];
     isLoggedIN: boolean;
     isLoggedID: string;
     subs = new SubSink();

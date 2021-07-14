@@ -37,11 +37,7 @@ import { SubSink } from 'subsink';
                             </div>
                             <div class="productInfo">
                                 <div class="ratings">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
+                                <i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
                                 </div>
                                 <p class="salinginfo">{{(item?.productSoldCount | number) + ' people bought this'}}</p>
                             </div>		
@@ -71,6 +67,7 @@ import { SubSink } from 'subsink';
 })
 export class SharedBestSellingComponent implements OnInit {
   @Input() products: ProductList[] = [];
+  stars: number[] = [1, 2, 3, 4, 5];
   isLoggedIN: boolean;
   isLoggedID: string;
   subs = new SubSink();

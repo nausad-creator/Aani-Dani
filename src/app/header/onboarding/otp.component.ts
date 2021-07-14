@@ -41,16 +41,16 @@ interface Otp {
 		      <form class="text-left profile-form otp-adding" [formGroup]="verificationForm" (ngSubmit)="onSubmitOTP(verificationForm.value)" action="post">             
 		        <div class="row digit-group">
 		          <div class="col-3 form-group">             
-		             <input type="text" id="digit-5" (keydown.space)="$event.preventDefault()" #userOTP1 formControlName="userOTP1" name="digit-5" data-next="digit-6" class="form-control" value="">
+		             <input type="text" id="digit-5" #userOTP1 formControlName="userOTP1" name="digit-5" data-next="digit-6" class="form-control" value="">
 		          </div>
 		          <div class="col-3 form-group">    
-		             <input type="text" id="digit-6" (keydown.space)="$event.preventDefault()" #userOTP2 formControlName="userOTP2" name="digit-6" data-next="digit-7" data-previous="digit-5" class="form-control" value="">
+		             <input type="text" id="digit-6" #userOTP2 formControlName="userOTP2" name="digit-6" data-next="digit-7" data-previous="digit-5" class="form-control" value="">
 		          </div>
 		          <div class="col-3 form-group">    
-		             <input type="text" id="digit-7" (keydown.space)="$event.preventDefault()" #userOTP3 formControlName="userOTP3" name="digit-7" data-next="digit-8" data-previous="digit-6" class="form-control" value="">
+		             <input type="text" id="digit-7" #userOTP3 formControlName="userOTP3" name="digit-7" data-next="digit-8" data-previous="digit-6" class="form-control" value="">
 		          </div>
 		          <div class="col-3 form-group">    
-		             <input type="text" id="digit-8" (keydown.space)="$event.preventDefault()" #userOTP4 formControlName="userOTP4" name="digit-8" data-next="digit-9" data-previous="digit-7" class="form-control" value="">
+		             <input type="text" id="digit-8" #userOTP4 formControlName="userOTP4" name="digit-8" data-next="digit-9" data-previous="digit-7" class="form-control" value="">
 		          </div>        
 		          
 		          <div class="col-md-12 col-sm-12 mb-2 mt-3 text-center">
@@ -209,12 +209,12 @@ export class OtpComponent implements OnInit {
 			$(this).on('keyup', function (e) {
 				const parent = $($(this).parent());
 				if (e.keyCode === 8 || e.keyCode === 37) {
-					const prev = parent.find('input#' + $(this).data('previous'));
+					const prev = parent.closest('div').prev().find('input#' + $(this).data('previous'));
 					if (prev.length) {
 						$(prev).select();
 					}
 				} else if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
-					const next = parent.find('input#' + $(this).data('next'));
+					const next = parent.closest('div').next().find('input#' + $(this).data('next'));
 					if (next.length) {
 						$(next).select();
 					} else {

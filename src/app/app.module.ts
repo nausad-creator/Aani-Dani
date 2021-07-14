@@ -27,7 +27,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { CmsEffects } from './effects/cms.effect';
 import { NationalityEffects } from './effects/others.effects';
-import { DpDatePickerModule } from 'ng2-date-picker';
 import { AgmCoreModule } from '@agm/core';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { AuthenticationService } from './authentication.service';
@@ -53,7 +52,6 @@ import { LocationService } from './location.service';
     NgxPaginationModule,
     LazyLoadImageModule,
     NgxSkeletonLoaderModule,
-    DpDatePickerModule,
     ToastrModule.forRoot(
       {
         positionClass: 'toast-center-center',

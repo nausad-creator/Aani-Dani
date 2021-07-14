@@ -19,7 +19,7 @@ import { Category } from 'src/app/interface';
           <div class="category_slider">
               <owl-carousel-o [options]="caseOptions">
               <ng-template carouselSlide *ngFor="let category of categories">
-              <div class="slider_itemBox cursr">
+              <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">
                     <div class="form-row">
                         <div class="col-4">
                             <div class="catImgBox"><img offset="50"
@@ -33,7 +33,7 @@ import { Category } from 'src/app/interface';
                             <div class="productInfo">
                             </div>
                             <div class="explorBTN pt-2">
-                                <a routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">Explore <i class="icofont-rounded-right"></i></a>
+                                <a>Explore <i class="icofont-rounded-right"></i></a>
                             </div>
                         </div>	
                     </div>	

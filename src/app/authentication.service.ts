@@ -177,7 +177,7 @@ export class AuthenticationService {
             "userFullName":"${JSON.parse(item).userFullName}",
             "userEmail":"${JSON.parse(item).userEmail}",
             "nationalityID":"${JSON.parse(item).nationalityID}",
-            "userDOB":"${JSON.parse(item).userDOB}",
+            "userDOB":"${moment(moment(`${JSON.parse(item).userDOB}`).toDate(), 'YYYY-MM-DD').format('YYYY-MM-DD')}",
             "userMobile":"${JSON.parse(item).userMobile}",
             "userDeviceType":"Android",
             "userDeviceID":"xczxcxzczxczxcxcxc",

@@ -1,5 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ProductList } from 'src/app/interface';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from 'src/app/authentication.service';
+import { ProductList, TempCartItems } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
+import { SubSink } from 'subsink';
 
 @Component({
 	selector: 'app-details',
@@ -32,12 +36,19 @@ import { ProductList } from 'src/app/interface';
 				  			</div>
 				  			<div class="form-group select_unit mb-2 mt-2">
 				  			</div>
-				  			<div class="d-flex align-items-center detailBtn pt-2">
-				  				<div class="form-group mb-0">
+				  			<div class="d-flex align-items-center detailBtn pt-1">
+				  				<!-- <div class="form-group mb-0">
 				  					<input type="number" id="quantity" class="form-control" min="1">				  					
-				  				</div>	
-				  				<div class="pl-3">
-									<a href="javascript:voil(0)" class="addcart-btn shopingcart-tbtn btn" id="addcart-1"> Add to Cart</a>
+				  				</div>	 -->
+				  				<div class="cartbox" [ngClass]="{'show-counter': product.addedCartCount>0}">
+									<a class="addcart-btn shopingcart-tbtn btn" (click)="addItemToCart(product);" id="addcart-1"> Add to Cart</a>
+									<div class="contercontern">
+									<div class="handle-counter d-flex" id="handleCounter">
+										<button (click)="deleteItemFromCart(product);" class="counter-minus btn">-</button>
+										<input type="text" [ngModel]="product.addedCartCount" readonly>
+										<button (click)="addItemToCart(product);" class="counter-plus btn">+</button>
+									</div>
+								</div>
 								</div>
 				  			</div>
 
@@ -61,9 +72,112 @@ import { ProductList } from 'src/app/interface';
 })
 export class DetailsComponent implements OnInit {
 	@Input() product: ProductList;
-	constructor() { }
-
-	ngOnInit(): void {
-	}
-
+	isLoggedIN: boolean;
+    isLoggedID: string;
+    subs = new SubSink();
+    @Output() updateHeader: EventEmitter<{ data: string, res: number }> = new EventEmitter();
+	constructor(
+        public route: ActivatedRoute,
+        private auth: AuthenticationService,
+        private root: RootService,
+        private cd: ChangeDetectorRef
+    ) { }
+    checkStatus = () => {
+        // getting auth user data
+        this.subs.add(this.auth.user.subscribe(user => {
+            if (user) {
+                this.isLoggedIN = user.userID ? true : false;
+                this.isLoggedID = user.userID;
+                this.cd.markForCheck();
+            }
+            if (user === null) {
+                this.isLoggedIN = false;
+                this.isLoggedID = '0';
+                this.cd.markForCheck();
+            }
+        }));
+    }
+    ngOnInit(): void {
+        this.checkStatus();
+    }
+    addItemToCart = (pro: ProductList) => {
+        pro.addedCartCount++;
+        this.root.addItemToCartTemp(JSON.stringify({
+            loginuserID: this.isLoggedID,
+            languageID: '1',
+            orderID: '1',
+            productID: pro.productID,
+            orderdetailsQty: '1',
+            orderdetailsPrice: pro.productPrice
+        })).subscribe(r => {
+            if (r.status === 'true') {
+                this.addToLocal({
+                    productID: pro.productID,
+                    qty: 1
+                })
+                this.updateHeader.emit({ data: '', res: Math.random() })
+            }
+        }), () => console.error('error while adding item to cart!');
+    }
+    deleteItemFromCart = (pro: ProductList) => {
+        pro.addedCartCount--;
+        this.root.deleteItemFromCartTemp(JSON.stringify({
+            loginuserID: this.isLoggedID,
+            languageID: '1',
+            orderID: '1',
+            productID: pro.productID,
+            orderdetailsQty: '1',
+            orderdetailsPrice: pro.productPrice
+        })).subscribe(r => {
+            if (r.status === 'true') {
+                this.removeFromLocal({
+                    productID: pro.productID,
+                    qty: 1
+                })
+                this.updateHeader.emit({ data: '', res: Math.random() })
+            }
+        }), () => console.error('error while deleting item from cart!');
+    }
+    addToLocal = (pro: {
+        productID: string;
+        qty: number;
+    }) => {
+        if (localStorage.getItem('tempCart')) {
+            const cart = JSON.parse(localStorage.getItem('tempCart')) as TempCartItems[];
+            const index = cart.map(c => c.productID).indexOf(pro.productID);
+            if (index === -1) {
+                cart.push(pro);
+                localStorage.setItem('tempCart', JSON.stringify(cart));
+            } else {
+                for (let i = 0; i < cart.length; i++) {
+                    if (cart[i].productID === pro.productID) {
+                        cart[i].qty += pro.qty;
+                        console.log(cart[i].qty)
+                    }
+                };
+                localStorage.setItem('tempCart', JSON.stringify(cart));
+            }
+        } else {
+            localStorage.setItem('tempCart', JSON.stringify([pro]));
+        }
+    }
+    removeFromLocal = (pro: {
+        productID: string;
+        qty: number;
+    }) => {
+        if (localStorage.getItem('tempCart')) {
+            const cart = JSON.parse(localStorage.getItem('tempCart')) as TempCartItems[];
+            const index = cart.map(c => c.productID).indexOf(pro.productID);
+            if (index !== -1) {
+                for (let i = 0; i < cart.length; i++) {
+                    if (cart[i].productID === pro.productID) {
+                        cart[i].qty -= pro.qty;
+                    }
+                };
+                localStorage.setItem('tempCart', JSON.stringify(cart));
+            }
+        } else {
+            localStorage.removeItem('tempCart');
+        }
+    }
 }

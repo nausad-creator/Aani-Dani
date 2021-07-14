@@ -2,29 +2,58 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Banner, Category, ProductList } from 'src/app/interface';
+import { map } from 'rxjs/operators';
+import { Banner, Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeBannerList, selectHomeBestSellingList, selectHomeCategoryList, State } from 'src/app/reducers';
 @Component({
-  selector: 'app-shared',
-  templateUrl: './shared.component.html',
-  styles: [
-  ], changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'app-shared',
+	templateUrl: './shared.component.html',
+	styles: [
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedComponent implements OnInit, OnDestroy {
-  banner$: Observable<Banner[]> = this.store.select(selectHomeBannerList);
-  products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList);
-  categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
-
-  constructor(
-    readonly router: Router,
-    private store: Store<State>) { }
-
-  ngOnInit(): void {
-    this.jquery();
-  }
-  ngOnDestroy(): void {
-  }
-  jquery = () => {
+	cart:TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+	banner$: Observable<Banner[]> = this.store.select(selectHomeBannerList);
+	products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
+		map(list => list.map(a => {
+			return {
+				productID: a.productID,
+				categoryID: a.categoryID,
+				subcatID: a.subcatID,
+				productName: a.productName,
+				productArabicNme: a.productArabicNme,
+				productSKU: a.productSKU,
+				productTag: a.productTag,
+				productDescription: a.productDescription,
+				productPriceVat: a.productPriceVat,
+				productPrice: a.productPrice,
+				productMOQ: a.productMOQ,
+				productImage: a.productImage,
+				productPackagesize: a.productPackagesize,
+				productReviewCount: a.productReviewCount,
+				productRatingCount: a.productRatingCount,
+				productRatingAvg: a.productRatingAvg,
+				productSoldCount: a.productSoldCount,
+				productStatus: a.productStatus,
+				productCreatedDate: a.productCreatedDate,
+				categoryName: a.categoryName,
+				isFavorite: a.isFavorite,
+				similarproducts: a.similarproducts,
+				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+			}
+		}))
+	)
+	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
+	changedCountHeader: number;
+	constructor(
+		readonly router: Router,
+		private store: Store<State>) { }
+	ngOnInit(): void {
+		this.jquery();
+	}
+	ngOnDestroy(): void {
+	}
+	jquery = () => {
 		jQuery(() => {
 			// Mobile Navigation
 			if ($('.nav-menu').length) {

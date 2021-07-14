@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Subject, Observable, of, merge, timer } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Category, ProductList } from 'src/app/interface';
+import { Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
@@ -12,7 +12,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
+  <app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -41,14 +41,14 @@ import { SubSink } from 'subsink';
     <section id="product-detail-section" class="pb-3 pt-4" *ngIf="!loader">
 		<div class="container">
 			<div class="card">
-				<app-details [product]="product"></app-details>
+				<app-details (updateHeader)="changedCountHeader=$event.res" [product]="product"></app-details>
 				<!-- <app-offers></app-offers>  -->
 		      	<div class="row">
 		      		<div class="col-md-8">
 		      			<app-descriptions-and-review [product]="product"></app-descriptions-and-review>	
 		      		</div>
 		      		<div class="col-md-4 borleft">
-		      			<app-top-sellings (change)="onChange($event); loader=true" [similarproduct]="product.similarproducts"></app-top-sellings>
+		      			<app-top-sellings (updateFromSimilar)="changedCountHeader=$event.res" (change)="onChange($event); loader=true" [similarproduct]="product.similarproducts"></app-top-sellings>
 		      		</div>	
 		      	</div>	
 			</div>	
@@ -80,14 +80,67 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		pagesize: '1',
 	};
 	loader = true;
+	changedCountHeader: number;
 	forceReload$ = new Subject<void>();
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	subs = new SubSink();
-	products$: Observable<ProductList> = of(null);
+	products$: Observable<ProductList[]> = of(null);
 	product: ProductList;
+	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	getProducts = () => {
-		return this.root.productLists(JSON.stringify(this.data)).pipe(map((res) => res[0]), take(1),
-			catchError(() => of([]))) as Observable<ProductList>;
+		return this.root.productLists(JSON.stringify(this.data)).pipe(map(list => list.map(a => {
+			return {
+				productID: a.productID,
+				categoryID: a.categoryID,
+				subcatID: a.subcatID,
+				productName: a.productName,
+				productArabicNme: a.productArabicNme,
+				productSKU: a.productSKU,
+				productTag: a.productTag,
+				productDescription: a.productDescription,
+				productPriceVat: a.productPriceVat,
+				productPrice: a.productPrice,
+				productMOQ: a.productMOQ,
+				productImage: a.productImage,
+				productPackagesize: a.productPackagesize,
+				productReviewCount: a.productReviewCount,
+				productRatingCount: a.productRatingCount,
+				productRatingAvg: a.productRatingAvg,
+				productSoldCount: a.productSoldCount,
+				productStatus: a.productStatus,
+				productCreatedDate: a.productCreatedDate,
+				categoryName: a.categoryName,
+				isFavorite: a.isFavorite,
+				similarproducts: a.similarproducts.map(pr => {
+					return {
+						productID: pr.productID,
+						categoryID: pr.categoryID,
+						subcatID: pr.subcatID,
+						productName: pr.productName,
+						productArabicNme: pr.productArabicNme,
+						productSKU: pr.productSKU,
+						productTag: pr.productTag,
+						productDescription: pr.productDescription,
+						productPriceVat: pr.productPriceVat,
+						productPrice: pr.productPrice,
+						productMOQ: pr.productMOQ,
+						productImage: pr.productImage,
+						productPackagesize: pr.productPackagesize,
+						productReviewCount: pr.productReviewCount,
+						productRatingCount: pr.productRatingCount,
+						productRatingAvg: pr.productRatingAvg,
+						productSoldCount: pr.productSoldCount,
+						productStatus: pr.productStatus,
+						productCreatedDate: pr.productCreatedDate,
+						categoryName: pr.categoryName,
+						isFavorite: pr.isFavorite,
+						addedCartCount: this.cart.filter(p => p.productID === pr.productID).length > 0 ? this.cart.filter(p => p.productID === pr.productID)[0].qty : 0,
+					}
+				}),
+				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+			}
+		})), take(1),
+			catchError(() => of([]))) as Observable<ProductList[]>;
 	}
 	constructor(
 		private store: Store<State>,
@@ -103,7 +156,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.data.loginuserID = '1';
 			}
 		}));
-	 }
+	}
 	ngAfterViewInit(): void {
 		jQuery(() => {
 			// Mobile Navigation
@@ -153,6 +206,9 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 	}
+	updateCart = () => {
+		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
 	}
@@ -162,14 +218,14 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
 		this.products();
 	}
-	onChange = async (ids: {categoryID: string, productID: string}) => {
+	onChange = async (ids: { categoryID: string, productID: string }) => {
 		const queryParams: Params = { page: '0', categoryID: ids.categoryID, productID: ids.productID };
-		this.router.navigate([], 
-		  {
-			relativeTo: this.route,
-			queryParams: queryParams, 
-			queryParamsHandling: 'merge', // remove to replace all query params by provided
-		  });
+		this.router.navigate([],
+			{
+				relativeTo: this.route,
+				queryParams: queryParams,
+				queryParamsHandling: 'merge', // remove to replace all query params by provided
+			});
 		// query changes
 		this.data.page = '0';
 		this.data.categoryID = ids.categoryID ? ids.categoryID : '0';
@@ -178,18 +234,18 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	products = () => {
 		// products
-		const initialProducts$ = this.getProducts() as Observable<ProductList>;
-		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList>));
+		const initialProducts$ = this.getProducts() as Observable<ProductList[]>;
+		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList[]>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
-		this.subs.add(this.products$.subscribe((res: ProductList) => {
-					timer(500).subscribe(() => {
-						this.loader = false;
-						this.product = res;
-						this.cd.markForCheck();
-					  });
-				}, (err) => {
-					this.loader = false;
-					console.error(err);
-				}));
+		this.subs.add(this.products$.subscribe((res: ProductList[]) => {
+			timer(500).subscribe(() => {
+				this.loader = false;
+				this.product = res[0];
+				this.cd.markForCheck();
+			});
+		}, (err) => {
+			this.loader = false;
+			console.error(err);
+		}));
 	}
 }

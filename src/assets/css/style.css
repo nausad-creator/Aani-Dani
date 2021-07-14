@@ -812,3 +812,19 @@ html{scroll-behavior:smooth;}
   .pasword-hideshowLogin:focus {
     color: #dd5709
   }
+.show-counter .contercontern{max-width:110px;margin:0px auto;}
+.handle-counter, .handle-counter input{background-color:#0f0e0e;}
+
+.owl-theme .owl-dots .owl-dot span{background:#ffffff;opacity:.2;position:absolute;z-index:9;bottom:60px;}
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span{opacity:1;}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+}
+.btn-circle.btn-sm {
+  width: 50px;
+  height: 50px;
+  padding: 8px 10px;
+  font-size: 14px;
+}

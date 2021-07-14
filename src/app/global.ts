@@ -62,3 +62,8 @@ export const order = {
     languageID: "1",
     searchkeyword: ""
 }
+export const tepmOrder = {
+    orderID: "0",
+    loginuserID: "",
+    languageID: "1"
+}

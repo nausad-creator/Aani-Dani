@@ -44,6 +44,7 @@ export interface ProductList {
 	productID: string;
 	categoryID: string;
 	subcatID: string;
+	addedCartCount: number;
 	productName: string;
 	productArabicNme: string;
 	productSKU: string;
@@ -200,6 +201,21 @@ export interface FORGOT {
 	status: string;
 	message: string;
 }
+export interface TempOrders {
+	orderdetails: OrderDetailsTemp[],
+	temporderDate: string;
+	temporderID: string;
+	userFullName: string;
+	userID: string;
+	userMobile: string;
+	billingDetails: {
+		delivery_Tip: number;
+		delivery_Fee: number;
+        item_Total: number;
+        vat: number;
+        net_Payable: number;
+	}
+}
 export interface Orders {
 	orderID: string;
 	userID: string;
@@ -241,6 +257,30 @@ export interface Orders {
 		}
 	]
 }
+export interface OrderDetailsTemp {
+	Price: string;
+	Qty: string;
+	categoryID: string;
+	categoryName: string;
+	productArabicNme: string;
+	productCreatedDate: string;
+	productDescription: string;
+	productID: string;
+	productImage: string;
+	productMOQ: string;
+	productName: string;
+	productPackagesize: string;
+	productPrice: string;
+	productPriceVat: string;
+	productRatingAvg: string;
+	productRatingCount: string;
+	productReviewCount: string;
+	productSKU: string;
+	productSoldCount: string;
+	productStatus: string;
+	productTag: string;
+	subcatID: string;
+}
 export interface OrderDetails {
 	orderdetailsID: string;
 	orderID: string;
@@ -273,4 +313,8 @@ export interface ChangePassword {
 	userCurrentPassword: string;
 	userNewPassword: string;
 	userNewRePassword: string;
+}
+export interface TempCartItems {
+	productID: string;
+	qty: number;
 }

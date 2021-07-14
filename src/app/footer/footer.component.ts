@@ -27,13 +27,13 @@ import { Component, OnInit } from '@angular/core';
 		  <div class="col-lg-3 col-md-6 col-sm-6 footer-links">
             <p class="text-white">FOLLOW US</p>
             <div class="footer-social-menu">
-            	<a href="#"><i class="fab fa-facebook-square"></i></a>
-            	<a href="#"><i class="fab fa-twitter-square"></i></a>
-            	<a href="#"><i class="fab fa-instagram-square"></i></a>
-            	<a href="#"><i class="fab fa-snapchat-square"></i></a>
-            	<a href="#"><i class="fab fa-pinterest-square"></i></a>
-            	<a href="#"><i class="fab fa-youtube-square"></i></a>
-            	<a href="#"><i class="fab fa-linkedin-square"></i></a>
+            	<a href="https://www.facebook.com/aanidani/" target="_blank"><i class="fab fa-facebook-square"></i></a>
+            	<a href="https://twitter.com/aanidani/" target="_blank"><i class="fab fa-twitter-square"></i></a>
+            	<a href="https://www.instagram.com/aanidani/" target="_blank"><i class="fab fa-instagram-square"></i></a>
+            	<a href="https://www.snapchat.com/add/AANIDANI" target="_blank"><i class="fab fa-snapchat-square"></i></a>
+            	<a href="https://www.pinterest.com/aanidani/" target="_blank"><i class="fab fa-pinterest-square"></i></a>
+            	<a href="https://www.youtube.com/user/aanidani/videos" target="_blank"><i class="fab fa-youtube-square"></i></a>
+            	<a href="https://www.linkedin.com/company/aani-&-dani/" target="_blank"><i class="fab fa-linkedin-square"></i></a>
             </div>	
           </div>
           <div class="col-lg-3 col-md-6 col-sm-6 footer-links">

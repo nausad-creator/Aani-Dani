@@ -148,5 +148,41 @@
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
+  },
+  "/temporders/add-item/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/temporders/remove-item/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/temporders/place-order/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/temporders/my-orders/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/orders/place-order/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/temporders/empty-cart/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
   }
 }

@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SubSink } from 'subsink';
 import { LoginComponent } from './onboarding/login.component';
-import { data } from 'src/app/global';
+import { data, tepmOrder } from 'src/app/global';
 import { AuthenticationService } from '../authentication.service';
+import { RootService } from '../root.service';
+import { Observable, of, Subject, merge } from 'rxjs';
+import { take, catchError, mergeMap, map } from 'rxjs/operators';
+import { TempOrders } from '../interface';
 
 @Component({
 	selector: 'app-header',
@@ -54,10 +58,11 @@ import { AuthenticationService } from '../authentication.service';
 					</div>	
 				</div>
 			</div>
-			<div class="cart-topbtn d-flex">
-				<a routerLink="/cart" class="btn user-cart-btrn"><i class="fas fa-shopping-basket"></i>  <span class="counter-addon">1</span></a>
-				<span class="cartamount align-self-center">165.00 SR</span>
-			</div>		
+			<div class="cart-topbtn d-flex" *ngIf="orders$ | async as orders">
+				<a routerLink="/cart" class="btn user-cart-btrn">
+				<i class="fas fa-shopping-basket"></i><span class="counter-addon" *ngIf="orders[0]?.length !== 0">{{orders[0]?.length}}</span></a>
+				<span class="cartamount align-self-center" *ngIf="orders[0]?.total !== 0">{{(orders[0]?.total | number) + ' SR'}}</span>
+			</div>	
 	      </div>
       </div>
     </div>
@@ -67,14 +72,56 @@ import { AuthenticationService } from '../authentication.service';
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnChanges {
 	subs = new SubSink();
 	isLoggedID: boolean;
 	bsModal: BsModalRef;
+	@Input() update: number;
 	constructor(
 		private modal: BsModalService,
 		private auth: AuthenticationService,
-		private cd: ChangeDetectorRef	) { }
+		private cd: ChangeDetectorRef,
+		private root: RootService) { }
+	orders$: Observable<{
+		data: TempOrders[];
+		status: string
+		message: string
+	}[]> = of(null);
+	forceReload$ = new Subject<void>();
+	getOrdersTempUpdates = (t: string) => {
+		return this.root.ordersTemp(t).pipe(
+			map((res) => res[0].data.map(o => {
+			return {
+				length: o.orderdetails.filter(f => +f.Qty > 0).length,
+				total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+			}
+		})), take(1),
+			catchError(() => of([]))) as Observable<{
+                data: TempOrders[];
+                status: string
+                message: string
+            }[]>;
+	}
+	getOrdersTempCached = (t: string) => {
+		return this.root.ordersHeader(t).pipe(
+			map((res) => res[0].data.map(o => {
+			return {
+				length: o.orderdetails.filter(f => +f.Qty > 0).length,
+				total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+			}
+		})), take(1),
+			catchError(() => of([]))) as Observable<{
+                data: TempOrders[];
+                status: string
+                message: string
+            }[]>;
+	}
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.update.currentValue){
+			this.root.forceReload();
+			this.forceReload$.next();
+		}
+	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
 	}
@@ -92,12 +139,14 @@ export class HeaderComponent implements OnInit {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
-				data.loginuserID = user.userID
+				tepmOrder.loginuserID = user.userID;
+				data.loginuserID = user.userID;
 				this.isLoggedID = true;
 				this.cd.markForCheck();
 			}
 			if (user === null) {
-				data.loginuserID = '0'
+				tepmOrder.loginuserID = '0';
+				data.loginuserID = '0';
 				this.isLoggedID = false;
 				this.cd.markForCheck();
 			}
@@ -105,12 +154,27 @@ export class HeaderComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.checkStatus();
+		this.orders();
 		$(function () {
 			$(".dropdown-menu li a").on('click', function () {
 				var selText = $(this).html();
 				$(this).parents('.input-group-btn').find('.btn-search').html(selText);
 			});
 		});
+	}
+	orders = () => {
+		const initial$ = this.getOrdersTempCached(JSON.stringify(tepmOrder)) as Observable<{
+			data: TempOrders[];
+			status: string
+			message: string
+		}[]>;
+		const updates$ = this.forceReload$.pipe(mergeMap(() => this.getOrdersTempUpdates(JSON.stringify(tepmOrder)) as Observable<{
+			data: TempOrders[];
+			status: string
+			message: string
+		}[]>));
+		this.orders$ = merge(initial$, updates$);
+		this.cd.markForCheck();
 	}
 	logout = () => {
 		// clear all localstorages and redirect to main public page

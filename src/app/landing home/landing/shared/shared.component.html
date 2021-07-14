@@ -1,4 +1,4 @@
-<app-header></app-header> <!-- Top Bar -->
+<app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
 <!-- Header -->
 <header id="header">
     <div class="container">
@@ -24,7 +24,7 @@
   <!-- End Header -->
 <app-banner [banner]="banner$ | async"></app-banner>  <!-- Hero Section -->
 <main id="main">
-    <app-best-selling [products]="products" *ngIf="products$ | async as products"></app-best-selling>
+    <app-best-selling (updateHeader)="changedCountHeader=$event.res" [products]="products" *ngIf="products$ | async as products"></app-best-selling>
 	<app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
     <!-- <app-offers></app-offers>   -->
     <app-most-popular-best-seller [categories]="categories$ | async"></app-most-popular-best-seller>

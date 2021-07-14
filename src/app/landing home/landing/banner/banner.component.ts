@@ -41,15 +41,11 @@ export class BannerComponent implements OnInit {
   caseOptions: OwlOptions = {
     loop: true,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     autoplayHoverPause: true,
     dots: true,
-    dotsEach: 3,
-    slideBy: 3,
-    animateIn: '',
-    animateOut: '',
     nav: true,
-    navSpeed: 700,
+    navSpeed: 1500,
     navText: ["<a class='carousel-control-prev' role='button' data-slide='prev'> <span class='carousel-control-prev-icon icofont-rounded-left' aria-hidden='true'></span> <span class='sr-only'>Previous</span> </a>", "<a class='carousel-control-next' role='button' data-slide='next'><span class='carousel-control-next-icon icofont-rounded-right' aria-hidden='true'></span><span class='sr-only'>Next</span></a>"],
     responsive: {
       0: {

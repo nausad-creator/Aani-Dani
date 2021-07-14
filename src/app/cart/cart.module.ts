@@ -14,7 +14,8 @@ import { SharedBestSellingComponent } from './shared-best-selling/shared-best-se
 import { HeaderModule } from '../header/header.module';
 import { SkeletonComponent } from './shared-best-selling/skeleton.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-
+import { SharedSkeletonComponent } from './shared-skeleton.component';
+import { SkeletonBillingComponent } from './shared-billing/skeleton-billing.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     SharedDetailsComponent,
     SharedBillingComponent,
     SharedBestSellingComponent,
-    SkeletonComponent
+    SkeletonComponent,
+    SharedSkeletonComponent,
+    SkeletonBillingComponent
   ],
   imports: [
     CommonModule,

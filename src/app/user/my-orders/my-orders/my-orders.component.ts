@@ -39,9 +39,14 @@ export class MyOrdersComponent implements OnInit {
     private cd: ChangeDetectorRef
   ) {
     // getting auth user data
-    this.subs.add(this.auth.user.subscribe(x => {
-      if (x) {
+    this.subs.add(this.auth.user.subscribe(user => {
+      if (user) {
+        order.loginuserID = user.userID;
+        this.cd.markForCheck();
+      }
+      if (user === null) {
         order.loginuserID = '1';
+        this.cd.markForCheck();
       }
     }));
   }

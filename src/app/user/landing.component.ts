@@ -16,7 +16,7 @@ import { data } from 'src/app/global';
 					</div>	
 					<div class="filterSection">
 						<div class="filterLeftContent card ">
-							<h5 class="mb-0">Hey, Shreyansh!</h5>	
+							<h5 class="mb-0" *ngIf="userName">Hey, {{userName | titlecase}}!</h5>	
 							<div class="accountTab pb-3">
 								<ul class="nav nav-tabs" id="myTab" role="tablist">
 								  <li class="nav-item">
@@ -71,6 +71,7 @@ import { data } from 'src/app/global';
 export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 	subs = new SubSink();
 	isLoggedID: boolean;
+	userName: string;
 	constructor(
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef) { }
@@ -88,11 +89,13 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 			if (user) {
 				data.loginuserID = user.userID
 				this.isLoggedID = true;
+				this.userName = user.userFullName;
 				this.cd.markForCheck();
 			}
 			if (user === null) {
 				data.loginuserID = '0'
 				this.isLoggedID = false;
+				this.userName = 'undefined';
 				this.cd.markForCheck();
 			}
 		}));

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable, Subject, of, merge, timer } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Category, ProductList } from 'src/app/interface';
+import { Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 @Component({
 	selector: 'app-shared-list',
 	template: `
-	<app-header></app-header> <!-- Top Bar -->
+	<app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
 	<!-- Header -->
 	<header id="header">
     <div class="container">
@@ -61,7 +61,7 @@ import { Store } from '@ngrx/store';
 						<div class="sparetor_title">
 				    <h5 class="mb-0">Item (90)</h5>
 				    </div>
-					<app-items [products]="product" *ngIf="!loader"></app-items>
+					<app-items (updateHeader)="changedCountHeader=$event.res; updateCart()" [products]="product" *ngIf="!loader"></app-items>
 					<app-skeleton *ngIf="loader"></app-skeleton>
 					</div>				
 				</div>
@@ -78,6 +78,7 @@ import { Store } from '@ngrx/store';
 })
 export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
+	cart:TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
@@ -103,11 +104,41 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	preventAbuse: boolean;
 	subs = new SubSink();
 	product: ProductList[];
+	changedCountHeader: number;
 	products$: Observable<ProductList[]> = of(null);
 	forceReload$ = new Subject<void>();
 	getProducts = (t: string) => {
-		return this.root.productLists(t).pipe(map((res) => res), take(1),
+		return this.root.productLists(t).pipe(map(list => list.map(a => {
+			return {
+				productID: a.productID,
+				categoryID: a.categoryID,
+				subcatID: a.subcatID,
+				productName: a.productName,
+				productArabicNme: a.productArabicNme,
+				productSKU: a.productSKU,
+				productTag: a.productTag,
+				productDescription: a.productDescription,
+				productPriceVat: a.productPriceVat,
+				productPrice: a.productPrice,
+				productMOQ: a.productMOQ,
+				productImage: a.productImage,
+				productPackagesize: a.productPackagesize,
+				productReviewCount: a.productReviewCount,
+				productRatingCount: a.productRatingCount,
+				productRatingAvg: a.productRatingAvg,
+				productSoldCount: a.productSoldCount,
+				productStatus: a.productStatus,
+				productCreatedDate: a.productCreatedDate,
+				categoryName: a.categoryName,
+				isFavorite: a.isFavorite,
+				similarproducts: a.similarproducts,
+				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+			}
+		})), take(1),
 			catchError(() => of([]))) as Observable<ProductList[]>;
+	}
+	updateCart = () => {
+		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	}
 	ngOnInit(): void {
 		// query changes

@@ -14,7 +14,7 @@ import { Component, OnInit } from '@angular/core';
               </div>
           </div>  
           <div class="category_slider">
-              <div class="row product-carousel">
+              <div class="row productListingPage">
                 <div class="slider_itemBoxskeleton col-lg-3 col-sm-6">
                     <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '220px', height: '200px'}"></ngx-skeleton-loader>
                     <div class="content_textContent">

@@ -35,8 +35,8 @@ export class RootService {
   ordersTempEmptyUrl = '/temporders/empty-cart';
   ordersPlaceUrl = '/orders/place-order';
   // Behavior-subjects
-  searchWord: Subject<string | boolean> = new BehaviorSubject<string | boolean>('');
-  searchWord$ = this.searchWord.asObservable();
+  update_user_status$: Subject<string> = new BehaviorSubject<string>('201');
+  update$ = this.update_user_status$.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -294,14 +294,18 @@ export class RootService {
       }[]>(`${this.removeItemToCartUrl}`, form, this.httpOptions)
       .pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
   }
-  placeNewOrderTemp = (temp: string): Observable<Orders[]> => {
+  placeNewOrderTemp = (temp: string): Observable<{
+    date: Orders[];
+    message: string;
+    status: string;
+  }> => {
     const form = new FormData();
     const json = `[{
       "loginuserID":"${JSON.parse(temp).loginuserID}",
       "apiType":"android",
       "apiVersion":"1.0",
       "languageID":"${JSON.parse(temp).languageID}",
-      "orderdetails":"${JSON.parse(temp).orderdetails}"
+      "orderdetails":${JSON.stringify(JSON.parse(temp).orderdetails)}
     }]`;
     form.append('json', json);
     return this.http
@@ -309,8 +313,8 @@ export class RootService {
         date: Orders[];
         message: string;
         status: string;
-      }>(`${this.placeNewOrderUrl}`, form, this.httpOptions)
-      .pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
+      }[]>(`${this.placeNewOrderUrl}`, form, this.httpOptions)
+      .pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
   }
   emptyCart = (temp: string): Observable<{
     message: string;

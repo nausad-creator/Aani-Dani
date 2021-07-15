@@ -8,6 +8,7 @@ import { RootService } from '../root.service';
 import { Observable, of, Subject, merge } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { TempOrders } from '../interface';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
 	selector: 'app-header',
@@ -60,8 +61,8 @@ import { TempOrders } from '../interface';
 			</div>
 			<div class="cart-topbtn d-flex" *ngIf="orders$ | async as orders">
 				<a routerLink="/cart" class="btn user-cart-btrn">
-				<i class="fas fa-shopping-basket"></i><span class="counter-addon" *ngIf="orders[0]?.length !== 0">{{orders[0]?.length}}</span></a>
-				<span class="cartamount align-self-center" *ngIf="orders[0]?.total !== 0">{{(orders[0]?.total | number) + ' SR'}}</span>
+				<i class="fas fa-shopping-basket"></i><span class="counter-addon" *ngIf="orders.length > 0 && orders[0].cart[0].count !== 0">{{orders[0]?.cart[0]?.count}}</span></a>
+				<span class="cartamount align-self-center" *ngIf="orders.length > 0 && orders[0].cart[0].total !== 0">{{(orders[0]?.cart[0]?.total | number) + ' SR'}}</span>
 			</div>	
 	      </div>
       </div>
@@ -81,7 +82,18 @@ export class HeaderComponent implements OnInit, OnChanges {
 		private modal: BsModalService,
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
-		private root: RootService) { }
+		private root: RootService,
+		private cookie: CookieService) {
+			// for updating user
+			this.subs.add(this.root.update$.subscribe(status => {
+				if (status === '302') {
+				  	this.checkStatus();
+					this.root.forceReload();
+					this.orders();
+					this.root.update_user_status$.next('000');
+				}
+			  }));
+		 }
 	orders$: Observable<{
 		data: TempOrders[];
 		status: string
@@ -90,36 +102,58 @@ export class HeaderComponent implements OnInit, OnChanges {
 	forceReload$ = new Subject<void>();
 	getOrdersTempUpdates = (t: string) => {
 		return this.root.ordersTemp(t).pipe(
-			map((res) => res[0].data.map(o => {
-			return {
-				length: o.orderdetails.filter(f => +f.Qty > 0).length,
-				total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
-			}
-		})), take(1),
-			catchError(() => of([]))) as Observable<{
-                data: TempOrders[];
-                status: string
-                message: string
-            }[]>;
+			map((res) => {
+				return [{
+					status: 'true',
+					cart: res[0].data.map(o => {
+						return {
+							count: o.orderdetails.filter(f => +f.Qty > 0).length,
+							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+						}
+					})
+				}]
+			}), take(1),
+			catchError(() => of([{
+				status: 'false',
+				cart: [{
+					count: 0,
+					total: 0
+				}]
+			}]))) as Observable<{
+				data: TempOrders[];
+				status: string
+				message: string
+			}[]>;
 	}
 	getOrdersTempCached = (t: string) => {
 		return this.root.ordersHeader(t).pipe(
-			map((res) => res[0].data.map(o => {
-			return {
-				length: o.orderdetails.filter(f => +f.Qty > 0).length,
-				total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
-			}
-		})), take(1),
-			catchError(() => of([]))) as Observable<{
-                data: TempOrders[];
-                status: string
-                message: string
-            }[]>;
+			map((res) => {
+				return [{
+					status: 'true',
+					cart: res[0].data.map(o => {
+						return {
+							count: o.orderdetails.filter(f => +f.Qty > 0).length,
+							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+						}
+					})
+				}]
+			}), take(1),
+			catchError(() => of([{
+				status: 'false',
+				cart: [{
+					count: 0,
+					total: 0
+				}]
+			}]))) as Observable<{
+				data: TempOrders[];
+				status: string
+				message: string
+			}[]>;
 	}
 	ngOnChanges(changes: SimpleChanges): void {
-		if (changes.update.currentValue){
+		if (changes.update.currentValue) {
 			this.root.forceReload();
-			this.forceReload$.next();
+			this.orders();
 		}
 	}
 	ngOnDestroy(): void {
@@ -142,6 +176,20 @@ export class HeaderComponent implements OnInit, OnChanges {
 				tepmOrder.loginuserID = user.userID;
 				data.loginuserID = user.userID;
 				this.isLoggedID = true;
+				this.root.ordersTemp(JSON.stringify(tepmOrder)).pipe(
+					map((res) => res), take(1),
+				).subscribe(r => {
+					if (r[0].status === 'true') {
+						// tempOrderID is present!!!
+						this.cookie.set('Temp_Order_ID', r[0].data.length > 0 ? r[0].data[0].temporderID : '0')
+						this.root.update_user_status$.next('200');
+					}
+					if (r[0].status === 'false') {
+						// tempOrderID is present!!!
+						this.cookie.set('Temp_Order_ID', '0')
+						this.root.update_user_status$.next('200');
+					}
+				}, err => console.error(err));
 				this.cd.markForCheck();
 			}
 			if (user === null) {
@@ -182,6 +230,8 @@ export class HeaderComponent implements OnInit, OnChanges {
 			this.subs.unsubscribe();
 		}
 		this.auth.logout();
+		this.root.update_user_status$.next('404');
+		this.cookie.delete('Temp_Order_ID');
 		setTimeout(() => {
 			this.checkStatus();
 		}, 100);

@@ -17,10 +17,10 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
         <br>
         <div class="pt-3">
         	<div class="col-12 pb-3">
-				<button type="button" (click)="bsModal.hide()" routerLink='/user/my-orders' routerLinkActive='active' class="btn btn-them w-100 btn-md">Track Order</button>
+				<button type="button" (click)="bsModal.hide()" routerLink='/user/my-orders' class="btn btn-them w-100 btn-md">Track Order</button>
 			</div>	
 			<div class="col-12">
-				<a type="button" class="btn w-100 btn-outline-secondary btn-md">Continue Shopping</a>
+				<a (click)="bsModal.hide()" routerLink='/' class="btn w-100 btn-outline-secondary btn-md">Continue Shopping</a>
 			</div>				
 		</div>
 		<br>	

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { OrderDetailsTemp, TempCartItems, TempOrders } from 'src/app/interface';
@@ -83,7 +84,8 @@ export class SharedDetailsComponent implements OnInit {
     private auth: AuthenticationService,
     private cd: ChangeDetectorRef,
     private toastr: ToastrService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private cookie: CookieService
   ) { }
   ngOnInit(): void {
     this.checkStatus();
@@ -114,7 +116,7 @@ export class SharedDetailsComponent implements OnInit {
     this.root.deleteItemFromCartTemp(JSON.stringify({
       loginuserID: this.isLoggedID,
       languageID: '1',
-      orderID: '1',
+      orderID: this.cookie.get('Temp_Order_ID'),
       productID: pro.productID,
       orderdetailsQty: pro.Qty,
       orderdetailsPrice: pro.productPrice

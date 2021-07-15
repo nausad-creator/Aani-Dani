@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { FORGOT, USER_RESPONSE } from 'src/app/interface';
@@ -93,7 +94,8 @@ export class OtpRegisterComponent implements OnInit {
 		private toastr: ToastrService,
 		private cd: ChangeDetectorRef,
 		private fb: FormBuilder,
-		private auth: AuthenticationService
+		private auth: AuthenticationService,
+		private cookie: CookieService
 	) {}
 	onResendClick = () => {
 		this.auth.otpResendVerification(JSON.stringify(this.verificationForm.value)).subscribe(
@@ -137,6 +139,7 @@ export class OtpRegisterComponent implements OnInit {
 			this.preventAbuse = true;
 			this.verificationForm.get('userOTP').patchValue(`${post.userOTP1}${post.userOTP2}${post.userOTP3}${post.userOTP4}`)
 			this.submitOTP(JSON.stringify(this.verificationForm.value)).then((res: USER_RESPONSE) => {
+				this.cookie.set('Temp_Order_ID', '0')
                 sessionStorage.setItem('USER_LOGGED', JSON.stringify(res));
 				localStorage.removeItem('USER_LOGGED');
                 this.auth.updateUser(res);

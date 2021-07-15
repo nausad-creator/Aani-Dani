@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { merge, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, map, mergeMap, take } from 'rxjs/operators';
@@ -257,7 +258,8 @@ export class CheckoutComponent implements OnInit {
     private auth: AuthenticationService,
     private cd: ChangeDetectorRef,
     private modal: BsModalService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private cookie: CookieService) { }
   loader = true;
   ordersList: TempOrders[];
   orders$: Observable<{
@@ -484,7 +486,7 @@ export class CheckoutComponent implements OnInit {
   emptyCart = () => {
     this.root.emptyCart(JSON.stringify({
       loginuserID: this.user.userID,
-      orderID: this.ordersList[0].temporderID
+      orderID: this.cookie.get('Temp_Order_ID')
     })).subscribe(r => {
       if (r.status === 'true') {
         this.changedCountHeader = Math.random();

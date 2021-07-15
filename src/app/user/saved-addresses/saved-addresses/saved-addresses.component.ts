@@ -104,10 +104,21 @@ export class SavedAddressesComponent implements OnInit {
 			languageID: '1',
 		})).subscribe(r => {
 			if (r.status === 'true') {
+				const index = this.user.address.indexOf(this.user.address.filter(r => r.addressID === addressID)[0], 0);
 				if (localStorage.getItem('USER_LOGGED')) {
+					const tempAddress = this.user.address.filter(a => a.addressID === addressID)[0];
+					tempAddress.addressIsDefault = 'Yes'
+					this.user.address.splice(index, 1);
+					this.user.address.push(tempAddress);
+					console.log(tempAddress)
 					localStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				if (sessionStorage.getItem('USER_LOGGED')) {
+					const tempAddress = this.user.address.filter(a => a.addressID === addressID)[0];
+					tempAddress.addressIsDefault = 'Yes'
+					this.user.address.splice(index, 1);
+					this.user.address.push(tempAddress);
+					console.log(tempAddress)
 					sessionStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				this.update({ status: 200 });

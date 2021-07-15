@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { ProductList, TempCartItems } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
@@ -28,7 +29,8 @@ import { SubSink } from 'subsink';
 						  			</div>		
 						  			
 						  			<div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
-									  <a class="addcart-btn shopingcart-tbtn btn" (click)="addItemToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> Add to Cart</a>
+									<a *ngIf="tempOrderID !== '0'" class="addcart-btn shopingcart-tbtn btn" (click)="addItemToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> Add to Cart</a>
+                                    <a *ngIf="tempOrderID === '0'" class="addcart-btn shopingcart-tbtn btn" (click)="placeTempOrder(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> Add to Cart</a>
                               		<div class="contercontern">
                                       <div class="handle-counter d-flex" id="handleCounter">
 										<button (click)="deleteItemFromCart(item); $event.stopPropagation();" class="counter-minus btn">-</button>
@@ -49,6 +51,7 @@ export class ItemsComponent implements OnInit {
     stars: number[] = [1, 2, 3, 4, 5];
     isLoggedIN: boolean;
     isLoggedID: string;
+    tempOrderID: string;
     subs = new SubSink();
     @Output() updateHeader: EventEmitter<{ data: string, res: number }> = new EventEmitter();
     constructor(
@@ -56,12 +59,22 @@ export class ItemsComponent implements OnInit {
         public route: ActivatedRoute,
         private auth: AuthenticationService,
         private root: RootService,
-        private cd: ChangeDetectorRef
-    ) { }
+        private cd: ChangeDetectorRef,
+        private cookie: CookieService
+    ) {
+        // for updating user
+        this.subs.add(this.root.update$.subscribe(status => {
+            if (status === '200') {
+                this.checkStatus();
+                this.cd.markForCheck();
+            }
+        }));
+     }
     checkStatus = () => {
         // getting auth user data
         this.subs.add(this.auth.user.subscribe(user => {
             if (user) {
+                this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
                 this.isLoggedIN = user.userID ? true : false;
                 this.isLoggedID = user.userID;
                 this.cd.markForCheck();
@@ -84,18 +97,39 @@ export class ItemsComponent implements OnInit {
         });
     }
     ngOnInit(): void {
+        this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
         this.checkStatus();
         this.jquery();
     }
     clickOnNavigate = (category: { categoryID: string, productID: string }) => {
         this.router.navigate(['/product-details'], { queryParams: { page: '0', categoryID: category.categoryID, productID: category.productID } })
     }
+    placeTempOrder = (pro: ProductList) => {
+        pro.addedCartCount++;
+        this.root.placeNewOrderTemp(JSON.stringify({
+            loginuserID: this.isLoggedID,
+            languageID: '1',
+            orderdetails: [{
+                productID: pro.productID,
+                orderdetailsQty: 1,
+                orderdetailsPrice: pro.productPrice
+            }]
+        })).subscribe(r => {
+            if (r.status === 'true') {
+                this.addToLocal({
+                    productID: pro.productID,
+                    qty: 1
+                })
+                this.updateHeader.emit({ data: '', res: Math.random() })
+            }
+        }), () => console.error('error while placing first temp item to cart!');
+    }
     addItemToCart = (pro: ProductList) => {
         pro.addedCartCount++;
         this.root.addItemToCartTemp(JSON.stringify({
             loginuserID: this.isLoggedID,
             languageID: '1',
-            orderID: '1',
+            orderID: this.tempOrderID,
             productID: pro.productID,
             orderdetailsQty: '1',
             orderdetailsPrice: pro.productPrice
@@ -114,7 +148,7 @@ export class ItemsComponent implements OnInit {
         this.root.deleteItemFromCartTemp(JSON.stringify({
             loginuserID: this.isLoggedID,
             languageID: '1',
-            orderID: '1',
+            orderID: this.tempOrderID,
             productID: pro.productID,
             orderdetailsQty: '1',
             orderdetailsPrice: pro.productPrice

@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { USER_RESPONSE } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
 import { ForgotComponent } from './forgot.component';
 import { RegistrationComponent } from './registration.component';
 
@@ -93,7 +94,8 @@ export class LoginComponent implements OnInit {
 		private bsModal: BsModalRef,
 		private fb: FormBuilder,
 		private auth: AuthenticationService,
-		private cd: ChangeDetectorRef
+		private cd: ChangeDetectorRef,
+		private root: RootService
 	) {
 		// for Login
 		this.logIn = this.fb.group({
@@ -128,6 +130,7 @@ export class LoginComponent implements OnInit {
 						this.onClose()
 						this.logIn.reset();
 						this.triggerEvent('Confirmed');
+						this.root.update_user_status$.next('302');
 					}, 100);
 				}).catch((error: string) => {
 					this.error = error;

@@ -4,6 +4,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { FORGOT, USER_RESPONSE } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
 import { OtpComponent } from './otp.component';
 interface Reset {
   loginuserID: string;
@@ -81,7 +82,8 @@ export class ResetComponent implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private cd: ChangeDetectorRef,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private root: RootService
   ) { }
   ngOnInit(): void {
     this.resetForm = this.fb.group({
@@ -121,6 +123,7 @@ export class ResetComponent implements OnInit {
                 this.auth.updateUser(data);
 					      this.preventAbuse = false;
                 this.triggerEvent('Confirmed');
+                this.root.update_user_status$.next('302');
                 setTimeout(() => {
                     this.onClose()
                     this.resetForm.reset();

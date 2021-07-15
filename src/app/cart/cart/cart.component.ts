@@ -13,7 +13,7 @@ import { SubSink } from 'subsink';
 @Component({
     selector: 'app-cart',
     template: `
-  <app-header [update]="ordersList ? ordersList[0].orderdetails.length : 0"></app-header> <!-- Top Bar -->
+  <app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -44,7 +44,7 @@ import { SubSink } from 'subsink';
             <div class="card mt-3">
                 <div class="row m-0 pt-3 pb-3">
                     <div class="col-lg-8">
-                        <app-shared-details (updateCart)="forceReload$.next()" [orders]="ordersList" *ngIf="!loader"></app-shared-details>
+                        <app-shared-details (updateCart)="changedCountHeader=$event.res; forceReload$.next()" [orders]="ordersList" *ngIf="!loader"></app-shared-details>
                         <app-shared-skeleton *ngIf="loader"></app-shared-skeleton>
                     </div>	
                     <div class="col-lg-4 ">
@@ -53,8 +53,8 @@ import { SubSink } from 'subsink';
                     </div>
                     <!-- when empty -->
                     <div class="col-lg-12" *ngIf="!loader">
-                            <div class="table-responsive" style="margin-top: 20px; min-height: 180px" *ngIf="ordersList[0].orderdetails.length===0">
-                              <p class="text-center pt-20">Your cart is empty.</p>
+                            <div class="table-responsive" style="margin-top: 20px; min-height: 280px" *ngIf="ordersList[0].orderdetails.length===0">
+                              <p class="text-center pt-20">Currently Your Cart is Empty.</p>
                     </div>  
                     </div>
                 </div>	
@@ -62,7 +62,7 @@ import { SubSink } from 'subsink';
         </div>	
     </section>	
 
-   <app-shared-best-selling (updateHeader)="forceReload$.next()" [products]="products" *ngIf="products$ | async as products"></app-shared-best-selling>
+   <app-shared-best-selling (updateHeader)="changedCountHeader=$event.res; forceReload$.next()" [products]="products" *ngIf="products$ | async as products"></app-shared-best-selling>
    <app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
 
 </main><!-- End #main -->
@@ -74,37 +74,38 @@ import { SubSink } from 'subsink';
 })
 export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
     loginuserID: string;
-    cart:TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+    changedCountHeader: number;
+    cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
     categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
     products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
-		map(list => list.map(a => {
-			return {
-				productID: a.productID,
-				categoryID: a.categoryID,
-				subcatID: a.subcatID,
-				productName: a.productName,
-				productArabicNme: a.productArabicNme,
-				productSKU: a.productSKU,
-				productTag: a.productTag,
-				productDescription: a.productDescription,
-				productPriceVat: a.productPriceVat,
-				productPrice: a.productPrice,
-				productMOQ: a.productMOQ,
-				productImage: a.productImage,
-				productPackagesize: a.productPackagesize,
-				productReviewCount: a.productReviewCount,
-				productRatingCount: a.productRatingCount,
-				productRatingAvg: a.productRatingAvg.split('.')[0],
-				productSoldCount: a.productSoldCount,
-				productStatus: a.productStatus,
-				productCreatedDate: a.productCreatedDate,
-				categoryName: a.categoryName,
-				isFavorite: a.isFavorite,
-				similarproducts: a.similarproducts,
-				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
-			}
-		}))
-	);
+        map(list => list.map(a => {
+            return {
+                productID: a.productID,
+                categoryID: a.categoryID,
+                subcatID: a.subcatID,
+                productName: a.productName,
+                productArabicNme: a.productArabicNme,
+                productSKU: a.productSKU,
+                productTag: a.productTag,
+                productDescription: a.productDescription,
+                productPriceVat: a.productPriceVat,
+                productPrice: a.productPrice,
+                productMOQ: a.productMOQ,
+                productImage: a.productImage,
+                productPackagesize: a.productPackagesize,
+                productReviewCount: a.productReviewCount,
+                productRatingCount: a.productRatingCount,
+                productRatingAvg: a.productRatingAvg.split('.')[0],
+                productSoldCount: a.productSoldCount,
+                productStatus: a.productStatus,
+                productCreatedDate: a.productCreatedDate,
+                categoryName: a.categoryName,
+                isFavorite: a.isFavorite,
+                similarproducts: a.similarproducts,
+                addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+            }
+        }))
+    );
     subs = new SubSink();
     constructor(
         private store: Store<State>,
@@ -128,44 +129,44 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
                 status: res[0].status,
                 data: res[0].data.map(d => {
                     return {
-                    orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
-                        return {
-                            Price: a.Price,
-                            Qty: a.Qty.split('.')[0],
-                            categoryID: a.categoryID,
-                            categoryName: a.categoryName,
-                            productArabicNme: a.productArabicNme,
-                            productCreatedDate: a.productCreatedDate,
-                            productDescription: a.productDescription,
-                            productID: a.productID,
-                            productImage: a.productImage,
-                            productMOQ: a.productMOQ,
-                            productName: a.productName,
-                            productPackagesize: a.productPackagesize,
-                            productPrice: a.productPrice,
-                            productPriceVat: a.productPriceVat,
-                            productRatingAvg: a.productRatingAvg.split('.')[0],
-                            productRatingCount: a.productRatingCount,
-                            productReviewCount: a.productReviewCount,
-                            productSKU: a.productSKU,
-                            productSoldCount: a.productSoldCount,
-                            productStatus: a.productStatus,
-                            productTag: a.productTag,
-                            subcatID: a.subcatID,
-                        }
-                    }),
-                    billingDetails: {
-                        delivery_Tip: 10,
-                        delivery_Fee: 30,
-                        item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0),
-                        vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
-                        net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPriceVat).reduce((a, b) => a + b, 0) + 30 + 10,
-                    },
-	                temporderDate: d.temporderDate,
-	                temporderID: d.temporderID,
-	                userFullName: d.userFullName,
-	                userID: d.userID,
-	                userMobile: d.userMobile,
+                        orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
+                            return {
+                                Price: a.Price,
+                                Qty: a.Qty.split('.')[0],
+                                categoryID: a.categoryID,
+                                categoryName: a.categoryName,
+                                productArabicNme: a.productArabicNme,
+                                productCreatedDate: a.productCreatedDate,
+                                productDescription: a.productDescription,
+                                productID: a.productID,
+                                productImage: a.productImage,
+                                productMOQ: a.productMOQ,
+                                productName: a.productName,
+                                productPackagesize: a.productPackagesize,
+                                productPrice: a.productPrice,
+                                productPriceVat: a.productPriceVat,
+                                productRatingAvg: a.productRatingAvg.split('.')[0],
+                                productRatingCount: a.productRatingCount,
+                                productReviewCount: a.productReviewCount,
+                                productSKU: a.productSKU,
+                                productSoldCount: a.productSoldCount,
+                                productStatus: a.productStatus,
+                                productTag: a.productTag,
+                                subcatID: a.subcatID,
+                            }
+                        }),
+                        billingDetails: {
+                            delivery_Tip: 10,
+                            delivery_Fee: 30,
+                            item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0),
+                            vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
+                            net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPriceVat).reduce((a, b) => a + b, 0) + 30 + 10,
+                        },
+                        temporderDate: d.temporderDate,
+                        temporderID: d.temporderID,
+                        userFullName: d.userFullName,
+                        userID: d.userID,
+                        userMobile: d.userMobile,
                     }
                 })
             }]
@@ -194,16 +195,30 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
             status: string
             message: string
         }[]) => {
-            if (res[0].status === 'true') {
+            if (res.length > 0 && res[0].status === 'true') {
                 timer(500).subscribe(() => {
                     this.ordersList = res[0].data;
                     this.loader = false;
                     this.cd.markForCheck();
                 });
             }
-            if (res[0].status === 'false') {
+            if (res.length === 0) {
                 timer(500).subscribe(() => {
-                    this.ordersList = [];
+                    this.ordersList = [{
+                        orderdetails: [],
+                        userFullName: '',
+                        userID: '',
+                        billingDetails: {
+                            delivery_Tip: null,
+                            delivery_Fee: null,
+                            item_Total: null,
+                            vat: null,
+                            net_Payable: null
+                        },
+                        userMobile: null,
+                        temporderDate: '',
+                        temporderID: '0'
+                    }];
                     this.loader = false;
                     this.cd.markForCheck();
                 });

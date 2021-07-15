@@ -66,7 +66,7 @@ import { ProductList } from 'src/app/interface';
                             <br>
                             <div class="row">
                                 <div class="col-6">
-                                    <button type="button" class="btn w-100 btn-outline-secondary">Continue Shopping</button>
+                                    <button routerLink='/' class="btn w-100 btn-outline-secondary">Continue Shopping</button>
                                 </div>
                                 <div class="col-6">
                                     <button (click)="place.emit(orderNote.value)" type="button" class="btn btn-them w-100">{{preventAbuse ? 'Please wait...' : 'Proceed to Pay'}}</button>

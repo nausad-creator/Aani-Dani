@@ -4,8 +4,8 @@ import { TempOrders, OrderDetailsTemp } from 'src/app/interface';
 import { SubSink } from 'subsink';
 
 @Component({
-    selector: 'app-skeleton-billing',
-    template: `
+	selector: 'app-skeleton-billing',
+	template: `
     <div class="paymentDetails">
                             <h5>Bill Details</h5>
                             <div class="coponCode">
@@ -51,19 +51,19 @@ import { SubSink } from 'subsink';
 
                         </div>
   `,
-    styles: [
-    ]
+	styles: [
+	]
 })
 export class SkeletonBillingComponent implements OnInit {
-    @Input() orders: TempOrders[];
-    data: OrderDetailsTemp;
-    isLoggedIN: boolean;
-    isLoggedID: string;
-    subs = new SubSink();
-    modalRef: BsModalRef;
-    @Output() updateCart: EventEmitter<{ data: string, res: number }> = new EventEmitter();
-    constructor() { }
+	@Input() orders: TempOrders[];
+	data: OrderDetailsTemp;
+	isLoggedIN: boolean;
+	isLoggedID: string;
+	subs = new SubSink();
+	modalRef: BsModalRef;
+	@Output() updateCart: EventEmitter<{ data: string, res: number }> = new EventEmitter();
+	constructor() { }
 
-    ngOnInit(): void {
-    }
+	ngOnInit(): void {
+	}
 }

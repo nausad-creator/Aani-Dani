@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-footer',
-  template: `
+	selector: 'app-footer',
+	template: `
      <!--  Footer  -->
   <footer id="footer">    
     <div class="footer-top">
@@ -63,14 +63,14 @@ import { Component, OnInit } from '@angular/core';
   </footer>
   <!-- End Footer -->
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class FooterComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

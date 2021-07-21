@@ -4,16 +4,16 @@ import { ContactUsComponent } from './contact-us/contact-us.component';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [
-    ContactUsComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild([
-      {
-        path: '', component: ContactUsComponent,
-      }
-    ])
-  ]
+	declarations: [
+		ContactUsComponent
+	],
+	imports: [
+		CommonModule,
+		RouterModule.forChild([
+			{
+				path: '', component: ContactUsComponent,
+			}
+		])
+	]
 })
 export class ContactUsModule { }

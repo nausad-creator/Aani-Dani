@@ -18,31 +18,31 @@ import { SharedSkeletonComponent } from './shared-skeleton.component';
 import { SkeletonBillingComponent } from './shared-billing/skeleton-billing.component';
 
 @NgModule({
-  declarations: [
-    CartComponent,
-    SharedDetailsComponent,
-    SharedBillingComponent,
-    SharedBestSellingComponent,
-    SkeletonComponent,
-    SharedSkeletonComponent,
-    SkeletonBillingComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HeaderModule,
-    CarouselModule,
-    NgSelectModule,
-    NgxPaginationModule,
-	  LazyLoadImageModule,
-	  NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '', component: CartComponent
-      },
-    ]),
-  ]
+	declarations: [
+		CartComponent,
+		SharedDetailsComponent,
+		SharedBillingComponent,
+		SharedBestSellingComponent,
+		SkeletonComponent,
+		SharedSkeletonComponent,
+		SkeletonBillingComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		HeaderModule,
+		CarouselModule,
+		NgSelectModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '', component: CartComponent
+			},
+		]),
+	]
 })
 export class CartModule { }

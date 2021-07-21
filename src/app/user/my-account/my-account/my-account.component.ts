@@ -17,7 +17,7 @@ export const MY_CUSTOM_FORMATS = {
 	monthYearLabel: 'MMM YYYY',
 	dateA11yLabel: 'LL',
 	monthYearA11yLabel: 'MMMM YYYY'
-	};
+};
 @Component({
 	selector: 'app-my-account',
 	template: `
@@ -122,8 +122,8 @@ export const MY_CUSTOM_FORMATS = {
       }`
 	],
 	providers: [
-	{ provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE] },
-	{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS }]
+		{ provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE] },
+		{ provide: OWL_DATE_TIME_FORMATS, useValue: MY_CUSTOM_FORMATS }]
 	, changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyAccountComponent implements OnInit {
@@ -201,7 +201,7 @@ export class MyAccountComponent implements OnInit {
 					if (!res) {
 						this.preventAbuse = false;
 						this.cd.markForCheck();
-						this.toastr.error('some error occured, please try again later', '',{positionClass: 'toast-center-center-error'});
+						this.toastr.error('some error occured, please try again later', '', { positionClass: 'toast-center-center-error' });
 					}
 				}).catch((error) => {
 					console.error(error);

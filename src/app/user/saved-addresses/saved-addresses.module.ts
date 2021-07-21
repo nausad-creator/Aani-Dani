@@ -13,27 +13,27 @@ import { MyFilterAdressPipe } from './saved-addresses/add.pipe';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 @NgModule({
-  declarations: [
-    SavedAddressesComponent,
-    SharedAddressComponent,
-    MyFilterAdressPipe
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    GooglePlaceModule,
-    NgxPaginationModule,
-    LazyLoadImageModule,
-    NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: SavedAddressesComponent,
-      }
-    ])
-  ]
+	declarations: [
+		SavedAddressesComponent,
+		SharedAddressComponent,
+		MyFilterAdressPipe
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		GooglePlaceModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '',
+				component: SavedAddressesComponent,
+			}
+		])
+	]
 })
 export class SavedAddressesModule { }

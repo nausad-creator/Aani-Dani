@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { terms_conditions, State } from 'src/app/reducers';
 
 @Component({
-  selector: 'app-terms',
-  template: `
+	selector: 'app-terms',
+	template: `
     <section id="about" class="about pt-3">
       <div class="container">
         <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> Terms of Service</span> </div>
@@ -27,15 +27,15 @@ import { terms_conditions, State } from 'src/app/reducers';
       </div>
     </section><!-- End About Section -->
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class TermsComponent implements OnInit {
-  terms_conditions$: Observable<{
-    cmspageName: string;
-    cmspageContents: string;
-  }> = this.store.select(terms_conditions);
-  constructor(private store: Store<State>,) { }
-  ngOnInit(): void {
-  }
+	terms_conditions$: Observable<{
+		cmspageName: string;
+		cmspageContents: string;
+	}> = this.store.select(terms_conditions);
+	constructor(private store: Store<State>,) { }
+	ngOnInit(): void {
+	}
 }

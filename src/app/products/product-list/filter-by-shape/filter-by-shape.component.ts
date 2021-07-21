@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-filter-by-shape',
-  template: `
+	selector: 'app-filter-by-shape',
+	template: `
     <div class="filterLeftContent mt-3 card">
 							<h5 class="mb-0">Filter by Shape</h5>	
 							<div class="shapeContent">
@@ -24,14 +24,14 @@ import { Component, OnInit } from '@angular/core';
 							</div>	
 						</div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class FilterByShapeComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

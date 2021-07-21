@@ -10,24 +10,24 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
-  declarations: [
-    SettingsComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    NgxPaginationModule,
-    LazyLoadImageModule,
-    NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: SettingsComponent,
-      }
-    ])
-  ]
+	declarations: [
+		SettingsComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '',
+				component: SettingsComponent,
+			}
+		])
+	]
 })
 export class SettingsModule { }

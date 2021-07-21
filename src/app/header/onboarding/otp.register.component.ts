@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { FORGOT, USER_RESPONSE } from 'src/app/interface';
+import { FORGOT, ProductList, USER_RESPONSE } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
+import { AlertComponent } from './alert.component';
 import { ForgotComponent } from './forgot.component';
-import { ResetComponent } from './reset.component';
 interface List {
 	res: FORGOT
 	msg: string;
@@ -82,7 +83,7 @@ export class OtpRegisterComponent implements OnInit {
 	verificationForm: FormGroup;
 	error: string;
 	status: string;
-	list: USER_RESPONSE[] = [];
+	list: { user: USER_RESPONSE, status: string, product: ProductList }[] = [];
 	preventAbuse = false;
 	@ViewChild('userOTP1', { static: false }) userOTP1: ElementRef;
 	@ViewChild('userOTP2', { static: false }) userOTP2: ElementRef;
@@ -95,8 +96,8 @@ export class OtpRegisterComponent implements OnInit {
 		private cd: ChangeDetectorRef,
 		private fb: FormBuilder,
 		private auth: AuthenticationService,
-		private cookie: CookieService
-	) {}
+		private cookie: CookieService,
+		private root: RootService) { }
 	onResendClick = () => {
 		this.auth.otpResendVerification(JSON.stringify(this.verificationForm.value)).subscribe(
 			(res) => {
@@ -138,16 +139,26 @@ export class OtpRegisterComponent implements OnInit {
 		if (this.verificationForm.valid && this.findInvalidControls().length === 0) {
 			this.preventAbuse = true;
 			this.verificationForm.get('userOTP').patchValue(`${post.userOTP1}${post.userOTP2}${post.userOTP3}${post.userOTP4}`)
-			this.submitOTP(JSON.stringify(this.verificationForm.value)).then((res: USER_RESPONSE) => {
-				this.cookie.set('Temp_Order_ID', '0')
-                sessionStorage.setItem('USER_LOGGED', JSON.stringify(res));
+			this.submitOTP(JSON.stringify(this.verificationForm.value)).then(async (res: USER_RESPONSE) => {
+				res.storeID = '';
+				this.cookie.set('Temp_Order_ID', '0');
+				sessionStorage.setItem('USER_LOGGED', JSON.stringify(res));
 				localStorage.removeItem('USER_LOGGED');
-                this.auth.updateUser(res);
-				setTimeout(() => {
-					this.preventAbuse = false;
-					this.verificationForm.reset();
-                    this.onClose();
-				}, 100);
+				this.auth.updateUser(res);
+				this.root.forceReload();
+				this.preventAbuse = false;
+				this.verificationForm.reset();
+				if (this.list[0].product) {
+					this.onClose();
+					setTimeout(() => {
+						this.modal.show(AlertComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
+					}, 700);
+				}
+				if (!this.list[0].product) {
+					this.root.update_user_status$.next('refresh_or_reload');
+					this.root.update_user_status$.next('update_header');
+					this.onClose();
+				}
 			}).catch((error) => {
 				this.error = error;
 				this.preventAbuse = false;
@@ -246,10 +257,10 @@ export class OtpRegisterComponent implements OnInit {
 			userOTP4: [null, Validators.compose([Validators.pattern('^[0-9]*$')])],
 			languageID: ['1'],
 			userOTP: [''],
-			loginuserID: [this.list[0].userID],
-			userMobile: [this.list[0].userMobile],
+			loginuserID: [this.list[0].user.userID],
+			userMobile: [this.list[0].user.userMobile],
 		});
 		this.focus();
-		this.status = `${this.list[0].userStatus}`;
+		this.status = `${this.list[0].user.userStatus}`;
 	}
 }

@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-    selector: 'app-success-pop-up',
-    template: `
+	selector: 'app-success-pop-up',
+	template: `
     <!--Succesfull Modal -->
     <div class="modal-contents">      
       <div class="modal-body">
         <div class="contenttopText text-center">
         	<div class="p-3 checkIcon"><i class="fas fa-check-circle text-success"></i></div>
         	<h5 class="">Order Successfully Placed</h5>
-        	<small>Order ID: AND002-99</small>
+        	<small>Order ID: {{list[0].orderID}}</small>
         	<p class="pt-3">Thanks for placing your order with us</p>
         	<p class="mb-0">for any queations and futher information please contact our customer support</p>        	
         </div>	
@@ -27,8 +27,8 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
       </div>
     </div>
   `,
-    styles: [
-        `.modal-contents {
+	styles: [
+		`.modal-contents {
             position: relative;
             display: flex;
             flex-direction: column;
@@ -39,8 +39,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
             border-radius: .3rem;
             outline: 0;
           }`
-    ]
+	]
 })
-export class SuccessPlacedOrderComponent {
-    constructor(public bsModal: BsModalRef){}
+export class SuccessPlacedOrderComponent implements OnInit {
+	list: { orderID: string }[] = [];
+	constructor(public bsModal: BsModalRef) { }
+	ngOnInit(): void {
+	}
 }

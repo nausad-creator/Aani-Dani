@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-offers',
-  template: `
+	selector: 'app-offers',
+	template: `
     <section class="ads-section pt-0 pb-4">
     <div class="container">
         <div class="owl-carousel ads-carousel">
@@ -19,39 +19,40 @@ import { Component, OnInit } from '@angular/core';
     </div> 
   </section> 
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class OffersComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-    this.jquery();
-  }
-  jquery = () => {
-    jQuery(() => {
-      ($(".ads-carousel") as any).owlCarousel({
-        autoplay: true,
-        dots: true,
-        loop: false,
-        nav:false,
-        margin:10,      
-        responsive: {
-          0: {
-            items: 1
-          },
-          768: {
-            items: 2
-          },
-          900: {
-            items: 2
-          },
-          1000: {
-            items: 3
-          }
-        }
-      });
-    })}
+	ngOnInit(): void {
+		this.jquery();
+	}
+	jquery = () => {
+		jQuery(() => {
+			($(".ads-carousel") as any).owlCarousel({
+				autoplay: true,
+				dots: true,
+				loop: false,
+				nav: false,
+				margin: 10,
+				responsive: {
+					0: {
+						items: 1
+					},
+					768: {
+						items: 2
+					},
+					900: {
+						items: 2
+					},
+					1000: {
+						items: 3
+					}
+				}
+			});
+		})
+	}
 
 }

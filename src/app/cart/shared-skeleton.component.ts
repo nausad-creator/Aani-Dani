@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-shared-skeleton',
-  template: `
+	selector: 'app-shared-skeleton',
+	template: `
     <div class="tableCart">
                             <div class="table-responsive">
                               <table class="table">
@@ -53,14 +53,14 @@ import { Component, OnInit } from '@angular/core';
                           </div>  
                         </div>	
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class SharedSkeletonComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

@@ -23,7 +23,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 	styles: [
 		`.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
     		width: 160px;
-			height: 40px;
+		height: 40px;
     		border-color: #E6E6E6;
     		background-color: #fff!important;
     		padding: .375rem .75rem;
@@ -35,30 +35,26 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
     		border-radius: .25rem;
     		transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 		  }
-		  
-		  .ng-select.ng-select-single.custom ::ng-deep .ng-select-container .ng-value-container .ng-input {
+		.ng-select.ng-select-single.custom ::ng-deep .ng-select-container .ng-value-container .ng-input {
 			left: 0;
 			padding-left: 18px;
 			padding-right: 50px
 		  }
 
-		  .ng-select.custom ::ng-deep .ng-arrow-wrapper {
+		.ng-select.custom ::ng-deep .ng-arrow-wrapper {
     		width: 10px;
     		padding-right: 0px;
 		 }
-		  
-		  .ng-select.custom ::ng-deep .ng-select-container .ng-value-container {
+		.ng-select.custom ::ng-deep .ng-select-container .ng-value-container {
 			align-items: center;
 			padding-left: 0px;
 		  }
-		  
-		  .ng-select.ng-select-single.custom ::ng-deep .ng-value-container .ng-value {
+		.ng-select.ng-select-single.custom ::ng-deep .ng-value-container .ng-value {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		  }
-		  
-		  .ng-select.custom ::ng-deep .ng-clear-wrapper {
+		.ng-select.custom ::ng-deep .ng-clear-wrapper {
 			margin-top: 3px;
 			padding: 5px;
 		  }`

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-our-partners',
-  template: `
+	selector: 'app-our-partners',
+	template: `
     <section class="LowestPrice-section bg-white p-3">
     <div class="container">
         <div class="card-header bg-white">
@@ -45,39 +45,40 @@ import { Component, OnInit } from '@angular/core';
     </div>
   </section>	
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class OurPartnersComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-    this.jquery();
-  }
-  jquery = () => {
-    jQuery(() => {
-      ($(".partner-carousel") as any).owlCarousel({
-        //autoplay: true,
-        dots: true,
-        loop: false,
-        nav:true,
-        margin:10,
-        navText: ["<i class='icofont-rounded-left'></i>","<i class='icofont-rounded-right'></i>"],
-        responsive: {
-          0: {
-            items: 2
-          },
-          768: {
-            items: 3
-          },
-          900: {
-            items: 4
-          },
-          1000: {
-            items: 5
-          }
-        }
-      });
-    })}
+	ngOnInit(): void {
+		this.jquery();
+	}
+	jquery = () => {
+		jQuery(() => {
+			($(".partner-carousel") as any).owlCarousel({
+				//autoplay: true,
+				dots: true,
+				loop: false,
+				nav: true,
+				margin: 10,
+				navText: ["<i class='icofont-rounded-left'></i>", "<i class='icofont-rounded-right'></i>"],
+				responsive: {
+					0: {
+						items: 2
+					},
+					768: {
+						items: 3
+					},
+					900: {
+						items: 4
+					},
+					1000: {
+						items: 5
+					}
+				}
+			});
+		})
+	}
 }

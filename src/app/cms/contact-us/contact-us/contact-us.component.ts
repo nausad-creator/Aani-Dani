@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-contact-us',
-  template: `
+	selector: 'app-contact-us',
+	template: `
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact pb-5 pt-3">
       <div class="container">
@@ -84,14 +84,14 @@ import { Component, OnInit } from '@angular/core';
       </div>
     </section><!-- End Contact Section -->
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class ContactUsComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

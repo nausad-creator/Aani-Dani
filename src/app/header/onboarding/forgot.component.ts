@@ -8,8 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FORGOT } from 'src/app/interface';
 
 @Component({
-  selector: 'app-forgot',
-  template: `
+	selector: 'app-forgot',
+	template: `
     <!--Modal Forgot Password-->
     <div class="modal-contents">
       <div class="modal-header text-center d-block position-relative" style="border: none;">
@@ -39,8 +39,8 @@ import { FORGOT } from 'src/app/interface';
       </div>      
     </div>
   `,
-  styles: [
-    `.modal-contents {
+	styles: [
+		`.modal-contents {
       position: relative;
       display: flex;
       flex-direction: column;
@@ -55,129 +55,129 @@ import { FORGOT } from 'src/app/interface';
       content: "*";
       color: red;
     }`
-  ]
+	]
 })
 export class ForgotComponent {
-  bModalRef: BsModalRef;
-  preventAbuse = false;
-  error: string;
-  forgetForm: FormGroup;
-  @ViewChild('forgotEmail', { static: false }) forgotEmail: ElementRef;
-  constructor(
-    private modal: BsModalService,
-    private bsModal: BsModalRef,
-    private fb: FormBuilder,
-    private auth: AuthenticationService,
-    private toastr: ToastrService,
-    private cd: ChangeDetectorRef
-  ) {
-    this.forgetForm = this.fb.group({
-      userEmail: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
-      userMobile: [''],
-      languageID: ['1'],
-      userCountryCode: ['+91']
-    });
-  }
-  onSubmitEmailOrMobile = (post: { userEmail: string; userMobile: string; languageID: string }) => {
-    if (!this.checkControlPost(post)) {
-      this.markFormTouched(this.forgetForm);
-        if (this.forgetForm.valid) {
-            this.error = '';
-            this.preventAbuse=true
-            if (!isNaN(+post.userEmail)) {
-                  this.forgetForm.get('userMobile').patchValue(post.userEmail);
-                  this.forgetForm.get('userEmail').patchValue('');
-                  this.forgetPassword(JSON.stringify(this.forgetForm.value)).then((res: FORGOT) => {
-                  this.preventAbuse = false
-                  setTimeout(() => {
-                    this.forgetForm.reset();
-                    this.openOTP({
-                      userMobile: res.userMobile ? res.userMobile : post.userEmail,
-                      userID: res.userID ? res.userID : '1',
-                      status: res.status ? res.status : 'false',
-                      message: res.message ? res.message : 'New_User'
-                     }, 'mobile number');
-                    this.toastr.success('We have sent otp on your registered mobile.');
-            }, 100);
-          }).catch((error) => {
-                  this.error = error;
-                  this.cd.markForCheck();
-        });
-      } else {
-                this.forgetForm.get('userEmail').patchValue(post.userEmail);
-                this.forgetForm.get('userMobile').patchValue('');
-                this.forgetPassword(JSON.stringify(this.forgetForm.value)).then((res: FORGOT) => {
-                this.preventAbuse = false
-          setTimeout(() => {
-                   this.forgetForm.reset();
-                   this.openOTP({
-                    userMobile: res.userMobile ? res.userMobile : post.userEmail,
-                    userID: res.userID ? res.userID : '1',
-                    status: res.status ? res.status : 'false',
-                    message: res.message ? res.message : 'New_User'
-                   }, 'email address');
-                   this.toastr.success('We have sent otp on your registered email.');
-          }, 100);
-        }).catch((error) => {
-                this.error = error;
-                this.cd.markForCheck();
-        });
-      }
-    }
-    }
-  }
-  checkControlPost = (post: {
-    userEmail: string;
-  }) => {
-    let invalid = false;
-    Object.keys(post).forEach((key: string) => {
-      if (key === 'userEmail' && !this.forgetForm.get(`${key}`).value) {
-        this.forgotEmail.nativeElement.focus();
-        this.forgetForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
-        this.forgetForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
-        return invalid = true;
-      }
-    });
-    return invalid;
-  }
-  forgetPassword = (data: string) => {
-      return new Promise((resolve, reject) => {
-            this.auth.forgot(data).subscribe((res: FORGOT) => {
-            if (res.status === 'true') {
-                    resolve(res);
-            } else {
-                    reject('Invalid username!');
-            }
-            }, () => reject('Some error occured, please try again later!'));
-    });
-  }
-  markFormTouched = (group: FormGroup | FormArray) => {
-    Object.keys(group.controls).forEach((key: string) => {
-      const control = group.controls[key];
-      if (control instanceof FormGroup || control instanceof FormArray) {
-        control.markAsTouched();
-        this.markFormTouched(control);
-      } else {
-        control.markAsTouched();
-      }
-    });
-  }
-  onClose = () => {
-    this.bsModal.hide();
-  }
-  openforgetForm = () => {
-    this.onClose();
-    this.bsModal = this.modal.show(LoginComponent, { id: 99 });
-  }
-  openOTP = (res: FORGOT, msg: string) => {
-    this.onClose();
-    const initialState = {
-      list: [{
-        res,
-        msg,
-        status: 'forget'
-      }]
-    };
-    this.bsModal = this.modal.show(OtpComponent, { id: 101, initialState });
-  }
+	bModalRef: BsModalRef;
+	preventAbuse = false;
+	error: string;
+	forgetForm: FormGroup;
+	@ViewChild('forgotEmail', { static: false }) forgotEmail: ElementRef;
+	constructor(
+		private modal: BsModalService,
+		private bsModal: BsModalRef,
+		private fb: FormBuilder,
+		private auth: AuthenticationService,
+		private toastr: ToastrService,
+		private cd: ChangeDetectorRef
+	) {
+		this.forgetForm = this.fb.group({
+			userEmail: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
+			userMobile: [''],
+			languageID: ['1'],
+			userCountryCode: ['+91']
+		});
+	}
+	onSubmitEmailOrMobile = (post: { userEmail: string; userMobile: string; languageID: string }) => {
+		if (!this.checkControlPost(post)) {
+			this.markFormTouched(this.forgetForm);
+			if (this.forgetForm.valid) {
+				this.error = '';
+				this.preventAbuse = true
+				if (!isNaN(+post.userEmail)) {
+					this.forgetForm.get('userMobile').patchValue(post.userEmail);
+					this.forgetForm.get('userEmail').patchValue('');
+					this.forgetPassword(JSON.stringify(this.forgetForm.value)).then((res: FORGOT) => {
+						this.preventAbuse = false
+						setTimeout(() => {
+							this.forgetForm.reset();
+							this.openOTP({
+								userMobile: res.userMobile ? res.userMobile : post.userEmail,
+								userID: res.userID ? res.userID : '1',
+								status: res.status ? res.status : 'false',
+								message: res.message ? res.message : 'New_User'
+							}, 'mobile number');
+							this.toastr.success('We have sent otp on your registered mobile.');
+						}, 100);
+					}).catch((error) => {
+						this.error = error;
+						this.cd.markForCheck();
+					});
+				} else {
+					this.forgetForm.get('userEmail').patchValue(post.userEmail);
+					this.forgetForm.get('userMobile').patchValue('');
+					this.forgetPassword(JSON.stringify(this.forgetForm.value)).then((res: FORGOT) => {
+						this.preventAbuse = false
+						setTimeout(() => {
+							this.forgetForm.reset();
+							this.openOTP({
+								userMobile: res.userMobile ? res.userMobile : post.userEmail,
+								userID: res.userID ? res.userID : '1',
+								status: res.status ? res.status : 'false',
+								message: res.message ? res.message : 'New_User'
+							}, 'email address');
+							this.toastr.success('We have sent otp on your registered email.');
+						}, 100);
+					}).catch((error) => {
+						this.error = error;
+						this.cd.markForCheck();
+					});
+				}
+			}
+		}
+	}
+	checkControlPost = (post: {
+		userEmail: string;
+	}) => {
+		let invalid = false;
+		Object.keys(post).forEach((key: string) => {
+			if (key === 'userEmail' && !this.forgetForm.get(`${key}`).value) {
+				this.forgotEmail.nativeElement.focus();
+				this.forgetForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
+				this.forgetForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
+				return invalid = true;
+			}
+		});
+		return invalid;
+	}
+	forgetPassword = (data: string) => {
+		return new Promise((resolve, reject) => {
+			this.auth.forgot(data).subscribe((res: FORGOT) => {
+				if (res.status === 'true') {
+					resolve(res);
+				} else {
+					reject('Invalid username!');
+				}
+			}, () => reject('Some error occured, please try again later!'));
+		});
+	}
+	markFormTouched = (group: FormGroup | FormArray) => {
+		Object.keys(group.controls).forEach((key: string) => {
+			const control = group.controls[key];
+			if (control instanceof FormGroup || control instanceof FormArray) {
+				control.markAsTouched();
+				this.markFormTouched(control);
+			} else {
+				control.markAsTouched();
+			}
+		});
+	}
+	onClose = () => {
+		this.bsModal.hide();
+	}
+	openforgetForm = () => {
+		this.onClose();
+		this.bsModal = this.modal.show(LoginComponent, { id: 99 });
+	}
+	openOTP = (res: FORGOT, msg: string) => {
+		this.onClose();
+		const initialState = {
+			list: [{
+				res,
+				msg,
+				status: 'forget'
+			}]
+		};
+		this.bsModal = this.modal.show(OtpComponent, { id: 101, initialState });
+	}
 }

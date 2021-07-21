@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CookieService } from 'ngx-cookie-service';
+import { map, take } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { USER_RESPONSE } from 'src/app/interface';
+import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
+import { AddressListComponent } from './address-list.component';
+import { AlertComponent } from './alert.component';
 import { ForgotComponent } from './forgot.component';
 import { RegistrationComponent } from './registration.component';
 
@@ -25,21 +29,21 @@ import { RegistrationComponent } from './registration.component';
 		        <div class="form-row CandidateForm">
 		            <div class="col-md-12 col-sm-12 form-group">
 		            	<label>Username<span class="required-field"></span></label>	
-					    <input type="email" #emailInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" id="Email" class="form-control" placeholder="Enter username or e-mail">
-						<small class="text-danger" *ngIf="logIn.controls['userMobile'].hasError('required')">This field is required.</small>
+				<input type="email" #emailInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" id="Email" class="form-control" placeholder="Enter username or e-mail">
+				<small class="text-danger" *ngIf="logIn.controls['userMobile'].hasError('required')">This field is required.</small>
             			<small class="text-danger" *ngIf="logIn.controls['userMobile'].hasError('pattern') && (logIn.controls['userMobile'].dirty || logIn.controls['userMobile'].touched)">Please enter valid email address or phone number.</small>
-				    </div>        
-				    <div class="col-md-12 col-sm-12 form-group">
-				    	<div class="row">
-				    	    <div class="col"><label>Password<span class="required-field"></span></label></div>
-				    		<div class="col text-right"><a class="cursr" id="forgot" (click)="openForgot()" style="color:#2660C0;" data-toggle="modal">Forgot?</a></div>
-				    	</div>
-					    <div>
-						<a class="pasword-hideshowLogin cursr" (click)="hide=!hide"><i class="fa " [ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
+				</div>        
+				<div class="col-md-12 col-sm-12 form-group">
+				<div class="row">
+				<div class="col"><label>Password<span class="required-field"></span></label></div>
+				<div class="col text-right"><a class="cursr" id="forgot" (click)="openForgot()" style="color:#2660C0;" data-toggle="modal">Forgot?</a></div>
+				</div>
+				<div>
+				<a class="pasword-hideshowLogin cursr" (click)="hide=!hide"><i class="fa " [ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
               			<input #passwordInput type="password" [type]=" hide ? 'password' : 'text' " id="password" (keydown.space)="$event.preventDefault()" placeholder="Enter password" class="form-control" formControlName="userPassword" name="password" autocomplete="off">
               			<small class="text-danger" *ngIf="logIn.controls['userPassword'].hasError('required')">This field is required.</small>
-            		</div>
-				    </div>
+            			</div>
+				</div>
 				    <div class="col-md-12 col-sm-12">													
 						<div class="row pt-3">
 						   <div class="col">
@@ -52,7 +56,7 @@ import { RegistrationComponent } from './registration.component';
 							<label class="custom-control-label" for="customCheck">Keep me signed in</label>
 						  </div>
 						</div> 
-		            </div>            
+		            		</div>            
 					<div class="col-md-12 col-sm-12 mt-3 signupbtn text-center">
 						<br>
 					  <span>New Here?</span> <a class="cursr ml-1" (click)="openRegistration()" data-toggle="modal">Create an Account</a>
@@ -85,6 +89,7 @@ export class LoginComponent implements OnInit {
 	logIn: FormGroup;
 	error: string;
 	hide = true;
+	list: { status: string, product?: ProductList }[] = [];
 	preventAbuse = false;
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	@ViewChild('emailInput', { static: false }) emailInput: ElementRef;
@@ -95,8 +100,7 @@ export class LoginComponent implements OnInit {
 		private fb: FormBuilder,
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
-		private root: RootService
-	) {
+		private root: RootService) {
 		// for Login
 		this.logIn = this.fb.group({
 			userMobile: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
@@ -117,6 +121,7 @@ export class LoginComponent implements OnInit {
 				this.error = '';
 				this.preventAbuse = true
 				this.login(JSON.stringify(post)).then((success: USER_RESPONSE) => {
+					success.storeID = '';
 					if (post.terms === true) {
 						localStorage.setItem('USER_LOGGED', JSON.stringify(success));
 						sessionStorage.removeItem('USER_LOGGED');
@@ -127,10 +132,27 @@ export class LoginComponent implements OnInit {
 					this.auth.updateUser(success);
 					this.preventAbuse = false;
 					setTimeout(() => {
-						this.onClose()
+						this.root.forceReload();
+						if (this.list[0].status === 'Location') {
+							if (success.address.length > 0) {
+								this.onClose();
+								this.openAddress(success.address, this.list[0].product, this.list[0].status);
+							}
+							if (success.address.length === 0) {
+								this.onClose();
+								setTimeout(() => {
+									this.modal.show(AlertComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
+								}, 700);
+							}
+							this.root.update_user_status$.next('update_header');
+						}
+						if (this.list[0].status === 'Header') {
+							this.triggerEvent('Confirmed');
+							this.root.update_user_status$.next('update_header');
+							this.root.update_user_status$.next('refresh_or_reload');
+							this.onClose();
+						}
 						this.logIn.reset();
-						this.triggerEvent('Confirmed');
-						this.root.update_user_status$.next('302');
 					}, 100);
 				}).catch((error: string) => {
 					this.error = error;
@@ -146,11 +168,7 @@ export class LoginComponent implements OnInit {
 	}
 	login = (post: string) => {
 		return new Promise((resolve, reject) => {
-			this.auth.signIn(post).subscribe((r: {
-                data: USER_RESPONSE[];
-                status: string;
-                message: string;
-            }) => {
+			this.auth.signIn(post).subscribe((r: { data: USER_RESPONSE[]; status: string; message: string; }) => {
 				if (r.status === 'true') {
 					resolve(r.data[0]);
 				} else {
@@ -162,11 +180,17 @@ export class LoginComponent implements OnInit {
 			);
 		});
 	}
-	checkInputFocus = (post: {
-		userMobile: string;
-		userPassword: string;
-		terms: boolean;
-	}) => {
+	openAddress = (add: ADDRESS[], product: ProductList, status: string) => {
+		const initialState = {
+			list: [{
+				status: status,
+				product: product,
+				address: add
+			}]
+		};
+		this.bsModal = this.modal.show(AddressListComponent, { id: 499, initialState });
+	}
+	checkInputFocus = (post: { userMobile: string; userPassword: string; terms: boolean; }) => {
 		let temp = false;
 		Object.keys(post).forEach((key) => {
 			if (key === 'userMobile' && !post[key] && !temp) {
@@ -228,7 +252,13 @@ export class LoginComponent implements OnInit {
 	}
 	openRegistration = () => {
 		this.onClose();
-		this.bsModal = this.modal.show(RegistrationComponent, { id: 999 });
+		const initialState = {
+			list: [{
+				status: 'Location',
+				product: this.list[0].product
+			}]
+		};
+		this.bsModal = this.modal.show(RegistrationComponent, { id: 999, initialState });
 	}
 	openForgot = () => {
 		this.onClose();

@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { faqs, State } from 'src/app/reducers';
 
 @Component({
-  selector: 'app-faqs',
-  template: `
+	selector: 'app-faqs',
+	template: `
     <section id="about" class="about pt-3">
       <div class="container">
         <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> FAQs</span> </div>
@@ -28,16 +28,16 @@ import { faqs, State } from 'src/app/reducers';
       </div>
     </section>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class FaqsComponent implements OnInit {
-  faqs$: Observable<{
-    faqID: string;
-    faqQuestion: string;
-    faqAnswer: string;
-  }[]> = this.store.select(faqs);
-  constructor(private store: Store<State>,) { }
-  ngOnInit(): void {
-  }
+	faqs$: Observable<{
+		faqID: string;
+		faqQuestion: string;
+		faqAnswer: string;
+	}[]> = this.store.select(faqs);
+	constructor(private store: Store<State>,) { }
+	ngOnInit(): void {
+	}
 }

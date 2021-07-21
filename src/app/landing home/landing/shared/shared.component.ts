@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Banner, Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeBannerList, selectHomeBestSellingList, selectHomeCategoryList, State } from 'src/app/reducers';
+import { RootService } from 'src/app/root.service';
+import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	templateUrl: './shared.component.html',
@@ -12,7 +14,7 @@ import { selectHomeBannerList, selectHomeBestSellingList, selectHomeCategoryList
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedComponent implements OnInit, OnDestroy {
-	cart:TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	banner$: Observable<Banner[]> = this.store.select(selectHomeBannerList);
 	products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
 		map(list => list.map(a => {
@@ -44,10 +46,46 @@ export class SharedComponent implements OnInit, OnDestroy {
 		}))
 	)
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
-	changedCountHeader: number;
+	subs = new SubSink();
 	constructor(
 		readonly router: Router,
-		private store: Store<State>) { }
+		private store: Store<State>,
+		private root: RootService) {
+		this.subs.add(this.root.update$.subscribe(status => {
+			if (status === 'refresh_or_reload') {
+				this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+				this.products$ = this.store.select(selectHomeBestSellingList).pipe(
+					map(list => list.map(a => {
+						return {
+							productID: a.productID,
+							categoryID: a.categoryID,
+							subcatID: a.subcatID,
+							productName: a.productName,
+							productArabicNme: a.productArabicNme,
+							productSKU: a.productSKU,
+							productTag: a.productTag,
+							productDescription: a.productDescription,
+							productPriceVat: a.productPriceVat,
+							productPrice: a.productPrice,
+							productMOQ: a.productMOQ,
+							productImage: a.productImage,
+							productPackagesize: a.productPackagesize,
+							productReviewCount: a.productReviewCount,
+							productRatingCount: a.productRatingCount,
+							productRatingAvg: a.productRatingAvg.split('.')[0],
+							productSoldCount: a.productSoldCount,
+							productStatus: a.productStatus,
+							productCreatedDate: a.productCreatedDate,
+							categoryName: a.categoryName,
+							isFavorite: a.isFavorite,
+							similarproducts: a.similarproducts,
+							addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+						}
+					}))
+				)
+			}
+		}));
+	}
 	ngOnInit(): void {
 		this.jquery();
 	}

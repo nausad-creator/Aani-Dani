@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-skeleton',
-  template: `
+	selector: 'app-skeleton',
+	template: `
     <section id="product-detail-section" class="pb-3 pt-4">
     <div class="container">
         <div class="card">
@@ -95,14 +95,14 @@ import { Component, OnInit } from '@angular/core';
     </div>		
 </section>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class SkeletonComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

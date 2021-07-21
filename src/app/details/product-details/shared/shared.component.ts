@@ -12,7 +12,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	template: `
-  <app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
+  <app-header></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -41,14 +41,14 @@ import { SubSink } from 'subsink';
     <section id="product-detail-section" class="pb-3 pt-4" *ngIf="!loader">
 		<div class="container">
 			<div class="card">
-				<app-details (updateHeader)="changedCountHeader=$event.res" [product]="product"></app-details>
+				<app-details [product]="product"></app-details>
 				<!-- <app-offers></app-offers>  -->
 		      	<div class="row">
 		      		<div class="col-md-8">
 		      			<app-descriptions-and-review [product]="product"></app-descriptions-and-review>	
 		      		</div>
 		      		<div class="col-md-4 borleft">
-		      			<app-top-sellings (updateFromSimilar)="changedCountHeader=$event.res" (change)="onChange($event); loader=true" [similarproduct]="product.similarproducts"></app-top-sellings>
+		      			<app-top-sellings (change)="onChange($event); loader=true" [similarproduct]="product.similarproducts"></app-top-sellings>
 		      		</div>	
 		      	</div>	
 			</div>	
@@ -80,7 +80,6 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		pagesize: '1',
 	};
 	loader = true;
-	changedCountHeader: number;
 	forceReload$ = new Subject<void>();
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	subs = new SubSink();
@@ -88,7 +87,7 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 	product: ProductList;
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	getProducts = () => {
-		return this.root.productLists(JSON.stringify(this.data)).pipe(map(list => list.map(a => {
+		return this.root.product(JSON.stringify(this.data)).pipe(map(list => list.map(a => {
 			return {
 				productID: a.productID,
 				categoryID: a.categoryID,
@@ -154,6 +153,12 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
 				this.data.loginuserID = '1';
+			}
+		}));
+		this.subs.add(this.root.update$.subscribe(status => {
+			if (status === 'refresh_or_reload') {
+				this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+				this.forceReload$.next();
 			}
 		}));
 	}

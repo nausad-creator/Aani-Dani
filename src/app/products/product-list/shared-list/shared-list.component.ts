@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 @Component({
 	selector: 'app-shared-list',
 	template: `
-	<app-header [update]="changedCountHeader ? changedCountHeader : 0"></app-header> <!-- Top Bar -->
+	<app-header></app-header> <!-- Top Bar -->
 	<!-- Header -->
 	<header id="header">
     <div class="container">
@@ -59,9 +59,9 @@ import { Store } from '@ngrx/store';
 					<div class="category_slider card">
 						<app-sort-header (sortBy)="onSort($event);" [categoryName]="route.snapshot.queryParams?.categoryName"></app-sort-header>
 						<div class="sparetor_title">
-				    <h5 class="mb-0">Item (90)</h5>
+				    <h5 class="mb-0">{{'Item ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')'}}</h5>
 				    </div>
-					<app-items (updateHeader)="changedCountHeader=$event.res; updateCart()" [products]="product" *ngIf="!loader"></app-items>
+					<app-items [products]="product.data" *ngIf="!loader"></app-items>
 					<app-skeleton *ngIf="loader"></app-skeleton>
 					</div>				
 				</div>
@@ -78,7 +78,7 @@ import { Store } from '@ngrx/store';
 })
 export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
-	cart:TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
@@ -93,6 +93,12 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 				data.loginuserID = '1';
 			}
 		}));
+		this.subs.add(this.root.update$.subscribe(status => {
+			if (status === 'refresh_or_reload') {
+				this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+				this.forceReload$.next();
+			}
+		}));
 	}
 	ngAfterViewInit(): void {
 		this.jquery();
@@ -103,39 +109,71 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	loader = true;
 	preventAbuse: boolean;
 	subs = new SubSink();
-	product: ProductList[];
+	product: {
+		data: ProductList[];
+		itemscount: string;
+		bestselling: ProductList[];
+		message: string;
+		status: string;
+	} = {
+			data: [],
+			itemscount: '0',
+			bestselling: [],
+			message: '',
+			status: ''
+		};
 	changedCountHeader: number;
-	products$: Observable<ProductList[]> = of(null);
+	products$: Observable<{
+		data: ProductList[];
+		itemscount: string;
+		bestselling: ProductList[];
+		message: string;
+		status: string;
+	}> = of(null);
 	forceReload$ = new Subject<void>();
 	getProducts = (t: string) => {
-		return this.root.productLists(t).pipe(map(list => list.map(a => {
+		return this.root.productLists(t).pipe(map(r => {
 			return {
-				productID: a.productID,
-				categoryID: a.categoryID,
-				subcatID: a.subcatID,
-				productName: a.productName,
-				productArabicNme: a.productArabicNme,
-				productSKU: a.productSKU,
-				productTag: a.productTag,
-				productDescription: a.productDescription,
-				productPriceVat: a.productPriceVat,
-				productPrice: a.productPrice,
-				productMOQ: a.productMOQ,
-				productImage: a.productImage,
-				productPackagesize: a.productPackagesize,
-				productReviewCount: a.productReviewCount,
-				productRatingCount: a.productRatingCount,
-				productRatingAvg: a.productRatingAvg.split('.')[0],
-				productSoldCount: a.productSoldCount,
-				productStatus: a.productStatus,
-				productCreatedDate: a.productCreatedDate,
-				categoryName: a.categoryName,
-				isFavorite: a.isFavorite,
-				similarproducts: a.similarproducts,
-				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+				status: r.status,
+				message: r.message,
+				itemscount: r.itemscount,
+				bestselling: r.bestselling,
+				data: r.data.map(a => {
+					return {
+						productID: a.productID,
+						categoryID: a.categoryID,
+						subcatID: a.subcatID,
+						productName: a.productName,
+						productArabicNme: a.productArabicNme,
+						productSKU: a.productSKU,
+						productTag: a.productTag,
+						productDescription: a.productDescription,
+						productPriceVat: a.productPriceVat,
+						productPrice: a.productPrice,
+						productMOQ: a.productMOQ,
+						productImage: a.productImage,
+						productPackagesize: a.productPackagesize,
+						productReviewCount: a.productReviewCount,
+						productRatingCount: a.productRatingCount,
+						productRatingAvg: a.productRatingAvg.split('.')[0],
+						productSoldCount: a.productSoldCount,
+						productStatus: a.productStatus,
+						productCreatedDate: a.productCreatedDate,
+						categoryName: a.categoryName,
+						isFavorite: a.isFavorite,
+						similarproducts: a.similarproducts,
+						addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+					}
+				})
 			}
-		})), take(1),
-			catchError(() => of([]))) as Observable<ProductList[]>;
+		}), take(1),
+			catchError(() => of([]))) as Observable<{
+				data: ProductList[];
+				itemscount: string;
+				bestselling: ProductList[];
+				message: string;
+				status: string;
+			}>;
 	}
 	updateCart = () => {
 		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
@@ -150,7 +188,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	onChange = async (category: { categoryID: string, categoryName: string }) => {
 		if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
 			// query changes
-			this.loader=true;
+			this.loader = true;
 			dataChange.page = '0';
 			dataChange.categoryID = category.categoryID ? category.categoryID : '0';
 			dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
@@ -170,10 +208,28 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	products = (temp: string) => {
 		// products
-		const initialProducts$ = this.getProducts(temp) as Observable<ProductList[]>;
-		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<ProductList[]>));
+		const initialProducts$ = this.getProducts(temp) as Observable<{
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}>;
+		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<{
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
-		this.subs.add(this.products$.subscribe((res: ProductList[]) => {
+		this.subs.add(this.products$.subscribe((res: {
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}) => {
 			timer(500).subscribe(() => {
 				this.product = res;
 				this.loader = false;
@@ -187,7 +243,13 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	onFilter = ($temp: string) => {
 		data.minPrice = $temp.split(';')[0];
 		data.maxPrice = $temp.split(';')[1];
-		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
+		this.getProducts(JSON.stringify(data)).subscribe((res: {
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}) => {
 			this.product = res;
 			this.preventAbuse = false;
 			this.cd.markForCheck();
@@ -197,7 +259,13 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	onSort = ($temp: string) => {
 		data.sortBy = $temp ? $temp : '';
-		this.getProducts(JSON.stringify(data)).subscribe((res: ProductList[]) => {
+		this.getProducts(JSON.stringify(data)).subscribe((res: {
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}) => {
 			this.product = res;
 			this.cd.markForCheck();
 		}, (err) => {

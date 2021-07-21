@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-top-selling',
-  template: `
+	selector: 'app-top-selling',
+	template: `
     <div class="filterLeftContent mt-3 card text-center topSallinFilter">
 							<h5 class="mb-0">Top Selling Items</h5>	
 							<div class="slider_itemBox">								
@@ -39,14 +39,14 @@ import { Component, OnInit } from '@angular/core';
 						    </div>
 						</div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class TopSellingComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

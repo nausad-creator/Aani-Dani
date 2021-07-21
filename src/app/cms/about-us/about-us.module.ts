@@ -7,20 +7,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    AboutUsComponent,
-    SafeHtmlPipe
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    RouterModule.forChild([
-      {
-        path: '', component: AboutUsComponent,
-      }
-    ])
-  ]
+	declarations: [
+		AboutUsComponent,
+		SafeHtmlPipe
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		RouterModule.forChild([
+			{
+				path: '', component: AboutUsComponent,
+			}
+		])
+	]
 })
 export class AboutUsModule { }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-skeleton',
-  template: `
+	selector: 'app-skeleton',
+	template: `
   <div class="row productListingPage">
   <div class="slider_itemBoxskeleton col-lg-4 col-sm-6">
 	    <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '220px', height: '200px'}"></ngx-skeleton-loader>
@@ -186,14 +186,14 @@ import { Component, OnInit } from '@angular/core';
     </div>
   </div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class SkeletonComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

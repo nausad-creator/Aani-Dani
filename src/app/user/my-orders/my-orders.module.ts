@@ -13,27 +13,27 @@ import { SideFilterComponent } from './my-orders/shared-side-filter.component';
 import { SkeletonComponent } from './skeleton/skeleton.component';
 
 @NgModule({
-  declarations: [
-    MyOrdersComponent,
-    SharedOrderComponent,
-    SideFilterComponent,
-    SkeletonComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    NgxPaginationModule,
-    LazyLoadImageModule,
-    NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: MyOrdersComponent,
-      }
-    ])
-  ]
+	declarations: [
+		MyOrdersComponent,
+		SharedOrderComponent,
+		SideFilterComponent,
+		SkeletonComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '',
+				component: MyOrdersComponent,
+			}
+		])
+	]
 })
 export class MyOrdersModule { }

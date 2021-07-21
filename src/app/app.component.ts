@@ -5,35 +5,84 @@ import { State } from './reducers';
 import { about_us, home, privacy_policy, search, terms_conditions } from 'src/app/global';
 import { LoadAboutUs, LoadFaqs, LoadPrivacyPolicy, LoadTermsCondition } from './actions/cms.action';
 import { LoadNationality } from './actions/others.action';
+import { AuthenticationService } from './authentication.service';
+import { SubSink } from 'subsink';
+import { USER_RESPONSE } from './interface';
+import { RootService } from './root.service';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-  constructor(private store: Store<State>) { }
-  onActivate = () => {
-    window.scroll(0, 0);
-  }
-  ngOnInit(): void {
-    // dispatch initial action;
-    this.store.dispatch(new LoadHome(JSON.stringify(home)));
-    this.store.dispatch(new LoadAboutUs(about_us.code));
-    this.store.dispatch(new LoadTermsCondition(terms_conditions.code));
-    this.store.dispatch(new LoadFaqs());
-    this.store.dispatch(new LoadPrivacyPolicy(privacy_policy.code));
-    this.store.dispatch(new LoadNationality(search.code));
-    // scrolling
-    jQuery(() => {
-      ($(window) as any).scroll(() => {
-        const windowTop = ($(window) as any).scrollTop() + 1;
-        if (windowTop > 50) {
-          $('body').addClass('stick-header');
-        } else {
-          $('body').removeClass('stick-header');
-        }
-      });
-    })
-  }
+	subs = new SubSink();
+	constructor(
+		private store: Store<State>,
+		private auth: AuthenticationService,
+		private root: RootService,
+		private cookie: CookieService) {
+		this.checkStatus();
+	}
+	onActivate = () => {
+		window.scroll(0, 0);
+	}
+	checkStatus = () => {
+		this.subs.add(this.auth.user.subscribe(async (user: USER_RESPONSE) => {
+			if (user) {
+				home.loginuserID = user.userID;
+				await this.root.ordersTemp(JSON.stringify({
+					orderID: '0',
+					loginuserID: user.userID,
+					languageID: '1'
+				})).toPromise().then(r => {
+					if (r[0].status === 'true') {
+						if (localStorage.getItem('tempCart')) {
+							localStorage.removeItem('tempCart');
+						}
+						localStorage.setItem('tempCart', JSON.stringify(r[0].data[0].orderdetails.length > 0 ? r[0].data[0].orderdetails.map(c => {
+							return {
+								productID: c.productID,
+								qty: +c.Qty.split('.')[0]
+							}
+						}) : []));
+						this.cookie.set('Temp_Order_ID', r[0].data.length > 0 ? r[0].data[0].temporderID : '0');
+					}
+					if (r[0].status === 'false') {
+						if (localStorage.getItem('tempCart')) {
+							localStorage.removeItem('tempCart');
+						}
+						this.cookie.set('Temp_Order_ID', '0')
+						this.root.update_user_status$.next('200');
+					}
+				}).catch(err => console.error(err));
+			}
+			if (!user) {
+				if (localStorage.getItem('tempCart')) {
+					localStorage.removeItem('tempCart');
+				}
+			}
+		}));
+	}
+	async ngOnInit(): Promise<void> {
+		// dispatch initial action;
+		this.store.dispatch(new LoadHome(JSON.stringify(home)));
+		this.store.dispatch(new LoadAboutUs(about_us.code));
+		this.store.dispatch(new LoadTermsCondition(terms_conditions.code));
+		this.store.dispatch(new LoadFaqs());
+		this.store.dispatch(new LoadPrivacyPolicy(privacy_policy.code));
+		this.store.dispatch(new LoadNationality(search.code));
+		// scrolling
+		jQuery(() => {
+			($(window) as any).scroll(() => {
+				const windowTop = ($(window) as any).scrollTop() + 1;
+				if (windowTop > 50) {
+					$('body').addClass('stick-header');
+				} else {
+					$('body').removeClass('stick-header');
+				}
+			});
+		})
+	}
 }

@@ -3,8 +3,8 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Category } from 'src/app/interface';
 
 @Component({
-    selector: 'app-most-popular-best-seller',
-    template: `
+	selector: 'app-most-popular-best-seller',
+	template: `
     <section class="LowestPrice-section pt-0">
     <div class="container">
         <div class="card">
@@ -45,38 +45,38 @@ import { Category } from 'src/app/interface';
     </div>
   </section>
   `,
-    styles: [
-    ], changeDetection: ChangeDetectionStrategy.OnPush
+	styles: [
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MostPopularBestSellerComponent implements OnInit, AfterViewInit {
-    @Input() categories: Category[] = []
-    caseOptions: OwlOptions = {
-        dots: false,
-        loop: false,
-        nav: true,
-        margin: 0,
-        navText: ["<i class='icofont-rounded-left'></i>", "<i class='icofont-rounded-right'></i>"],
-        responsive: {
-            0: {
-                items: 1
-            },
-            574: {
-                items: 1
-            },
-            800: {
-                items: 2
-            },
-            1000: {
-                items: 3
-            },
-            1200: {
-                items: 3
-            }
-        }
-    };
-    constructor() { }
-    ngAfterViewInit(): void {
-    }
-    ngOnInit(): void {
-    }
+	@Input() categories: Category[] = []
+	caseOptions: OwlOptions = {
+		dots: false,
+		loop: false,
+		nav: true,
+		margin: 0,
+		navText: ["<i class='icofont-rounded-left'></i>", "<i class='icofont-rounded-right'></i>"],
+		responsive: {
+			0: {
+				items: 1
+			},
+			574: {
+				items: 1
+			},
+			800: {
+				items: 2
+			},
+			1000: {
+				items: 3
+			},
+			1200: {
+				items: 3
+			}
+		}
+	};
+	constructor() { }
+	ngAfterViewInit(): void {
+	}
+	ngOnInit(): void {
+	}
 }

@@ -95,7 +95,7 @@ export class OtpComponent implements OnInit {
 		private cd: ChangeDetectorRef,
 		private fb: FormBuilder,
 		private auth: AuthenticationService
-	) {}
+	) { }
 	onResendClick = () => {
 		this.auth.otpResendVerification(JSON.stringify(this.verificationForm.value)).subscribe(
 			(res) => {
@@ -237,7 +237,7 @@ export class OtpComponent implements OnInit {
 		this.onClose();
 		const initialState = {
 			list: [res]
-		  };
+		};
 		this.bsModal = this.modal.show(ResetComponent, { id: 102, initialState });
 	}
 	ngOnInit(): void {

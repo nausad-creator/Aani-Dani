@@ -10,24 +10,24 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
-  declarations: [
-    CustomerSupportComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    NgxPaginationModule,
-    LazyLoadImageModule,
-    NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: CustomerSupportComponent,
-      }
-    ])
-  ]
+	declarations: [
+		CustomerSupportComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '',
+				component: CustomerSupportComponent,
+			}
+		])
+	]
 })
 export class CustomerSupportModule { }

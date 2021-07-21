@@ -9,24 +9,24 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @NgModule({
-  declarations: [
-    MyAccountComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: MyAccountComponent,
-      }
-    ])
-  ]
+	declarations: [
+		MyAccountComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		OwlDateTimeModule,
+		OwlNativeDateTimeModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '',
+				component: MyAccountComponent,
+			}
+		])
+	]
 })
 export class MyAccountModule { }

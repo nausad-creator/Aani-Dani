@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Nationality, USER_RESPONSE } from 'src/app/interface';
+import { Nationality, ProductList, USER_RESPONSE } from 'src/app/interface';
 import { selectNationalyList, State } from 'src/app/reducers';
 import { LoginComponent } from './login.component';
 import { OtpRegisterComponent } from './otp.register.component';
@@ -129,6 +129,7 @@ export class RegistrationComponent implements OnInit {
 	hideReenter = true;
 	maxDate = new Date();
 	preventAbuse = false;
+	list: { status: string, product: ProductList }[] = [];
 	nationalities$: Observable<Nationality[]> = this.store.select(selectNationalyList);
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	@ViewChild('userFullNameInput', { static: false }) userFullName: ElementRef;
@@ -163,9 +164,9 @@ export class RegistrationComponent implements OnInit {
 		const password = group.get('userPassword').value;
 		const confirmPassword = group.get('userRePassword').value;
 		if (password && confirmPassword) {
-		  return password === confirmPassword ? null : { confirmedValidator: true };
+			return password === confirmPassword ? null : { confirmedValidator: true };
 		}
-	  }
+	}
 	onClickregister = async (post: {
 		userFullName: string;
 		userEmail: string;
@@ -337,10 +338,14 @@ export class RegistrationComponent implements OnInit {
 	openOTP = (res: USER_RESPONSE) => {
 		this.onClose();
 		const initialState = {
-		  list: [res]
+			list: [{
+				user: res,
+				status: 'Location',
+				product: this.list[0].product
+			}]
 		};
 		this.bsModal = this.modal.show(OtpRegisterComponent, { id: 199, initialState });
-	  }
+	}
 	markFormTouched = (group: FormGroup | FormArray) => {
 		Object.keys(group.controls).forEach((key: string) => {
 			const control = group.controls[key];

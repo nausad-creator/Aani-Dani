@@ -3,8 +3,8 @@ import { FormControl } from '@angular/forms';
 import { ProductList } from 'src/app/interface';
 
 @Component({
-    selector: 'app-shared-orders-details',
-    template: `
+	selector: 'app-shared-orders-details',
+	template: `
     <div class="paymentDetails">
                             <h5>Your Order</h5>
                             <div class="tableCart">
@@ -74,22 +74,22 @@ import { ProductList } from 'src/app/interface';
                             </div>
         </div>
   `,
-    styles: [
-    ]
+	styles: [
+	]
 })
 export class SharedOrdersDetailsComponent implements OnInit {
-    @Input() billingDetails: {
-        delivery_Tip: string;
-        delivery_Fee: string;
-        item_Total: string;
-        vat: string;
-        net_Payable: string;
-    };
-    @Input() products: ProductList[] = [];
-    @Input() preventAbuse: boolean;
-    @Output() place: EventEmitter<string> = new EventEmitter();
-    orderNote = new FormControl('');
-    constructor() { }
-    ngOnInit(): void {
-    }
+	@Input() billingDetails: {
+		delivery_Tip: string;
+		delivery_Fee: string;
+		item_Total: string;
+		vat: string;
+		net_Payable: string;
+	};
+	@Input() products: ProductList[] = [];
+	@Input() preventAbuse: boolean;
+	@Output() place: EventEmitter<string> = new EventEmitter();
+	orderNote = new FormControl('');
+	constructor() { }
+	ngOnInit(): void {
+	}
 }

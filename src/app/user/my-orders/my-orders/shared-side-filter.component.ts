@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-side-filter',
-  template: `
+	selector: 'app-side-filter',
+	template: `
                 <div class="Mobilefilter">
                     <a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
                 </div>	
@@ -42,14 +42,14 @@ import { Component, OnInit } from '@angular/core';
                 </div>
                 <br>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class SideFilterComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-shared-skeleton-orders-details',
-    template: `
+	selector: 'app-shared-skeleton-orders-details',
+	template: `
     <div class="paymentDetails">
                             <h5><ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '25%' }"></ngx-skeleton-loader></h5>
                             <div class="tableCart">
@@ -82,8 +82,8 @@ import { Component } from '@angular/core';
                             </div>
                         </div>
   `,
-    styles: [
-    ]
+	styles: [
+	]
 })
 export class SharedSkeletonDetailsComponent {
 }

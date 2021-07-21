@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { privacy_policy, State } from 'src/app/reducers';
 
 @Component({
-  selector: 'app-privacy-policy',
-  template: `
+	selector: 'app-privacy-policy',
+	template: `
   <section id="about" class="about pt-3">
       <div class="container">
         <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> Privacy policy</span> </div>
@@ -27,14 +27,14 @@ import { privacy_policy, State } from 'src/app/reducers';
       </div>
     </section><!-- End About Section -->
   `,
-  styles: []
+	styles: []
 })
 export class PrivacyPolicyComponent implements OnInit {
-  privacy_policy$: Observable<{
-    cmspageName: string;
-    cmspageContents: string;
-  }> = this.store.select(privacy_policy);
-  constructor(private store: Store<State>,) { }
-  ngOnInit(): void {
-  }
+	privacy_policy$: Observable<{
+		cmspageName: string;
+		cmspageContents: string;
+	}> = this.store.select(privacy_policy);
+	constructor(private store: Store<State>,) { }
+	ngOnInit(): void {
+	}
 }

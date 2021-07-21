@@ -2,20 +2,20 @@ import { CategoriesActionTypes, CategoryActions } from '../actions/categories.ac
 import { Category } from '../interface';
 
 export interface CategoryState {
-    categories: Category[];
+	categories: Category[];
 }
 export const initialState: CategoryState = {
-    categories: []
+	categories: []
 };
 
 export function categoriesReducer(state = initialState, action: CategoryActions): CategoryState {
-    switch (action.type) {
-        case CategoriesActionTypes.LoadCategoriesSuccess:
-            return { ...state, categories: action.data }
-        case CategoriesActionTypes.LoadCategoriesFailure:
-            return { ...state, categories: [] }
-        default:
-            return state;
-    }
+	switch (action.type) {
+		case CategoriesActionTypes.LoadCategoriesSuccess:
+			return { ...state, categories: action.data }
+		case CategoriesActionTypes.LoadCategoriesFailure:
+			return { ...state, categories: [] }
+		default:
+			return state;
+	}
 }
 

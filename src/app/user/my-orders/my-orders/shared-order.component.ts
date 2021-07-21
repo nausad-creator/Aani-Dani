@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { Orders } from 'src/app/interface';
 
 @Component({
-    selector: 'app-shared-order',
-    template: `
+	selector: 'app-shared-order',
+	template: `
             <div class="category_slider card">
     <div class="card-header bg-white">
         <div class="section-title row pb-0">
@@ -66,15 +66,15 @@ import { Orders } from 'src/app/interface';
     </div>
 </div>		
   `,
-    styles: [
-    ], changeDetection: ChangeDetectionStrategy.OnPush
+	styles: [
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedOrderComponent implements OnInit {
-    @Input() orders: Orders[];
-    constructor() { }
+	@Input() orders: Orders[];
+	constructor() { }
 
-    ngOnInit(): void {
-        console.log(this.orders);
-    }
+	ngOnInit(): void {
+		console.log(this.orders);
+	}
 
 }

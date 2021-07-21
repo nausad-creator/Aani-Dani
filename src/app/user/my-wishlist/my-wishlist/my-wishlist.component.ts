@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-my-wishlist',
-  template: `
+	selector: 'app-my-wishlist',
+	template: `
     <div class="tab-pane fade show active" id="MyWishlist" role="tabpanel" aria-labelledby="contact-tab">
 						  		<div class="titleAccount">
 						  			<h5>My Wishlist (2)</h5>						  			
@@ -81,14 +81,14 @@ import { Component, OnInit } from '@angular/core';
 					        	</div>
 						  	</div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class MyWishlistComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

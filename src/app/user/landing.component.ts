@@ -23,7 +23,7 @@ import { data } from 'src/app/global';
 								 <a class="nav-link" routerLink="/user/my-account" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active"><i class="icofont-ui-user"></i> <span>My Account</span> <i class="icofont-simple-right"></i></a>
 								  </li>
 								  <li class="nav-item">
-								 <a class="nav-link" routerLink="/user/saved-address" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active"><i class="icofont-address-book"></i> <span>Saved Addresses</span> <i class="icofont-simple-right"></i></a>
+								 <a class="nav-link" routerLink="/user/saved-address" routerLinkActive="active"><i class="icofont-address-book"></i> <span>Saved Addresses</span> <i class="icofont-simple-right"></i></a>
 								  </li>
 								  <li class="nav-item">
 								 <a class="nav-link" routerLink="/user/my-orders"><i class="fas fa-box"></i> <span>My Orders</span> <i class="icofont-simple-right"></i></a>

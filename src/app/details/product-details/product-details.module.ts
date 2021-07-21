@@ -17,30 +17,30 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
-  declarations: [
-    DetailsComponent,
-    DescriptionsAndReviewComponent,
-    TopSellingsComponent,
-    SharedComponent,
-    OffersComponent,
-    SkeletonComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CarouselModule,
-    HeaderModule,
-    NgSelectModule,
-    NgxPaginationModule,
-	  LazyLoadImageModule,
-	  NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '', component: SharedComponent
-      },
-    ]),
-  ]
+	declarations: [
+		DetailsComponent,
+		DescriptionsAndReviewComponent,
+		TopSellingsComponent,
+		SharedComponent,
+		OffersComponent,
+		SkeletonComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		CarouselModule,
+		HeaderModule,
+		NgSelectModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '', component: SharedComponent
+			},
+		]),
+	]
 })
 export class ProductDetailsModule { }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-notifications',
-  template: `
+	selector: 'app-notifications',
+	template: `
     <div class="tab-pane fade show active" id="Notifications" role="tabpanel" aria-labelledby="contact-tab">
 						  		<div class="titleAccount">
 						  			<h5>Notifications</h5>						  			
@@ -58,14 +58,14 @@ import { Component, OnInit } from '@angular/core';
 								</div>	
 						  	</div>
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class NotificationsComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

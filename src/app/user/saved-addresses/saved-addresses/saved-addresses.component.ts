@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { ADDRESS, USER_RESPONSE } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
 @Component({
@@ -29,11 +31,11 @@ import { SubSink } from 'subsink';
      </div>	
      <div class="addresDisplay" *ngIf="user.address.length === 0">
         <div class="addresItem pt-3">
-            <div>
+            <!-- <div>
                 <p class="text-center">No address found.</p>
-            </div>
-            <br>
-            <div class="pt-3"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ Add New Address</button></div>
+            </div> -->
+            <!-- <br> -->
+            <div class="pt-1"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ Add New Address</button></div>
         </div>
     </div>	
 </div>
@@ -51,6 +53,8 @@ export class SavedAddressesComponent implements OnInit {
 		private cd: ChangeDetectorRef,
 		private auth: AuthenticationService,
 		private toastr: ToastrService,
+		private root: RootService,
+		private route: ActivatedRoute
 	) { }
 	ngOnInit(): void {
 		this.update({ status: 200 });
@@ -58,7 +62,14 @@ export class SavedAddressesComponent implements OnInit {
 			$('.closeSidebar').on('click', function () {
 				$('.AddressSidebar').removeClass('opensidebar');
 			});
-		})
+		});
+		// query changes
+		if (this.route.snapshot.queryParams.tag && this.route.snapshot.queryParams.tag === 'add_new') {
+			this.add_or_edit = true;
+			setTimeout(() => {
+				this.click();
+			}, 500);
+		}
 	}
 	update = (status: { status: number }) => {
 		if (status.status === 200) {
@@ -87,12 +98,15 @@ export class SavedAddressesComponent implements OnInit {
 				const index = this.user.address.indexOf(this.user.address.filter(r => r.addressID === addressID)[0], 0);
 				this.user.address.splice(index, 1);
 				if (localStorage.getItem('USER_LOGGED')) {
+					this.auth.updateUser(this.user);
 					localStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				if (sessionStorage.getItem('USER_LOGGED')) {
+					this.auth.updateUser(this.user);
 					sessionStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				this.update({ status: 200 });
+				this.root.update_user_status$.next('update_header');
 				this.toastr.success('address deleted successfully');
 			}
 		})
@@ -104,24 +118,27 @@ export class SavedAddressesComponent implements OnInit {
 			languageID: '1',
 		})).subscribe(r => {
 			if (r.status === 'true') {
+				const list = this.user.address;
+				list.map(a => {
+					if (a.addressID === addressID) {
+						a.addressIsDefault = 'Yes';
+					} else {
+						a.addressIsDefault = 'No';
+					}
+				});
 				const index = this.user.address.indexOf(this.user.address.filter(r => r.addressID === addressID)[0], 0);
 				if (localStorage.getItem('USER_LOGGED')) {
-					const tempAddress = this.user.address.filter(a => a.addressID === addressID)[0];
-					tempAddress.addressIsDefault = 'Yes'
-					this.user.address.splice(index, 1);
-					this.user.address.push(tempAddress);
-					console.log(tempAddress)
+					this.user.address = list;
+					this.auth.updateUser(this.user);
 					localStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				if (sessionStorage.getItem('USER_LOGGED')) {
-					const tempAddress = this.user.address.filter(a => a.addressID === addressID)[0];
-					tempAddress.addressIsDefault = 'Yes'
-					this.user.address.splice(index, 1);
-					this.user.address.push(tempAddress);
-					console.log(tempAddress)
+					this.user.address = list;
+					this.auth.updateUser(this.user);
 					sessionStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 				}
 				this.update({ status: 200 });
+				this.root.update_user_status$.next('update_header');
 				this.toastr.success('default changed successfully');
 			}
 		})

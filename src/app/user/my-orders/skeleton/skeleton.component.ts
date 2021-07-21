@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-skeleton',
-  template: `
+	selector: 'app-skeleton',
+	template: `
 					<div class="category_slider card">
 						<div class="card-header bg-white">
 					        <div class="section-title row pb-0">
@@ -108,14 +108,14 @@ import { Component, OnInit } from '@angular/core';
 				        </div>	
 					</div>	
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class SkeletonComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

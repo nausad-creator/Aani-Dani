@@ -19,32 +19,32 @@ import { NgProgressModule } from 'ngx-progressbar';
 import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
-  declarations: [
-    SharedListComponent,
-    ShopByCategoryComponent,
-    FilterByPriceComponent,
-    FilterByShapeComponent,
-    TopSellingComponent,
-    ItemsComponent,
-    SortHeaderComponent,
-    SkeletonComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    NgProgressModule,
-    FormsModule,
-    NgSelectModule,
-    HeaderModule,
-    NgxPaginationModule,
-	  LazyLoadImageModule,
-	  NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '', component: SharedListComponent
-      },
-    ]),
-  ]
+	declarations: [
+		SharedListComponent,
+		ShopByCategoryComponent,
+		FilterByPriceComponent,
+		FilterByShapeComponent,
+		TopSellingComponent,
+		ItemsComponent,
+		SortHeaderComponent,
+		SkeletonComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		NgProgressModule,
+		FormsModule,
+		NgSelectModule,
+		HeaderModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '', component: SharedListComponent
+			},
+		]),
+	]
 })
 export class ProductListModule { }

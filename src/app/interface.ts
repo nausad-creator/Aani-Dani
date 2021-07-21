@@ -123,6 +123,7 @@ export interface USER_RESPONSE {
 	languageName: string;
 	address: ADDRESS[];
 	settings: SETTINGS[];
+	storeID: string;
 }
 export interface SETTINGS {
 	settingsID: string;
@@ -211,9 +212,9 @@ export interface TempOrders {
 	billingDetails: {
 		delivery_Tip: number;
 		delivery_Fee: number;
-        item_Total: number;
-        vat: number;
-        net_Payable: number;
+		item_Total: number;
+		vat: number;
+		net_Payable: number;
 	}
 }
 export interface Orders {
@@ -317,4 +318,26 @@ export interface ChangePassword {
 export interface TempCartItems {
 	productID: string;
 	qty: number;
+}
+export interface Store {
+	storeID: string;
+	storeClientID: string;
+	storeName: string;
+	storeManagerName: string;
+	storeCode: string;
+	storeCity: string;
+	cityID: string;
+	storeEmail: string;
+	storeManagerMobile: string;
+	storeMobile: string;
+	storeOpeningTime: string;
+	storeClosingTime: string;
+	storeOffDay: string;
+	storeLatitude: string;
+	storeLangitude: string;
+	storeMapUrl: string;
+	storeStatus: string;
+	storeBarqHubID: string;
+	distance_in_km: string;
+	offlinedelivery: string;
 }

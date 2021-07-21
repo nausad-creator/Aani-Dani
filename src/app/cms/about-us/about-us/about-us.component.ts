@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { about_us, State } from 'src/app/reducers';
 
 @Component({
-  selector: 'app-about-us',
-  template: `
+	selector: 'app-about-us',
+	template: `
     <!-- ======= About Section ======= -->
     <section id="about" class="about pt-3">
       <div class="container">
@@ -25,15 +25,15 @@ import { about_us, State } from 'src/app/reducers';
       </div>
     </section><!-- End About Section -->
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class AboutUsComponent implements OnInit {
-  about_us$: Observable<{
-    cmspageName: string;
-    cmspageContents: string;
-  }> = this.store.select(about_us);
-  constructor(private store: Store<State>,) { }
-  ngOnInit(): void {
-  }
+	about_us$: Observable<{
+		cmspageName: string;
+		cmspageContents: string;
+	}> = this.store.select(about_us);
+	constructor(private store: Store<State>,) { }
+	ngOnInit(): void {
+	}
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-customer-support',
-  template: `
+	selector: 'app-customer-support',
+	template: `
     <div class="tab-pane fade show active" id="Support" role="tabpanel" aria-labelledby="contact-tab">
 						  		<div class="titleAccount">
 						  			<h5>Customer Support</h5>						  			
@@ -53,14 +53,14 @@ import { Component, OnInit } from '@angular/core';
 						  		</div>
 						  	</div>	
   `,
-  styles: [
-  ]
+	styles: [
+	]
 })
 export class CustomerSupportComponent implements OnInit {
 
-  constructor() { }
+	constructor() { }
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+	}
 
 }

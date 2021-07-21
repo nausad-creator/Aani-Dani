@@ -18,31 +18,31 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { HeaderModule } from 'src/app/header/header.module';
 
 @NgModule({
-  declarations: [
-    BannerComponent,
-    BestSellingComponent,
-    SkeletonComponent,
-    OffersComponent,
-    MostPopularBestSellerComponent,
-    OurPartnersComponent,
-    SharedComponent
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    CarouselModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule,
-    HeaderModule,
-    NgxPaginationModule,
-	  LazyLoadImageModule,
-	  NgxSkeletonLoaderModule,
-    RouterModule.forChild([
-      {
-        path: '', component: SharedComponent
-      },
-    ]),
-  ]
+	declarations: [
+		BannerComponent,
+		BestSellingComponent,
+		SkeletonComponent,
+		OffersComponent,
+		MostPopularBestSellerComponent,
+		OurPartnersComponent,
+		SharedComponent
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		CarouselModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		HeaderModule,
+		NgxPaginationModule,
+		LazyLoadImageModule,
+		NgxSkeletonLoaderModule,
+		RouterModule.forChild([
+			{
+				path: '', component: SharedComponent
+			},
+		]),
+	]
 })
 export class LandingModule { }

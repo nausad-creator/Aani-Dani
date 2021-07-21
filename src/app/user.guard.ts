@@ -4,19 +4,19 @@ import { Observable } from 'rxjs';
 import { RootService } from './root.service';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class UserGuard implements CanActivate {
-  constructor(readonly router: Router, private service: RootService) {}
-  canActivate(
-	route: ActivatedRouteSnapshot,
-	state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
+	constructor(readonly router: Router, private service: RootService) { }
+	canActivate(
+		route: ActivatedRouteSnapshot,
+		state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
 		return true;
-	// const currentUser = this.service.isAuthenticated();
-	// if (currentUser) {
-	// 	return true;
-	// } else {
-	// 	return this.router.createUrlTree(['/'], { queryParams: { auth: false } });
-	// }
-  }
+		// const currentUser = this.service.isAuthenticated();
+		// if (currentUser) {
+		// 	return true;
+		// } else {
+		// 	return this.router.createUrlTree(['/'], { queryParams: { auth: false } });
+		// }
+	}
 }

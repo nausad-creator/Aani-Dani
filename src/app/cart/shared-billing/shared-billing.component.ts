@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-shared-billing',
-    template: `
+	selector: 'app-shared-billing',
+	template: `
     <div class="paymentDetails" *ngIf="billingDetails.item_Total !== null && billingDetails.item_Total !== 0">
                             <h5>Bill Details</h5>
                             <div class="coponCode d-flex">
@@ -43,18 +43,18 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
                             <button type="button" routerLink='/checkout' class="btn btn-them btn-md w-100">Proceed to Checkout</button>
     </div>
   `,
-    styles: [
-    ], changeDetection: ChangeDetectionStrategy.OnPush
+	styles: [
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedBillingComponent implements OnInit {
-    @Input() billingDetails: {
+	@Input() billingDetails: {
 		delivery_Tip: number;
-        delivery_Fee: number;
-        item_Total: number;
-        vat: number;
-        net_Payable: number;
+		delivery_Fee: number;
+		item_Total: number;
+		vat: number;
+		net_Payable: number;
 	};
-    constructor() { }
-    ngOnInit(): void {
-    }
+	constructor() { }
+	ngOnInit(): void {
+	}
 }

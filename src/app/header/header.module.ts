@@ -13,33 +13,43 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 import { OtpRegisterComponent } from './onboarding/otp.register.component';
+import { LocationSelectionComponent } from './onboarding/location-selection.component';
+import { AddressListComponent } from './onboarding/address-list.component';
+import { MyFilterAdressPipe } from './onboarding/add.pipe';
+import { TooltipModule } from 'ng2-tooltip-directive';
+import { AlertComponent } from './onboarding/alert.component';
 
 @NgModule({
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-    ScrollToTopComponent,
-    LoginComponent,
-    RegistrationComponent,
-    OtpComponent,
-    ResetComponent,
-    ForgotComponent,
-    OtpRegisterComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    OwlDateTimeModule,
-    OwlNativeDateTimeModule,
-    ReactiveFormsModule,
-    FormsModule,
-    NgSelectModule
-  ],
-  exports: [
-    HeaderComponent,
-    FooterComponent,
-    ScrollToTopComponent,
-    CommonModule
-]
+	declarations: [
+		HeaderComponent,
+		FooterComponent,
+		ScrollToTopComponent,
+		LoginComponent,
+		RegistrationComponent,
+		OtpComponent,
+		ResetComponent,
+		ForgotComponent,
+		OtpRegisterComponent,
+		LocationSelectionComponent,
+		AddressListComponent,
+		MyFilterAdressPipe,
+		AlertComponent
+	],
+	imports: [
+		CommonModule,
+		RouterModule,
+		OwlDateTimeModule,
+		OwlNativeDateTimeModule,
+		ReactiveFormsModule,
+		FormsModule,
+		NgSelectModule,
+		TooltipModule
+	],
+	exports: [
+		HeaderComponent,
+		FooterComponent,
+		ScrollToTopComponent,
+		CommonModule
+	]
 })
 export class HeaderModule { }

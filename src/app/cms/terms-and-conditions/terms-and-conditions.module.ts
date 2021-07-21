@@ -7,20 +7,20 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SafeHtmlPipe } from './cms.pipe';
 
 @NgModule({
-  declarations: [
-    TermsComponent,
-    SafeHtmlPipe
-  ],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    RouterModule.forChild([
-      {
-        path: '', component: TermsComponent,
-      }
-    ])
-  ]
+	declarations: [
+		TermsComponent,
+		SafeHtmlPipe
+	],
+	imports: [
+		CommonModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		FormsModule,
+		RouterModule.forChild([
+			{
+				path: '', component: TermsComponent,
+			}
+		])
+	]
 })
 export class TermsAndConditionsModule { }

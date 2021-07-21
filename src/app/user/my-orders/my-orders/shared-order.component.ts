@@ -72,9 +72,7 @@ import { Orders } from 'src/app/interface';
 export class SharedOrderComponent implements OnInit {
 	@Input() orders: Orders[];
 	constructor() { }
-
 	ngOnInit(): void {
-		console.log(this.orders);
 	}
 
 }

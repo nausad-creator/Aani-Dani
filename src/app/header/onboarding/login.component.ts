@@ -153,7 +153,7 @@ export class LoginComponent implements OnInit {
 							this.onClose();
 						}
 						this.logIn.reset();
-					}, 100);
+					}, 500);
 				}).catch((error: string) => {
 					this.error = error;
 					this.preventAbuse = false;

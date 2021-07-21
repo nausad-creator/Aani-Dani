@@ -341,3 +341,8 @@ export interface Store {
 	distance_in_km: string;
 	offlinedelivery: string;
 }
+export interface AddressComponents {
+	long_name: string;
+	short_name: string;
+	types: string[];
+}

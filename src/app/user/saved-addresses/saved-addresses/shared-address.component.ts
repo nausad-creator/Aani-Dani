@@ -5,7 +5,7 @@ import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { USER_RESPONSE, ADDRESS } from 'src/app/interface';
+import { USER_RESPONSE, ADDRESS, AddressComponents } from 'src/app/interface';
 import { LocationService } from 'src/app/location.service';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
@@ -16,7 +16,7 @@ import { SubSink } from 'subsink';
     <!--Address Sidebar -->
 	<div class="AddressSidebar">
 		<div class="Sidebar-content">
-			<a class="closeSidebar cursr">&times;</a>	
+			<a (click)="changeQuery()" class="closeSidebar cursr">&times;</a>	
 			<h5>Save Delivery Address</h5>
 			<div id="map" style="height:250px;"></div>
 			<form class="text-left form-addree" (ngSubmit)="add ? onClickAdd(addressAddEditForm.getRawValue()) : onClickUpdate(addressAddEditForm.getRawValue())" [formGroup]="addressAddEditForm">	
@@ -67,7 +67,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 	preventAbuse = false;
 	options = {
 		types: [],
-		componentRestrictions: { country: 'IN' }
+		componentRestrictions: { country: 'SA' }
 	};
 	address_Type = [
 		{
@@ -106,6 +106,14 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 			}
 		}));
 	}
+	changeQuery = () => {
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: { tag: 'changed' },
+			replaceUrl: true,
+			queryParamsHandling: 'merge'
+		});
+	}
 	ngOnDestroy(): void {
 	}
 	ngOnChanges(changes: SimpleChanges): void {
@@ -113,43 +121,42 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 			this.getCurrentLocation();
 		}
 		if (!this.add && this.data) {
-			this.subs.add(this.loc.getLocationFromLatLng(+this.data.addressLati, +this.data.addressLongi).subscribe((add: string) => {
-				if (add !== 'Not found' && add !== null && add !== undefined && add !== '') {
-					const formatted = add.split(', ');
-					const zipState = formatted[formatted.length - 2].toString();
-					const zipAndState = zipState ? zipState.split(' ') : '';
-					this.map(+this.data.addressLati, +this.data.addressLongi, `<div id="content"><div id="siteNotice"></div>${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''} <br /> ${formatted.length > 1 ? `${formatted[2]}` : ''}</div>`, 15);
-					this.addressAddEditForm.get('addressBlockNo').patchValue(`${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''}`);
-					this.addressAddEditForm.get('addressLandmark').patchValue(formatted.length > 1 ? `${formatted[2]}` : '');
-					this.addressAddEditForm.get('addressPincode').patchValue(`${zipState ? zipAndState[1] : ''}`);
-					this.addressAddEditForm.get('cityName').patchValue(`${formatted[formatted.length - 3] ? formatted[formatted.length - 3] : ''}`);
-					this.addressAddEditForm.get('state').patchValue(`${zipState ? zipAndState[0] : ''}`);
-					this.addressAddEditForm.get('addressLati').patchValue(+this.data.addressLati);
-					this.addressAddEditForm.get('addressLongi').patchValue(+this.data.addressLongi);
-					this.addressAddEditForm.get('addressID').patchValue(this.data.addressID);
-					this.addressAddEditForm.get('addressMobile').patchValue(this.data.addressMobile);
-					this.addressAddEditForm.get('addressType').patchValue(this.data.addressType);
-					this.addressAddEditForm.get('addressTitle').patchValue(this.data.addressTitle);
-					this.addressAddEditForm.get('addressBuildingName').patchValue(this.data.addressBuildingName);
-					this.addressAddEditForm.get('addressIsDefault').patchValue(this.data.addressIsDefault === 'Yes' ? 'Yes' : 'No');
-					this.cd.markForCheck();
-				}
-			}, err => console.error(err)));
+			this.subs.add(this.loc.getLocationFromLatLng(+this.data.addressLati, +this.data.addressLongi).subscribe(
+				(add: { components: AddressComponents[], formatted_address: string }) => {
+					if (add.components.length > 0) {
+						const formatted = add.formatted_address.split(', ');
+						this.map(+this.data.addressLati, +this.data.addressLongi, `<div id="content"><div id="siteNotice"></div>${formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`} <br /> ${add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : ''}</div>`, 18);
+						this.addressAddEditForm.get('addressBlockNo').patchValue(formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`);
+						this.addressAddEditForm.get('addressLandmark').patchValue(add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name : '');
+						this.addressAddEditForm.get('addressPincode').patchValue(add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name ? add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name : '0');
+						this.addressAddEditForm.get('cityName').patchValue(add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : '');
+						this.addressAddEditForm.get('state').patchValue(add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name : '');
+						this.addressAddEditForm.get('countryName').patchValue(add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name : 'Saudi Arabia');
+						this.addressAddEditForm.get('addressLati').patchValue(+this.data.addressLati);
+						this.addressAddEditForm.get('addressLongi').patchValue(+this.data.addressLongi);
+						this.addressAddEditForm.get('addressID').patchValue(this.data.addressID);
+						this.addressAddEditForm.get('addressMobile').patchValue(this.data.addressMobile);
+						this.addressAddEditForm.get('addressType').patchValue(this.data.addressType);
+						this.addressAddEditForm.get('addressTitle').patchValue(this.data.addressTitle);
+						this.addressAddEditForm.get('addressBuildingName').patchValue(this.data.addressBuildingName);
+						this.addressAddEditForm.get('addressIsDefault').patchValue(this.data.addressIsDefault === 'Yes' ? 'Yes' : 'No');
+						this.cd.markForCheck();
+					}
+				}, err => console.error(err)));
 		}
 	}
 	handleAddressAdd = (address: Address) => {
 		this.subs.add(this.loc.getLocationFromLatLng(address.geometry.location.lat(), address.geometry.location.lng()).subscribe(
-			(add: string) => {
-				if (add !== 'Not found' && add !== null && add !== undefined && add !== '') {
-					const formatted = add.split(', ');
-					const zipState = formatted[formatted.length - 2].toString();
-					const zipAndState = zipState ? zipState.split(' ') : '';
-					this.map(address.geometry.location.lat(), address.geometry.location.lng(), `<div id="content"><div id="siteNotice"></div>${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''} <br /> ${formatted.length > 1 ? `${formatted[2]}` : ''}</div>`, 15);
-					this.addressAddEditForm.get('addressBlockNo').patchValue(`${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''}`);
-					this.addressAddEditForm.get('addressLandmark').patchValue(formatted.length > 1 ? `${formatted[2]}` : '');
-					this.addressAddEditForm.get('addressPincode').patchValue(`${zipState ? zipAndState[1] : ''}`);
-					this.addressAddEditForm.get('cityName').patchValue(`${formatted[formatted.length - 3] ? formatted[formatted.length - 3] : ''}`);
-					this.addressAddEditForm.get('state').patchValue(`${zipState ? zipAndState[0] : ''}`);
+			(add: { components: AddressComponents[], formatted_address: string }) => {
+				if (add.components.length > 0) {
+					const formatted = add.formatted_address.split(', ');
+					this.map(address.geometry.location.lat(), address.geometry.location.lng(), `<div id="content"><div id="siteNotice"></div>${formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`} <br /> ${add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : ''}</div>`, 18);
+					this.addressAddEditForm.get('addressBlockNo').patchValue(formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`);
+					this.addressAddEditForm.get('addressLandmark').patchValue(add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name : '');
+					this.addressAddEditForm.get('addressPincode').patchValue(add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name ? add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name : '0');
+					this.addressAddEditForm.get('cityName').patchValue(add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : '');
+					this.addressAddEditForm.get('state').patchValue(add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name : '');
+					this.addressAddEditForm.get('countryName').patchValue(add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name ? add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name : 'Saudi Arabia');
 					this.addressAddEditForm.get('addressLati').patchValue(address.geometry.location.lat());
 					this.addressAddEditForm.get('addressLongi').patchValue(address.geometry.location.lng());
 					this.cd.markForCheck();
@@ -160,21 +167,16 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 		this.intialize();
 	}
 	getCurrentLocation = () => {
-		this.loc.get().subscribe((res: {
-			formatted_address: string;
-			position_latitude: number;
-			position_longitude: number;
-		}) => {
-			if (res.formatted_address !== 'Not found' && res.formatted_address !== null && res.formatted_address !== undefined && res.formatted_address !== '') {
-				const formatted = res.formatted_address.split(', ');
-				const zipState = formatted[formatted.length - 2].toString();
-				const zipAndState = zipState ? zipState.split(' ') : '';
-				this.map(res.position_latitude, res.position_longitude, `<div id="content"><div id="siteNotice"></div>${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''} <br /> ${formatted.length > 1 ? `${formatted[2]}` : ''}</div>`, 15);
-				this.addressAddEditForm.get('addressBlockNo').patchValue(`${formatted.length > 0 ? formatted[0] : ''}, ${formatted.length >= 1 ? formatted[1] : ''}`);
-				this.addressAddEditForm.get('addressLandmark').patchValue(formatted.length > 1 ? `${formatted[2]}` : '');
-				this.addressAddEditForm.get('addressPincode').patchValue(`${zipState ? zipAndState[1] : ''}`);
-				this.addressAddEditForm.get('cityName').patchValue(`${formatted[formatted.length - 3] ? formatted[formatted.length - 3] : ''}`);
-				this.addressAddEditForm.get('state').patchValue(`${zipState ? zipAndState[0] : ''}`);
+		this.loc.get().subscribe((res: { add: { components: AddressComponents[], formatted_address: string }; position_latitude: number; position_longitude: number; }) => {
+			if (res.add.components.length > 0) {
+				const formatted = res.add.formatted_address.split(', ');
+				this.map(res.position_latitude, res.position_longitude, `<div id="content"><div id="siteNotice"></div>${formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`} <br /> ${res.add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? res.add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : ''}</div>`, 18);
+				this.addressAddEditForm.get('addressBlockNo').patchValue(formatted.length >= 2 ? `${formatted[0]}, ${formatted[1]}` : `${formatted[0]}`);
+				this.addressAddEditForm.get('addressLandmark').patchValue(res.add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name ? res.add.components.filter(c => c.types.find(t => t === 'sublocality'))[0].long_name : '');
+				this.addressAddEditForm.get('addressPincode').patchValue(res.add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name ? res.add.components.filter(c => c.types.filter(t => t === 'postal_code')[0])[0].long_name : '0');
+				this.addressAddEditForm.get('cityName').patchValue(res.add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name ? res.add.components.filter(c => c.types.find(t => t === 'locality'))[0].long_name : '');
+				this.addressAddEditForm.get('state').patchValue(res.add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name ? res.add.components.filter(c => c.types.find(t => t === 'administrative_area_level_1'))[0].long_name : '');
+				this.addressAddEditForm.get('countryName').patchValue(res.add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name ? res.add.components.filter(c => c.types.find(t => t === 'country'))[0].long_name : 'Saudi Arabia');
 				this.addressAddEditForm.get('addressLati').patchValue(res.position_latitude);
 				this.addressAddEditForm.get('addressLongi').patchValue(res.position_longitude);
 				this.cd.markForCheck();
@@ -200,7 +202,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 			state: [''],
 			cityName: [''],
 			addressType: [''],
-			countryName: ['India'],
+			countryName: [''],
 			countryID: ['1']
 		});
 	}
@@ -225,7 +227,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 						if (sessionStorage.getItem('USER_LOGGED')) {
 							sessionStorage.setItem('USER_LOGGED', JSON.stringify(this.user));
 						}
-						this.router.navigate([], { relativeTo: this.route, queryParams: {}, queryParamsHandling: 'merge' });
+						this.changeQuery();
 						this.auth.updateUser(this.user);
 						this.clearControls();
 						setTimeout(() => {
@@ -238,7 +240,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 							this.root.update_user_status$.next('update_header');
 							this.addressAddEditForm.get(`loginuserID`).patchValue(this.user.userID);
 							this.addressAddEditForm.get(`languageID`).patchValue(this.user.languageID);
-							this.addressAddEditForm.get(`countryName`).patchValue('India');
+							this.addressAddEditForm.get(`countryName`).patchValue('Saudi Arabia');
 							this.addressAddEditForm.get(`countryID`).patchValue('1');
 							this.addressAddEditForm.get(`addressIsDefault`).patchValue('No');
 						}, 500);
@@ -293,7 +295,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 							this.root.update_user_status$.next('update_header');
 							this.addressAddEditForm.get(`loginuserID`).patchValue(this.user.userID);
 							this.addressAddEditForm.get(`languageID`).patchValue(this.user.languageID);
-							this.addressAddEditForm.get(`countryName`).patchValue('India');
+							this.addressAddEditForm.get(`countryName`).patchValue('Saudi Arabia');
 							this.addressAddEditForm.get(`countryID`).patchValue('1');
 							this.addressAddEditForm.get(`addressIsDefault`).patchValue('No');
 						}, 500);
@@ -351,7 +353,6 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 	edit_address = (post: string) => {
 		return new Promise((resolve, reject) => {
 			this.service.addAddress(post).subscribe((res) => {
-				console.log(res)
 				if (res.status === 'true') {
 					resolve(JSON.stringify(res.data[0]));
 				} else {

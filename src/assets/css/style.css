@@ -4083,6 +4083,11 @@ html {
   margin: 0px auto;
 }
 
+.show-counter .conterconternCart {
+  max-width: 110px;
+  /* margin: 0px auto; */
+}
+
 .handle-counter,
 .handle-counter input {
   background-color: #0f0e0e;

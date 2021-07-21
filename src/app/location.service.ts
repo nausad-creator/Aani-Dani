@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MapsAPILoader } from '@agm/core';
 import { Observable } from 'rxjs';
+import { AddressComponents } from './interface';
 @Injectable({
 	providedIn: 'root'
 })
@@ -15,9 +16,9 @@ export class LocationService {
 				navigator.geolocation.getCurrentPosition(async (position) => {
 					if (position) {
 						try {
-							const addr = await this.decoding(position.coords.latitude, position.coords.longitude);
-							observer.next(addr ? {
-								formatted_address: addr,
+							const address = await this.decoding(position.coords.latitude, position.coords.longitude) as { components: AddressComponents[], formatted_address: string };
+							observer.next(address.formatted_address ? {
+								add: address,
 								position_latitude: position.coords.latitude,
 								position_longitude: position.coords.longitude
 							} : '');
@@ -42,7 +43,7 @@ export class LocationService {
 				};
 				geocoder.geocode({ location: latlng }, (results) => {
 					if (results && results.length > 0) {
-						resolve(results[0].formatted_address);
+						resolve({ components: results[0].address_components, formatted_address: results[0].formatted_address });
 					} else {
 						reject('Not found');
 					}
@@ -60,7 +61,7 @@ export class LocationService {
 				};
 				geocoder.geocode({ location: latlng }, (results) => {
 					if (results && results.length > 0) {
-						observer.next(results[0].formatted_address);
+						observer.next({ components: results[0].address_components, formatted_address: results[0].formatted_address });
 					} else {
 						observer.error('Not found');
 					}

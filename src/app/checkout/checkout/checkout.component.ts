@@ -44,7 +44,7 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
   <main id="main">
     <section id="cart-section" class="pb-3 pt-4">
         <div class="container">
-            <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> Checkout</span> </div>
+            <div class="brandcamp"><a routerLink='/'>Home  &gt;</a> <span> Checkout</span> </div>
             <div class="card mt-3">
                 <div class="row m-0 pt-3 pb-3">
                     <div class="col-lg-7">

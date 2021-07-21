@@ -115,8 +115,8 @@ export class AddressListComponent implements OnInit {
 			this.preventAbuse = true;
 			this.get_store(JSON.stringify(
 				{
-					currentLat: '24.7253981',
-					currentLong: '46.2620271'
+					currentLat: this.list[0].address.filter(a => a.addressID === this.checked_address)[0].addressLati,
+					currentLong: this.list[0].address.filter(a => a.addressID === this.checked_address)[0].addressLongi,
 				}
 			));
 		}

@@ -54,7 +54,7 @@ export class SavedAddressesComponent implements OnInit {
 		private auth: AuthenticationService,
 		private toastr: ToastrService,
 		private root: RootService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
 	) { }
 	ngOnInit(): void {
 		this.update({ status: 200 });

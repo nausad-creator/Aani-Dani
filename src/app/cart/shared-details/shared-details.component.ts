@@ -33,7 +33,7 @@ import { SubSink } from 'subsink';
                                   <td class="align-middle">
 				  <div class="form-group mb-0 detailBtn">
 				  <div class="show-counter">
-                              		<div class="contercontern">
+                              		<div class="conterconternCart">
 					<div class="handle-counteredit d-flex" id="handleCounter">
 					<button (click)="delete(product); $event.stopPropagation();" class="counter-minus btn">-</button>
 					<input type="text" [ngModel]="product?.addedCartCount" readonly>

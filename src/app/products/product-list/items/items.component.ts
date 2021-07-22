@@ -1,7 +1,9 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
+import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
@@ -13,7 +15,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-items',
 	template: `
-  <div class="row productListingPage cursr" *ngIf="products">
+  <div class="row productListingPage cursr" *ngIf="products" [@fadeIn]>
 	<div class="slider_itemBox col-lg-4 col-sm-6" (click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})" *ngFor="let item of products">
 	<img offset="0"
         defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
@@ -47,6 +49,9 @@ import { SubSink } from 'subsink';
   </div>
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemsComponent implements OnInit {

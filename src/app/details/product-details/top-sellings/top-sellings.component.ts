@@ -1,8 +1,10 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
@@ -23,7 +25,7 @@ import { SubSink } from 'subsink';
       </div>
   </div>  
 
-  <div class="category_slider">
+  <div class="category_slider" [@fadeIn]>
       <div class="">
         <owl-carousel-o [options]="caseOptions">
             <ng-template carouselSlide *ngFor="let item of similarproduct">
@@ -64,6 +66,9 @@ import { SubSink } from 'subsink';
 </div>
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopSellingsComponent implements OnInit {

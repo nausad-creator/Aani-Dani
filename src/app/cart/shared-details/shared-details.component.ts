@@ -1,7 +1,9 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
+import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { OrderDetailsTemp, ProductList, TempCartItems, TempOrders, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
@@ -10,7 +12,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared-details',
 	template: `
-    <div class="tableCart" *ngIf="this.orders[0].orderdetails.length>0">
+    <div class="tableCart" *ngIf="this.orders[0].orderdetails.length>0" [@fadeIn]>
                             <div class="table-responsive">
                               <table class="table">
                               <thead>
@@ -81,6 +83,9 @@ import { SubSink } from 'subsink';
 			display: block;
 			width: 100%;
     		}`
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedDetailsComponent implements OnInit {

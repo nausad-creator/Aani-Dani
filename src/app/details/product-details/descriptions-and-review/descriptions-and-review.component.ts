@@ -1,4 +1,6 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { data } from 'src/app/global';
 import { ProductList } from 'src/app/interface';
@@ -7,7 +9,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-descriptions-and-review',
 	template: `
-    <div class="reviewSection">
+    					<div class="reviewSection" [@fadeIn]>
 		      				<ul class="nav nav-tabs" id="myTab" role="tablist">
 							  <li class="nav-item">
 							    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Discription" role="tab" aria-controls="home" aria-selected="true">Discription</a>
@@ -98,10 +100,13 @@ import { SubSink } from 'subsink';
 							  		</form>	
 							  	</div>	
 							  </div>
-							</div>
+					</div>
 		      	</div>
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DescriptionsAndReviewComponent implements OnInit {

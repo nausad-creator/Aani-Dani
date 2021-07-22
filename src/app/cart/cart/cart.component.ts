@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { merge, Observable, of, Subject, timer } from 'rxjs';
@@ -47,7 +47,7 @@ import { SubSink } from 'subsink';
                         <app-shared-details (updateCart)="forceReload$.next()" [orders]="ordersList" *ngIf="!loader"></app-shared-details>
                         <app-shared-skeleton *ngIf="loader"></app-shared-skeleton>
                     </div>	
-                    <div class="col-lg-4 ">
+                    <div class="col-lg-4">
                         <app-shared-billing [billingDetails]="ordersList[0].billingDetails" *ngIf="!loader"></app-shared-billing>	
                         <app-skeleton-billing *ngIf="loader"></app-skeleton-billing>
                     </div>
@@ -70,7 +70,7 @@ import { SubSink } from 'subsink';
 <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
 	styles: [
-	]
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 	loginuserID: string;

@@ -8,10 +8,11 @@ import { merge, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, map, mergeMap, take } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { tepmOrder } from 'src/app/global';
-import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE } from 'src/app/interface';
+import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE, ADDRESS } from 'src/app/interface';
 import { selectHomeCategoryList, selectHomeBestSellingList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
+import { PaymentAlertComponent } from './payment-alert.component';
 import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 
 @Component({
@@ -27,17 +28,17 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
-		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
-		          		</ul>	
+		          <a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
+		          <ul>
+			  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
+		          </ul>	
 		          </li>
 		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
+		      </nav>			
+		    </div> 			
+		</div>
+	</div>  	  
     </div>
   </header>
   <!-- End Header -->
@@ -52,145 +53,31 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
                             <div class="d-flex">
                                 <div class="titleAssres">
                                     <h5><b>Delivery Address</b></h5>
-                                    <p class="mb-0">3876 Ibn Aram<br> Riyadh, Riyadh Province<br> Saudi Arabia 12486</p>
+                                    <p class="mb-0" *ngIf="selectedAddress">{{selectedAddress.address}}<br> {{(selectedAddress.city | titlecase) + ', ' + (selectedAddress.country | titlecase) + ' ' +  selectedAddress.zip_code}}</p>
                                 </div>
-                                <div class="EditeBtn ml-auto"><a class="SaveAddress" href="javascript:voild(0)">Change</a></div>
                             </div>	
                         </div>
 
-                        <div class="addressContent">
-                          <div class="titleAssres">
+                	<div class="addressContent">
+                        <div class="titleAssres">
                               <h5><b>Payment Method</b></h5>
-                          </div>	
-                          <div class="cartlist-conten">
-                              <p>Saved Cards</p>
-
-                              <div class="saved-card mt-2">
-                                  <div class="debitcarditem">
-                                      <div class="controlgroup" style="padding: 0;">
-                                          <label class="control control--radio mb-0" for="defaultUnchecked"> 
-                                            <input type="radio" name="defaultExampleRadios" class="form-check-input" id="defaultUnchecked">
-                                            <div class="crnumber d-flex">
-                                                <div class="cardimg"><img src="assets/images/visa-img.png" alt=""></div>
-                                              <div class="cardName">
-                                                  <h6>HDFC</h6>
-                                                  <p>5210 **** **** 1634</p>					
-                                              </div>
-                                              <div class="entercv">
-                                                  <div class="form-group mb-0"><input type="text" class="form-control bg-white" placeholder="CVV"></div>
-                                              </div>													
-                                            </div>											  
-                                          </label>
-                                      </div>
-                                  </div>
-                                  <div class="debitcarditem">
-                                      <div class="controlgroup" style="padding: 0;">
-                                          <label class="control control--radio mb-0" for="defaultUnchecked1"> 
-                                            <input type="radio" name="defaultExampleRadios" class="form-check-input" id="defaultUnchecked1">
-                                            <div class="crnumber d-flex">
-                                                <div class="cardimg"><img src="assets/images/mastercard-img.png" alt=""></div>
-                                              <div class="cardName">
-                                                  <h6>SBI</h6>
-                                                  <p>5210 **** **** 1634</p>					
-                                              </div>
-                                              <div class="entercv">
-                                                  <div class="form-group mb-0"><input type="text" class="form-control bg-white" placeholder="CVV"></div>
-                                              </div>													
-                                            </div>
-                                          </label>
-                                      </div>									
-                                  </div>
-                              </div>
-                                          
-                          </div>
                         </div>
-
-                        <div class="addressContent">
-                            <div class="controlgroup" style="padding-left:20px;">
-                              <label class="control control--radio" for="Debit"> 
-                                <input type="radio" name="defaultExampleRadios" class="form-check-input" id="Debit">Add Credit/ Debit Card</label>						
-                          </div>	
-                          <form class="text-left form-paymeny pt-2">							
-                            <div class="form-row">
-                                <div class="col-md-12 col-sm-12">
-                                <div class="form-group"><input type="text" id="CardNumber" class="form-control bg-white" placeholder="Card Number"></div>
-                              </div>
-                              <div class="col-md-12 col-sm-12">
-                                <div class="form-group is-empty"><input type="text" id="defaultRegisterFormFirstName" class="form-control bg-white" placeholder="Enter Holder Name"><span class="material-input"></span></div>
-                              </div>										 							
-                              <div class="col-md-6 col-sm-6">
-                                <div class="form-group"><input type="date" class="form-control bg-white" placeholder="Valid Till(MM/YY)"></div>
-                              </div>
-                              <div class="col-md-6 col-sm-6">
-                                <div class="form-group"><input type="text" id="cvv" class="form-control bg-white" placeholder="CVV"></div>
-                              </div>	
-                              <div class="col-md-12 col-sm-12">
-                                  <div class="custom-control custom-checkbox mb-3">
-                                    <input type="checkbox" class="custom-control-input" id="Save" name="Save1">
-                                    <label class="custom-control-label" for="Save"> Save details for future transactions</label>
-                                  </div>
-                              </div>
-                              <div class="col-md-12 col-sm-12">
-                                  <div class="pt-3">
-                                      <a href="javascript:voil(0)" class="apply-btn shopingcart-tbtn btn"> Pay Now</a>
-                                  </div>
-                              </div>											
-                            </div>																		
-                          </form>
-                        </div>	
-
-                        <div class="addressContent">
-                            <div class="controlgroup" style="padding-left:20px;">
-                              <label class="control control--radio" for="NetBanking"> 
-                                <input type="radio" name="defaultExampleRadios" class="form-check-input" id="NetBanking">Net Banking</label>						
-                          </div>
-                          <form class="text-left form-paymeny pt-2">
-                              <div class="form-group">
-                                  <select class="form-control bg-white custom-select">
-                                      <option>Select Bank for Net Banking</option>
-                                      <option>HDFC</option>
-                                      <option>ICICI</option>
-                                      <option>BOB</option>
-                                      <option>SBI</option>
-                                  </select>	
-                              </div>
-                          </form>								
+			  <!-- saved debit or credit card shared	 -->
+                        <app-saved-card (updateMode)="orderPaymentMode=$event"></app-saved-card>
                         </div>
-
-                        <div class="addressContent">
-                            <div class="controlgroup" style="padding-left:20px;">
-                              <label class="control control--radio" for="Cashon"> 
-                                <input type="radio" name="defaultExampleRadios" class="form-check-input" id="Cashon">Cash on Delivery</label>						
-                          </div>														
-                        </div>	
-
-                        <div class="addressContent border-0">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="controlgroup" style="padding-left:20px;">
-                                      <label class="control control--radio" for="stcpay"> 
-                                        <input type="radio" name="defaultExampleRadios" class="form-check-input" id="stcpay"><img src="assets/images/stcpay-img.png" alt=""></label>						
-                                  </div>
-                              </div>
-                              <div class="col-4">
-                                    <div class="controlgroup" style="padding-left:20px;">
-                                      <label class="control control--radio" for="applepay"> 
-                                        <input type="radio" name="defaultExampleRadios" class="form-check-input" id="applepay"><img src="assets/images/applepay-img.png" alt=""></label>						
-                                  </div>
-                              </div>
-                              <div class="col-4">
-                                    <div class="controlgroup" style="padding-left:20px;">
-                                      <label class="control control--radio" for="cpay"> 
-                                        <input type="radio" name="defaultExampleRadios" class="form-check-input" id="cpay"><img src="assets/images/cpay-img.png" alt=""></label>						
-                                  </div>
-                              </div>
-                          </div>															
-                        </div>
+			<!-- add debit or credit card shared form -->
+                        <app-add-debit-credit-shared></app-add-debit-credit-shared>
+			<!-- net-banking selection -->
+                        <app-netbanking-shared (updateMode)="orderPaymentMode=$event"></app-netbanking-shared>
+			<!-- cash-on-delivary selection -->
+                        <app-cash-on-delivary-shared (updateMode)="orderPaymentMode=$event"></app-cash-on-delivary-shared>	
+			<!-- upi-payment-selection -->
+                        <app-upi-shared (updateMode)="orderPaymentMode=$event"></app-upi-shared>
 
                     </div>	
 
                     <div class="col-lg-5">
-                        <app-shared-orders-details (place)="placeOrder($event); preventAbuse=true" [preventAbuse]="preventAbuse" [billingDetails]="ordersList[0].billingDetails" [products]="ordersList[0].orderdetails" *ngIf="!loader"></app-shared-orders-details>	
+                        <app-shared-orders-details (place)="placeOrder($event);" [preventAbuse]="preventAbuse" [billingDetails]="ordersList[0].billingDetails" [products]="ordersList[0].orderdetails" *ngIf="!loader"></app-shared-orders-details>	
                         <app-shared-skeleton-orders-details *ngIf="loader"></app-shared-skeleton-orders-details>
                     </div>
                 </div>	
@@ -208,6 +95,8 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 export class CheckoutComponent implements OnInit {
 	user: USER_RESPONSE;
 	preventAbuse = false;
+	orderPaymentMode: string;
+	selectedAddress: { address: string; city: string; country: string; zip_code: string; } = { address: '', city: '', country: '', zip_code: '' };
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
@@ -354,11 +243,31 @@ export class CheckoutComponent implements OnInit {
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
 				this.user = user;
+				this.selectedAddress.address = Object.keys(user.address.find(a => a.addressIsDefault === 'Yes')).filter((key: string) => {
+					if (key === 'addressBlockNo' && user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo) {
+						return `${user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo}`;
+					}
+					if (key === 'addressBuildingName' && user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName) {
+						return `${user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName}`;
+					}
+					if (key === 'addressLandmark' && user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark) {
+						return `${user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark}`;
+					}
+					if (key === 'addressStreetName' && user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName) {
+						return `${user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName}`;
+					}
+				}).map(f => user.address.find(a => a.addressIsDefault === 'Yes')[f]).join(' ');
+				this.selectedAddress.city = `${user.address.find(a => a.addressIsDefault === 'Yes').cityName}`;
+				this.selectedAddress.country = `${user.address.find(a => a.addressIsDefault === 'Yes').countryName}`;
+				this.selectedAddress.zip_code = `${user.address.find(a => a.addressIsDefault === 'Yes').addressPincode}`
 				tepmOrder.loginuserID = user.userID;
 				this.cd.markForCheck();
 			}
 			if (user === null) {
 				this.user = null;
+				Object.keys(this.selectedAddress).forEach(key => {
+					delete this.selectedAddress[key];
+				});
 				tepmOrder.loginuserID = '0';
 				this.cd.markForCheck();
 			}
@@ -421,62 +330,68 @@ export class CheckoutComponent implements OnInit {
 		this.orders(JSON.stringify(tepmOrder));
 	}
 	placeOrder = (note: string) => {
-		this.root.placeOrder(JSON.stringify({
-			orderDiscountCode: '',
-			loginuserID: this.user.userID,
-			storeID: this.user.storeID,
-			orderDiscount: '0',
-			orderWalletAmt: '0',
-			orderNotes: note ? note.trim() : '',
-			orderVAT: this.ordersList[0].billingDetails.vat,
-			orderGrossAmt: this.ordersList[0].billingDetails.net_Payable,
-			orderDeliveryAddress: Object.keys(this.user.address.find(a => a.addressIsDefault === 'Yes')).filter((key: string) => {
-				if (key === 'addressBlockNo' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo) {
-					return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo}`;
+		if (!this.orderPaymentMode) {
+			this.modal.show(PaymentAlertComponent, { id: 73, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
+		}
+		if (this.orderPaymentMode) {
+			this.preventAbuse = true;
+			this.root.placeOrder(JSON.stringify({
+				orderDiscountCode: '',
+				loginuserID: this.user.userID,
+				storeID: this.user.storeID,
+				orderDiscount: '0',
+				orderWalletAmt: '0',
+				orderNotes: note ? note.trim() : '',
+				orderVAT: this.ordersList[0].billingDetails.vat,
+				orderGrossAmt: this.ordersList[0].billingDetails.net_Payable,
+				orderDeliveryAddress: Object.keys(this.user.address.find(a => a.addressIsDefault === 'Yes')).filter((key: string) => {
+					if (key === 'addressBlockNo' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo) {
+						return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo}`;
+					}
+					if (key === 'addressBuildingName' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName) {
+						return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName}`;
+					}
+					if (key === 'addressLandmark' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark) {
+						return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark}`;
+					}
+					if (key === 'addressStreetName' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName) {
+						return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName}`;
+					}
+				}).map(f => this.user.address.find(a => a.addressIsDefault === 'Yes')[f]).join(' ') + ', ' + `${this.user.address.find(a => a.addressIsDefault === 'Yes').cityName}, ${this.user.address.find(a => a.addressIsDefault === 'Yes').countryName}, ${this.user.address.find(a => a.addressIsDefault === 'Yes').addressPincode}`,
+				orderDeliveryLat: this.user.address.find(a => a.addressIsDefault === 'Yes').addressLati,
+				orderDeliveryLong: this.user.address.find(a => a.addressIsDefault === 'Yes').addressLongi,
+				languageID: '1',
+				orderPaymentMode: this.orderPaymentMode,
+				orderNetAmount: this.ordersList[0].billingDetails.item_Total,
+				orderdetails: this.ordersList[0].orderdetails.map((p: OrderDetailsTemp) => ({
+					productID: p.productID,
+					orderdetailsQty: p.Qty,
+					orderdetailsPrice: p.productPrice,
+				}))
+			})).subscribe(r => {
+				if (r.status === 'true') {
+					this.emptyCart();
+					this.emptyLocalCart();
+					this.preventAbuse = false;
+					const initialState = {
+						list: [{
+							orderID: r.data[0].orderID
+						}]
+					};
+					this.modal.show(SuccessPlacedOrderComponent, { id: 200, initialState, ignoreBackdropClick: true, keyboard: false });
+					this.cd.markForCheck();
 				}
-				if (key === 'addressBuildingName' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName) {
-					return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressBuildingName}`;
+				if (r.status === 'false') {
+					this.preventAbuse = false;
+					this.toastr.error('Error while placing order, please try again!');
+					this.cd.markForCheck();
 				}
-				if (key === 'addressLandmark' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark) {
-					return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressLandmark}`;
-				}
-				if (key === 'addressStreetName' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName) {
-					return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressStreetName}`;
-				}
-			}).map(f => this.user.address.find(a => a.addressIsDefault === 'Yes')[f]).join(' ') + ', ' + `${this.user.address.find(a => a.addressIsDefault === 'Yes').cityName}, ${this.user.address.find(a => a.addressIsDefault === 'Yes').countryName}, ${this.user.address.find(a => a.addressIsDefault === 'Yes').addressPincode}`,
-			orderDeliveryLat: this.user.address.find(a => a.addressIsDefault === 'Yes').addressLati,
-			orderDeliveryLong: this.user.address.find(a => a.addressIsDefault === 'Yes').addressLongi,
-			languageID: '1',
-			orderPaymentMode: "Card",
-			orderNetAmount: this.ordersList[0].billingDetails.item_Total,
-			orderdetails: this.ordersList[0].orderdetails.map((p: OrderDetailsTemp) => ({
-				productID: p.productID,
-				orderdetailsQty: p.Qty,
-				orderdetailsPrice: p.productPrice,
-			}))
-		})).subscribe(r => {
-			if (r.status === 'true') {
-				this.emptyCart();
-				this.emptyLocalCart();
+			}, (err) => {
 				this.preventAbuse = false;
-				const initialState = {
-					list: [{
-						orderID: r.data[0].orderID
-					}]
-				};
-				this.modal.show(SuccessPlacedOrderComponent, { id: 200, initialState, ignoreBackdropClick: true, keyboard: false });
+				console.error(err);
 				this.cd.markForCheck();
-			}
-			if (r.status === 'false') {
-				this.preventAbuse = false;
-				this.toastr.error('Error while placing order, please try again!');
-				this.cd.markForCheck();
-			}
-		}, (err) => {
-			this.preventAbuse = false;
-			console.error(err);
-			this.cd.markForCheck();
-		});
+			});
+		}
 	}
 	emptyCart = () => {
 		this.root.emptyCart(JSON.stringify({

@@ -1,7 +1,9 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
+import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
@@ -13,9 +15,9 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-details',
 	template: `
-    <div class="prInfo row align-items-center">
+    			<div class="prInfo row align-items-center" [@fadeIn]>
 					<div class="col-lg-5 col-md-5">
-						<div class="bigIng" *ngIf="product"><img offset="100"
+						<div class="bigIng" *ngIf="product"><img offset="0"
 									style="width: 552px; height: 343px"
             						defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
             						lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
@@ -26,7 +28,7 @@ import { SubSink } from 'subsink';
 							<h4 class="" *ngIf="product"><b>{{product?.productName}}</b></h4>	
 							<div class="productInfo">
 								<div class="ratings">
-                                <i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
+                                			<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
 				  				<span>{{product?.productRatingCount | number}}</span>
 				  				</div>
 				  				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' people bought this'}}</p>
@@ -66,7 +68,10 @@ import { SubSink } from 'subsink';
 				</div>	
   `,
 	styles: [
-	]
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit {
 	@Input() product: ProductList;

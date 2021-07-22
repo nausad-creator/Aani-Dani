@@ -1,5 +1,7 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
+import { fadeIn } from 'src/app/animation';
 import { Banner } from 'src/app/interface';
 
 @Component({
@@ -10,7 +12,7 @@ import { Banner } from 'src/app/interface';
     <div class="hero-container">
       <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
         <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
-        <div class="carousel-inner" role="listbox">
+        <div class="carousel-inner" role="listbox" [@fadeIn]>
           <!-- Slides -->
           <owl-carousel-o 
           [options]="caseOptions" 
@@ -20,8 +22,6 @@ import { Banner } from 'src/app/interface';
           <div class="carousel-item active" [style.background-image]="'url(http://164.52.209.69/aanidani/backend/web/uploads/banners/'+item?.bannerImage+')'" lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/banners/{{item?.bannerImage}}">
             <div class="carousel-container">
               <div class="carousel-content">
-                <!-- <h2 class="animated fadeInDown mb-3">{{item?.bannerName}}</h2>
-				        <div class="slider-button animated fadeInUp"><a href="#" class="shopnow-btn btn">Shop Now</a></div> -->
               </div>
             </div>
           </div>
@@ -34,6 +34,9 @@ import { Banner } from 'src/app/interface';
   </section><!-- End Hero -->
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BannerComponent implements OnInit {

@@ -1,5 +1,7 @@
+import { trigger } from '@angular/animations';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { fadeIn } from 'src/app/animation';
 import { Category } from 'src/app/interface';
 
 @Component({
@@ -19,7 +21,7 @@ import { Category } from 'src/app/interface';
           <div class="category_slider">
               <owl-carousel-o [options]="caseOptions">
               <ng-template carouselSlide *ngFor="let category of categories">
-              <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">
+              <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}" [@fadeIn]>
                     <div class="form-row">
                         <div class="col-4">
                             <div class="catImgBox"><img offset="50"
@@ -46,6 +48,9 @@ import { Category } from 'src/app/interface';
   </section>
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MostPopularBestSellerComponent implements OnInit, AfterViewInit {

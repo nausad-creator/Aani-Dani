@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { fadeIn } from 'src/app/animation';
 
 @Component({
 	selector: 'app-our-partners',
@@ -13,7 +15,7 @@ import { Component, OnInit } from '@angular/core';
           </div>
       </div>   
 
-      <div class="category_slider">
+      <div class="category_slider" [@fadeIn]>
           <div class="owl-carousel partner-carousel">
           <a class="partnersItem text-center" target="_blank" href="https://www.mobily.com.sa/wps/portal/web/personal/mobile/neqaty/overview/neqaty-partners/neqaty-partners/">
                     <img src="assets/images/partners/Mobily.jpg" alt="partners"> 
@@ -46,7 +48,10 @@ import { Component, OnInit } from '@angular/core';
   </section>	
   `,
 	styles: [
-	]
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
+	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OurPartnersComponent implements OnInit {
 

@@ -1,4 +1,6 @@
+import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { fadeIn } from 'src/app/animation';
 import { Orders } from 'src/app/interface';
 
 @Component({
@@ -14,7 +16,7 @@ import { Orders } from 'src/app/interface';
         </div>
     </div>
 
-    <div class="orderDetailSection" *ngIf="orders.length > 0">
+    <div class="orderDetailSection" *ngIf="orders.length > 0" [@fadeIn]>
         <div class="orderDetailList" *ngFor="let order of orders">
             <div class="headerOrder form-row m-0 align-items-center">
                 <div class="col-md-3 col-6">
@@ -59,7 +61,7 @@ import { Orders } from 'src/app/interface';
             </div>
         </div>
     </div>
-    <div class="orderDetailSection" *ngIf="orders.length === 0">
+    <div class="orderDetailSection" *ngIf="orders.length === 0" [@fadeIn]>
         <div class="table-responsive" style="margin-top: 20px; min-height: 380px">
             <p class="text-center pt-20">No orders to show.</p>
         </div>
@@ -67,6 +69,9 @@ import { Orders } from 'src/app/interface';
 </div>		
   `,
 	styles: [
+	],
+	animations: [
+		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedOrderComponent implements OnInit {

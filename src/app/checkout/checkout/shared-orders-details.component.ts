@@ -69,7 +69,9 @@ import { ProductList } from 'src/app/interface';
                                     <button routerLink='/' class="btn w-100 btn-outline-secondary">Continue Shopping</button>
                                 </div>
                                 <div class="col-6">
-                                    <button (click)="place.emit(orderNote.value)" type="button" class="btn btn-them w-100">{{preventAbuse ? 'Please wait...' : 'Proceed to Pay'}}</button>
+                                    <button (click)="place.emit(orderNote.value)" type="button" class="btn btn-them w-100">
+				    <span class="spinner-border spinner-border-sm" style="margin: 1px;" role="status" aria-hidden="true" *ngIf="preventAbuse"></span>
+					    {{preventAbuse ? 'Please wait...' : 'Proceed to Pay'}}</button>
                                 </div>		
                             </div>
         </div>

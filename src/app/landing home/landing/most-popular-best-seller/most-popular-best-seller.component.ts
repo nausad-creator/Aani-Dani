@@ -7,7 +7,7 @@ import { Category } from 'src/app/interface';
 @Component({
 	selector: 'app-most-popular-best-seller',
 	template: `
-    <section class="LowestPrice-section pt-0">
+    <section class="LowestPrice-section pt-0" *ngIf="categories.length > 0">
     <div class="container">
         <div class="card">
             <div class="card-header bg-white">

@@ -147,7 +147,7 @@ export class SharedDetailsComponent implements OnInit {
 				this.root.update_user_status$.next('update_header'); // update header
 				this.decline();
 			}
-		}), () => console.error('error while deleting item from cart!');
+		}), () => console.error('Oops! Something went wrong while deleting item from cart!');
 	}
 	delete = async (pro: ProductList) => {
 		const res = await this.deleteItemFromCart(pro) as string;
@@ -178,15 +178,16 @@ export class SharedDetailsComponent implements OnInit {
 					resolve('Deleted_sucessfully');
 				}
 			}), () => {
-				reject('error while deleting item from cart!');
-				console.error('error while adding item from cart!');
+				reject('Oops! Something went wrong while deleting item from cart!');
+				console.error('Oops! Something went wrong while adding item from cart!');
 			};
 		});
 	}
 	add = async (pro: ProductList) => {
 		const res = await this.addItemToCart(pro) as string;
 		if (res === 'Added_sucessfully') {
-			this.root.forceReload();
+			this.root.forceReload(); // empty cached cart
+			this.updateCart.emit({ data: '', res: Math.random() }); // update cart-list
 			this.root.update_user_status$.next('refresh_or_reload');
 			this.root.update_user_status$.next('update_header');
 		}
@@ -210,8 +211,8 @@ export class SharedDetailsComponent implements OnInit {
 					resolve('Added_sucessfully');
 				}
 			}), () => {
-				reject('error while adding item to cart!');
-				console.error('error while adding item to cart!');
+				reject('Oops! Something went wrong while adding item to cart!');
+				console.error('Oops! Something went wrong while adding item to cart!');
 			};
 		});
 	}

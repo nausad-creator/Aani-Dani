@@ -141,7 +141,7 @@ export class ResetComponent implements OnInit {
 					});
 				} else {
 					this.triggerEvent('Error');
-					this.error = 'error occured, please try again later.';
+					this.error = 'Oops! Something went wrong!';
 					this.cd.markForCheck();
 				}
 			}).catch((error) => {
@@ -157,9 +157,9 @@ export class ResetComponent implements OnInit {
 				if (res) {
 					resolve(res);
 				} else {
-					reject('error occured, please try again later!');
+					reject('Oops! Something went wrong!');
 				}
-			}, () => reject('error occured, please try again later!'));
+			}, () => reject('Oops! Something went wrong!'));
 		});
 	}
 	triggerEvent = (item: string) => {

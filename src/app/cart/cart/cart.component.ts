@@ -13,57 +13,71 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-cart',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
-  <!-- Header -->
-  <header id="header">
-    <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
-		          		</ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
-		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
-    </div>
-  </header>
-  <!-- End Header -->
-    <main id="main">
-    <section id="cart-section" class="pb-3 pt-4">
-        <div class="container">
-            <div class="brandcamp"><a routerLink='/'>Home  &gt;</a> <span> My Cart</span> </div>
-            <div class="card mt-3">
-                <div class="row m-0 pt-3 pb-3">
-                    <div class="col-lg-8">
-                        <app-shared-details (updateCart)="forceReload$.next()" [orders]="ordersList" *ngIf="!loader"></app-shared-details>
-                        <app-shared-skeleton *ngIf="loader"></app-shared-skeleton>
-                    </div>	
-                    <div class="col-lg-4">
-                        <app-shared-billing [billingDetails]="ordersList[0].billingDetails" *ngIf="!loader"></app-shared-billing>	
-                        <app-skeleton-billing *ngIf="loader"></app-skeleton-billing>
-                    </div>
-                    <!-- when empty -->
-                    <div class="col-lg-12" *ngIf="!loader">
-                            <div class="table-responsive" style="margin-top: 20px; min-height: 280px" *ngIf="ordersList[0].orderdetails.length===0">
-                              <p class="text-center pt-20">Currently Your Cart is Empty.</p>
-                    </div>  
-                    </div>
-                </div>	
-            </div>	
-        </div>	
-    </section>	
+<app-header></app-header> <!-- Top Bar -->
+<!-- Header -->
+<header id="header">
+	<div class="container">
+		<div class="">
+			<div class="menu-content">
+				<div class="main-menu d-flex align-items-center">
+					<nav class="nav-menu d-none d-lg-block"
+						*ngIf="categories$ | async as categories">
+						<ul>
+							<li class="drop-down categorymenu">
+								<a class="maindrop" href="#"><i
+										class="icofont-navigation-menu mr-2"></i>
+									All Category</a>
+								<ul>
+									<li><a routerLink="/products"
+											[queryParams]="{page: '0', categoryID: category?.categoryID}"
+											*ngFor="let category of categories">{{category?.categoryName
+											| titlecase}}</a></li>
+								</ul>
+							</li>
+							<li *ngFor="let category of categories"><a
+									routerLink="/products"
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
+									| titlecase}}</a></li>
+						</ul>
+					</nav><!-- .nav-menu -->
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<!-- End Header -->
+<main id="main">
+	<section id="cart-section" class="pb-3 pt-4">
+		<div class="container">
+			<div class="brandcamp"><a routerLink='/'>Home &gt;</a> <span> My Cart</span> </div>
+			<div class="card mt-3">
+				<div class="row m-0 pt-3 pb-3">
+					<div class="col-lg-8">
+						<app-shared-details (updateCart)="forceReload$.next()"
+							[orders]="ordersList" *ngIf="!loader"></app-shared-details>
+						<app-shared-skeleton *ngIf="loader"></app-shared-skeleton>
+					</div>
+					<div class="col-lg-4">
+						<app-shared-billing [billingDetails]="ordersList[0].billingDetails"
+							*ngIf="!loader"></app-shared-billing>
+						<app-skeleton-billing *ngIf="loader"></app-skeleton-billing>
+					</div>
+					<!-- when empty -->
+					<div class="col-lg-12" *ngIf="!loader">
+						<div class="table-responsive"
+							style="margin-top: 20px; min-height: 280px"
+							*ngIf="ordersList[0].orderdetails.length===0">
+							<p class="text-center pt-20">Currently Your Cart is Empty.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-   <app-shared-best-selling (update)="forceReload$.next()" [products]="products" *ngIf="products$ | async as products"></app-shared-best-selling>
-   <app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
+	<app-shared-best-selling (update)="forceReload$.next()" [products]="products"
+		*ngIf="products$ | async as products"></app-shared-best-selling>
+	<app-skeleton *ngIf="(products$ | async)?.length === 0"></app-skeleton>
 
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->
@@ -166,7 +180,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 					return {
 						orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
 							return {
-								Price: a.Price,
+								Price: (+a.Qty.split('.')[0] * +a.productPrice).toString(),
 								Qty: a.Qty.split('.')[0],
 								categoryID: a.categoryID,
 								categoryName: a.categoryName,
@@ -194,9 +208,9 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 						billingDetails: {
 							delivery_Tip: 10,
 							delivery_Fee: 30,
-							item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0),
+							item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0),
 							vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
-							net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPriceVat).reduce((a, b) => a + b, 0) + 30 + 10,
+							net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0) + 30 + 10 + d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
 						},
 						temporderDate: d.temporderDate,
 						temporderID: d.temporderID,

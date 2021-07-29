@@ -168,7 +168,7 @@ export class AddressListComponent implements OnInit {
 			}
 		}, (err: any) => {
 			this.preventAbuse = false;
-			throw new Error(`Error while fetching store: ${err}`);
+			throw new Error(`Oops! Something went wrong while fetching store: ${err}`);
 		});
 	}
 	add_to_cart = () => {
@@ -247,8 +247,8 @@ export class AddressListComponent implements OnInit {
 					});
 				}
 			}), () => {
-				reject('error while placing first temp item to cart!');
-				console.error('error while placing first temp item to cart!');
+				reject('Oops! Something went wrong while placing first temp item to cart!');
+				console.error('Oops! Something went wrong while placing first temp item to cart!');
 			};
 		});
 	}
@@ -270,8 +270,8 @@ export class AddressListComponent implements OnInit {
 					resolve('Added_sucessfully');
 				}
 			}), () => {
-				reject('error while adding item to cart!');
-				console.error('error while adding item to cart!');
+				reject('Oops! Something went wrong while adding item to cart!');
+				console.error('Oops! Something went wrong while adding item to cart!');
 			};
 		});
 	}

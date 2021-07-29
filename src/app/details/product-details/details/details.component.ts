@@ -186,8 +186,8 @@ export class DetailsComponent implements OnInit {
 					});
 				}
 			}), () => {
-				reject('error while placing first temp item to cart!');
-				console.error('error while placing first temp item to cart!');
+				reject('Oops! Something went wrong while placing first temp item to cart!');
+				console.error('Oops! Something went wrong while placing first temp item to cart!');
 			};
 		});
 	}
@@ -218,8 +218,8 @@ export class DetailsComponent implements OnInit {
 					resolve('Added_sucessfully');
 				}
 			}), () => {
-				reject('error while adding item to cart!');
-				console.error('error while adding item to cart!');
+				reject('Oops! Something went wrong while adding item to cart!');
+				console.error('Oops! Something went wrong while adding item to cart!');
 			};
 		});
 	}
@@ -251,8 +251,8 @@ export class DetailsComponent implements OnInit {
 					resolve('Deleted_sucessfully');
 				}
 			}), () => {
-				reject('error while deleting item from cart!');
-				console.error('error while adding item from cart!');
+				reject('Oops! Something went wrong while deleting item from cart!');
+				console.error('Oops! Something went wrong while adding item from cart!');
 			};
 		});
 	}

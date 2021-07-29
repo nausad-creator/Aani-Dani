@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -171,8 +171,8 @@ export class ItemsComponent implements OnInit {
 					});
 				}
 			}), () => {
-				reject('error while placing first temp item to cart!');
-				console.error('error while placing first temp item to cart!');
+				reject('Oops! Something went wrong while placing first temp item to cart!');
+				console.error('Oops! Something went wrong while placing first temp item to cart!');
 			};
 		});
 	}
@@ -203,8 +203,8 @@ export class ItemsComponent implements OnInit {
 					resolve('Added_sucessfully');
 				}
 			}), () => {
-				reject('error while adding item to cart!');
-				console.error('error while adding item to cart!');
+				reject('Oops! Something went wrong while adding item to cart!');
+				console.error('Oops! Something went wrong while adding item to cart!');
 			};
 		});
 	}
@@ -236,8 +236,8 @@ export class ItemsComponent implements OnInit {
 					resolve('Deleted_sucessfully');
 				}
 			}), () => {
-				reject('error while deleting item from cart!');
-				console.error('error while adding item from cart!');
+				reject('Oops! Something went wrong while deleting item from cart!');
+				console.error('Oops! Something went wrong while adding item from cart!');
 			};
 		});
 	}

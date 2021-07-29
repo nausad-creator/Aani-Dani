@@ -19,7 +19,7 @@ import { ProductList } from 'src/app/interface';
                                   <tbody>
                                     <tr *ngFor="let item of products">
                                       <td class="align-middle">{{item?.productName}} <p class="mb-0">Qty:{{item?.Qty | number}}</p></td>
-                                      <td class="align-middle text-right">{{(item?.productPrice | number) + ' SR'}}</td>
+                                      <td class="align-middle text-right">{{(item?.Price | number) + ' SR'}}</td>
                                     </tr>
                                   </tbody>
                                 </table>

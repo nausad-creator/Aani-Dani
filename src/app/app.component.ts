@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
 							localStorage.removeItem('tempCart');
 						}
 						this.cookie.set('Temp_Order_ID', '0')
-						this.root.update_user_status$.next('200');
+						this.root.update_user_status$.next('update_header');
 					}
 				}).catch(err => console.error(err));
 			}

@@ -11,16 +11,12 @@ export class HomeEffects {
 		return this.actions$.pipe(
 			ofType(HomeActionTypes.LoadHome),
 			mergeMap(action => this.root.home(action.temp).pipe(
-				// If successfull, dispatch success action with result
 				map(data => new LoadHomeSuccess(data),
-					// If request fails, dispatch failure action with error
 					catchError((err) => of(new LoadHomeFailure(action.temp, err)))
-				), take(1)
-			)
+				), take(1))
 			)
 		);
 	});
-
 	constructor(
 		private actions$: Actions<LoadHome>,
 		private root: RootService

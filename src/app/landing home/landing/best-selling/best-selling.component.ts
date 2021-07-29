@@ -16,7 +16,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-best-selling',
 	template: `
-    <section class="category-section pb-4">
+    <section class="category-section pb-4" *ngIf="products.length > 0">
     <div class="container">
         <div class="card">
             <div class="card-header bg-white">

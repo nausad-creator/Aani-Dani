@@ -107,7 +107,7 @@ export class OtpComponent implements OnInit {
 					this.verificationForm.markAsUntouched();
 					this.toastr.success('OTP successfully resend');
 				} else {
-					this.error = 'error occured, please try again later!';
+					this.error = 'Oops! Something went wrong!';
 					this.cd.markForCheck();
 				}
 			}, (error) => {

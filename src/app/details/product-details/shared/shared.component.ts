@@ -12,53 +12,63 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
-  <!-- Header -->
-  <header id="header">
-    <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
-		          		</ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{category?.categoryName | titlecase}}</a></li>		  
-		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
-    </div>
-  </header>
-  <!-- End Header -->
-    <main id="main">
-  	<!--start Listing area-->
-    <section id="product-detail-section" class="pb-3 pt-4" *ngIf="!loader">
+<app-header></app-header> <!-- Top Bar -->
+<!-- Header -->
+<header id="header">
+	<div class="container">
+		<div class="">
+			<div class="menu-content">
+				<div class="main-menu d-flex align-items-center">
+					<nav class="nav-menu d-none d-lg-block"
+						*ngIf="categories$ | async as categories">
+						<ul>
+							<li class="drop-down categorymenu">
+								<a class="maindrop cursr"><i
+										class="icofont-navigation-menu mr-2"></i>
+									All Category</a>
+								<ul>
+									<li><a routerLink="/products"
+											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}"
+											*ngFor="let category of categories">{{category?.categoryName
+											| titlecase}}</a></li>
+								</ul>
+							</li>
+							<li *ngFor="let category of categories"><a
+									routerLink="/products"
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{category?.categoryName
+									| titlecase}}</a></li>
+						</ul>
+					</nav><!-- .nav-menu -->
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<!-- End Header -->
+<main id="main">
+	<!--start Listing area-->
+	<section id="product-detail-section" class="pb-3 pt-4" *ngIf="!loader">
 		<div class="container">
 			<div class="card">
 				<app-details [product]="product"></app-details>
-				<!-- <app-offers></app-offers>  -->
-		      	<div class="row">
-		      		<div class="col-md-8">
-		      			<app-descriptions-and-review [product]="product"></app-descriptions-and-review>	
-		      		</div>
-		      		<div class="col-md-4 borleft">
-		      			<app-top-sellings (change)="onChange($event); loader=true" [similarproduct]="product.similarproducts"></app-top-sellings>
-		      		</div>	
-		      	</div>	
-			</div>	
-		</div>		
-    </section>
+				<div class="row">
+					<div class="col-md-8">
+						<app-descriptions-and-review [product]="product">
+						</app-descriptions-and-review>
+					</div>
+					<div class="col-md-4 borleft">
+						<app-top-sellings (change)="onChange($event); loader=true"
+							[similarproduct]="product.similarproducts"></app-top-sellings>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 	<app-skeleton *ngIf="loader"></app-skeleton>
-    <!--end Listing area-->
-  </main><!-- End #main -->
-  <app-footer></app-footer> <!-- Footer Section -->
-  <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
+	<!--end Listing area-->
+</main><!-- End #main -->
+<app-footer></app-footer> <!-- Footer Section -->
+<app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
@@ -219,8 +229,8 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	ngOnInit(): void {
 		// query changes
-		this.data.productID = this.route.snapshot.queryParams.productID ? this.route.snapshot.queryParams.productID : '0';
-		this.data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
+		this.data.productID = this.route.snapshot.queryParams?.productID ? this.route.snapshot.queryParams?.productID : '0';
+		this.data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
 		this.products();
 	}
 	onChange = async (ids: { categoryID: string, productID: string }) => {

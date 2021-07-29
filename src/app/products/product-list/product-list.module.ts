@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SharedListComponent } from './shared-list/shared-list.component';
 import { ShopByCategoryComponent } from './shop-by-category/shop-by-category.component';
 import { FilterByPriceComponent } from './filter-by-price/filter-by-price.component';
-import { FilterByShapeComponent } from './filter-by-shape/filter-by-shape.component';
 import { TopSellingComponent } from './top-selling/top-selling.component';
 import { ItemsComponent } from './items/items.component';
 import { SortHeaderComponent } from './sort-header/sort-header.component';
@@ -23,7 +22,6 @@ import { HeaderModule } from 'src/app/header/header.module';
 		SharedListComponent,
 		ShopByCategoryComponent,
 		FilterByPriceComponent,
-		FilterByShapeComponent,
 		TopSellingComponent,
 		ItemsComponent,
 		SortHeaderComponent,

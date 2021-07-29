@@ -134,7 +134,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					cart: res[0].data.map(o => {
 						return {
 							count: o.orderdetails.filter(f => +f.Qty > 0).length,
-							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0)
 						}
 					})
 				}]
@@ -161,7 +161,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					cart: res[0].data.map(o => {
 						return {
 							count: o.orderdetails.filter(f => +f.Qty > 0).length,
-							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0)
+							total: o.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0)
 						}
 					})
 				}]
@@ -193,13 +193,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.bsModal = this.modal.show(LoginComponent, { id: 99, initialState });
 		this.bsModal.content.event.subscribe((res: { data: string; }) => {
 			if (res.data === 'Confirmed') {
-				this.checkStatus({ message: 'do_nothing' });
+				this.checkStatus();
 			} else {
 				console.error(res.data);
 			}
 		});
 	}
-	checkStatus = (take: { message: string }) => {
+	checkStatus = () => {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
@@ -221,7 +221,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}));
 	}
 	ngOnInit(): void {
-		this.checkStatus({ message: 'do_nothing' });
+		this.checkStatus();
 		this.orders();
 		$(function () {
 			$(".dropdown-menu li a").on('click', function () {
@@ -257,7 +257,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				this.cartTotal = 0;
 				this.cd.markForCheck();
 			}
-		}, () => { throw new Error('Orders not implemented.') }));
+		}, () => { throw new Error('Oops! Something went wrong.') }));
 	}
 	logout = () => {
 		// clear all localstorages and redirect to main public page

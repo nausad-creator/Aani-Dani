@@ -8,7 +8,7 @@ export const initialState: HomeState = {
 	home: [{
 		banners: [],
 		category: [],
-		bestsealling: null,
+		bestsealling: [],
 	}]
 };
 

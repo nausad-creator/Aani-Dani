@@ -10,34 +10,43 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-landing-my-order',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
-  <!-- Header -->
-  <header id="header">
-    <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
-		          		</ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
-		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
-    </div>
-  </header>
-  <main id="main">
-  <router-outlet></router-outlet>
-  </main><!-- End #main -->
-  <app-footer></app-footer> <!-- Footer Section -->
-  <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
+<app-header></app-header> <!-- Top Bar -->
+<!-- Header -->
+<header id="header">
+	<div class="container">
+		<div class="">
+			<div class="menu-content">
+				<div class="main-menu d-flex align-items-center">
+					<nav class="nav-menu d-none d-lg-block"
+						*ngIf="categories$ | async as categories">
+						<ul>
+							<li class="drop-down categorymenu">
+								<a class="maindrop" href="#"><i
+										class="icofont-navigation-menu mr-2"></i>
+									All Category</a>
+								<ul>
+									<li><a routerLink="/products"
+											[queryParams]="{page: '0', categoryID: category?.categoryID}"
+											*ngFor="let category of categories">{{category?.categoryName
+											| titlecase}}</a></li>
+								</ul>
+							</li>
+							<li *ngFor="let category of categories"><a
+									routerLink="/products"
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
+									| titlecase}}</a></li>
+						</ul>
+					</nav><!-- .nav-menu -->
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<main id="main">
+	<router-outlet></router-outlet>
+</main><!-- End #main -->
+<app-footer></app-footer> <!-- Footer Section -->
+<app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
   `,
 	styles: [
 	]

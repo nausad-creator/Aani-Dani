@@ -7,7 +7,6 @@ import { SharedComponent } from './shared/shared.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { OffersComponent } from './offers/offers.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -22,7 +21,6 @@ import { HeaderModule } from 'src/app/header/header.module';
 		DescriptionsAndReviewComponent,
 		TopSellingsComponent,
 		SharedComponent,
-		OffersComponent,
 		SkeletonComponent
 	],
 	imports: [

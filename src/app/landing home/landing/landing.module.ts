@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BannerComponent } from './banner/banner.component';
 import { BestSellingComponent } from './best-selling/best-selling.component';
-import { OffersComponent } from './offers/offers.component';
 import { MostPopularBestSellerComponent } from './most-popular-best-seller/most-popular-best-seller.component';
 import { OurPartnersComponent } from './our-partners/our-partners.component';
 import { SharedComponent } from './shared/shared.component';
@@ -16,16 +15,17 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { HeaderModule } from 'src/app/header/header.module';
+import { SkeletonCategoryComponent } from './most-popular-best-seller/skeleton-category.component';
 
 @NgModule({
 	declarations: [
 		BannerComponent,
 		BestSellingComponent,
 		SkeletonComponent,
-		OffersComponent,
 		MostPopularBestSellerComponent,
 		OurPartnersComponent,
-		SharedComponent
+		SharedComponent,
+		SkeletonCategoryComponent
 	],
 	imports: [
 		CommonModule,

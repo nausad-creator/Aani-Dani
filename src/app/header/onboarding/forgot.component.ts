@@ -148,7 +148,7 @@ export class ForgotComponent {
 				} else {
 					reject('Invalid username!');
 				}
-			}, () => reject('Some error occured, please try again later!'));
+			}, () => reject('Oops! Something went wrong!'));
 		});
 	}
 	markFormTouched = (group: FormGroup | FormArray) => {

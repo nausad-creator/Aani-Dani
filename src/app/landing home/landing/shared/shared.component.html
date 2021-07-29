@@ -14,14 +14,14 @@
 									Category</a>
 								<ul>
 									<li><a routerLink="/products"
-											[queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}"
-											*ngFor="let category of categories">{{category.categoryName
+											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}"
+											*ngFor="let category of categories">{{category?.categoryName
 											| titlecase}}</a></li>
 								</ul>
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category.categoryID, categoryName: category.categoryName}">{{category.categoryName
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{category?.categoryName
 									| titlecase}}</a></li>
 						</ul>
 					</nav><!-- .nav-menu -->
@@ -34,9 +34,10 @@
 <app-banner [banner]="banner$ | async"></app-banner> <!-- Hero Section -->
 <main id="main">
 	<app-best-selling [products]="products" *ngIf="products$ | async as products"></app-best-selling>
-	<app-skeleton *ngIf="(products$ | async) === null"></app-skeleton>
-	<!-- <app-offers></app-offers>   -->
-	<app-most-popular-best-seller [categories]="categories$ | async"></app-most-popular-best-seller>
+	<app-skeleton *ngIf="(products$ | async)?.length === 0"></app-skeleton>
+	<app-most-popular-best-seller [categories]="categories" *ngIf="categories$ | async as categories">
+	</app-most-popular-best-seller>
+	<app-skeleton-category *ngIf="(categories$ | async)?.length === 0"></app-skeleton-category>
 	<app-our-partners></app-our-partners>
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->

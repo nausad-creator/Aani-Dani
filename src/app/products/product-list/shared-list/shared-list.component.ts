@@ -50,7 +50,6 @@ import { Store } from '@ngrx/store';
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event);" [categories]="categories$ | async"></app-shop-by-category>
 						<app-filter-by-price [preventAbuse]="preventAbuse" (filterByPrice)="onFilter($event); preventAbuse=true"></app-filter-by-price>
-						<!-- <app-filter-by-shape></app-filter-by-shape> -->
 						<app-top-selling></app-top-selling>
 					</div>
 					<br>
@@ -180,24 +179,24 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	ngOnInit(): void {
 		// query changes
-		data.categoryID = this.route.snapshot.queryParams.categoryID ? this.route.snapshot.queryParams.categoryID : '0';
-		data.categoryName = this.route.snapshot.queryParams.categoryName ? this.route.snapshot.queryParams.categoryName : 'null';
-		data.page = this.route.snapshot.queryParams.page ? this.route.snapshot.queryParams.page : '0';
+		data.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		data.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'null';
+		data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
 		this.products(JSON.stringify(data));
 	}
 	onChange = async (category: { categoryID: string, categoryName: string }) => {
-		if (category.categoryID !== this.route.snapshot.queryParams.categoryID) {
+		if (category?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
 			// query changes
 			this.loader = true;
 			dataChange.page = '0';
-			dataChange.categoryID = category.categoryID ? category.categoryID : '0';
-			dataChange.categoryName = category.categoryName ? category.categoryName : 'null';
+			dataChange.categoryID = category?.categoryID ? category?.categoryID : '0';
+			dataChange.categoryName = category?.categoryName ? category?.categoryName : 'null';
 			this.products(JSON.stringify(dataChange));
 			// updating query-param
 			data.page = '0';
-			data.categoryID = category.categoryID ? category.categoryID : '0';
-			data.categoryName = category.categoryName ? category.categoryName : 'null';
-			const queryParams: Params = { page: '0', categoryID: category.categoryID, categoryName: category.categoryName };
+			data.categoryID = category?.categoryID ? category?.categoryID : '0';
+			data.categoryName = category?.categoryName ? category?.categoryName : 'null';
+			const queryParams: Params = { page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName };
 			this.router.navigate([],
 				{
 					relativeTo: this.route,

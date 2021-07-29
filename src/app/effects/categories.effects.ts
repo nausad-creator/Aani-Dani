@@ -11,16 +11,12 @@ export class CategoriesEffects {
 		return this.actions$.pipe(
 			ofType(CategoriesActionTypes.LoadCategories),
 			mergeMap(action => this.root.getCategories(action.temp).pipe(
-				// If successfull, dispatch success action with result
 				map(data => new LoadCategoriesSuccess(data),
-					// If request fails, dispatch failure action with error
 					catchError((err) => of(new LoadCategoriesFailure(action.temp, err)))
-				), take(1)
-			)
+				), take(1))
 			)
 		);
 	});
-
 	constructor(
 		private actions$: Actions<LoadCategories>,
 		private root: RootService

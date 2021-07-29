@@ -211,7 +211,7 @@ export class RegistrationComponent implements OnInit {
 					}
 				}).catch(() => {
 					this.preventAbuse = false;
-					this.error = 'some error occured, try again.';
+					this.error = 'Oops! Something went wrong!';
 					this.cd.markForCheck();
 				});
 			}
@@ -230,10 +230,10 @@ export class RegistrationComponent implements OnInit {
 				if (r.status === 'true') {
 					resolve(r.data[0]);
 				} else {
-					reject('some error occured.');
+					reject('Oops! Something went wrong!');
 				}
 			}, () => {
-				reject('some error occured.');
+				reject('Oops! Something went wrong!');
 			}
 			);
 		});

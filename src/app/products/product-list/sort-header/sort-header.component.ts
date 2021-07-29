@@ -4,21 +4,21 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 	selector: 'app-sort-header',
 	template: `
     <div class="card-header bg-white">
-					        <div class="section-title row pb-0">
-							  <div class="col-md-6">		
-					          	<div class="brandcamp"><a routerLink="/">Home</a> <span> > {{categoryName}}</span> </div>
-							  </div>
-							  <div class="col-md-6">	
-							  	<div class="sortby form-group d-flex align-items-center justify-content-end mb-0">
-							  		<label class="mr-3 mb-0" style="white-space:nowrap;">Sort By:</label>
-							  		<ng-select (change)="sortBy.emit($event)" appearance="outline" [searchable]="false" [clearable]="true"
+		<div class="section-title row pb-0">
+				<div class="col-md-6">		
+					        <div class="brandcamp"><a routerLink="/">Home</a> <span> > {{categoryName}}</span> </div>
+				</div>
+				<div class="col-md-6">	
+					<div class="sortby form-group d-flex align-items-center justify-content-end mb-0">
+						<label class="mr-3 mb-0" style="white-space:nowrap;">Sort By:</label>
+						<ng-select (change)="sortBy.emit($event)" appearance="outline" [searchable]="false" [clearable]="true"
                         			 class="custom" placeholder="Select to sort">
                         			<ng-option *ngFor="let s of sorting" [value]="s.value">{{s.label}}</ng-option>
                       				</ng-select>	
-							  	</div>	
-							  </div>				  	
-					        </div>
-				        </div>
+					</div>	
+				</div>				  	
+		</div>
+	</div>
   `,
 	styles: [
 		`.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {

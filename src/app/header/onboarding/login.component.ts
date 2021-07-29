@@ -175,7 +175,7 @@ export class LoginComponent implements OnInit {
 					reject('Invalid username and password');
 				}
 			}, () => {
-				reject('some error occured.');
+				reject('Oops! Something went wrong.');
 			}
 			);
 		});

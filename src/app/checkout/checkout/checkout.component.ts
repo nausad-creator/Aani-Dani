@@ -18,72 +18,94 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 @Component({
 	selector: 'app-checkout',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
-  <!-- Header -->
-  <header id="header">
-    <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          <a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
-		          <ul>
-			  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
-		          </ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
-		        </ul>
-		      </nav>			
-		    </div> 			
+<app-header></app-header> <!-- Top Bar -->
+<!-- Header -->
+<header id="header">
+	<div class="container">
+		<div class="">
+			<div class="menu-content">
+				<div class="main-menu d-flex align-items-center">
+					<nav class="nav-menu d-none d-lg-block"
+						*ngIf="categories$ | async as categories">
+						<ul>
+							<li class="drop-down categorymenu">
+								<a class="maindrop" href="#"><i
+										class="icofont-navigation-menu mr-2"></i>
+									All Category</a>
+								<ul>
+									<li><a routerLink="/products"
+											[queryParams]="{page: '0', categoryID: category?.categoryID}"
+											*ngFor="let category of categories">{{category?.categoryName
+											| titlecase}}</a></li>
+								</ul>
+							</li>
+							<li *ngFor="let category of categories"><a
+									routerLink="/products"
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
+									| titlecase}}</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 		</div>
-	</div>  	  
-    </div>
-  </header>
-  <!-- End Header -->
-  <main id="main">
-    <section id="cart-section" class="pb-3 pt-4">
-        <div class="container">
-            <div class="brandcamp"><a routerLink='/'>Home  &gt;</a> <span> Checkout</span> </div>
-            <div class="card mt-3">
-                <div class="row m-0 pt-3 pb-3">
-                    <div class="col-lg-7">
-                        <div class="addressContent">
-                            <div class="d-flex">
-                                <div class="titleAssres">
-                                    <h5><b>Delivery Address</b></h5>
-                                    <p class="mb-0" *ngIf="selectedAddress">{{selectedAddress.address}}<br> {{(selectedAddress.city | titlecase) + ', ' + (selectedAddress.country | titlecase) + ' ' +  selectedAddress.zip_code}}</p>
-                                </div>
-                            </div>	
-                        </div>
+	</div>
+</header>
+<!-- End Header -->
+<main id="main">
+	<section id="cart-section" class="pb-3 pt-4">
+		<div class="container">
+			<div class="brandcamp"><a routerLink='/'>Home &gt;</a> <span> Checkout</span> </div>
+			<div class="card mt-3">
+				<div class="row m-0 pt-3 pb-3">
+					<div class="col-lg-7">
+						<div class="addressContent">
+							<div class="d-flex">
+								<div class="titleAssres">
+									<h5><b>Delivery Address</b></h5>
+									<p class="mb-0" *ngIf="selectedAddress">
+										{{selectedAddress.address}}<br>
+										{{(selectedAddress.city | titlecase) +
+										', ' + (selectedAddress.country |
+										titlecase) + ' ' +
+										selectedAddress.zip_code}}</p>
+								</div>
+							</div>
+						</div>
 
-                	<div class="addressContent">
-                        <div class="titleAssres">
-                              <h5><b>Payment Method</b></h5>
-                        </div>
-			  <!-- saved debit or credit card shared	 -->
-                        <app-saved-card (updateMode)="orderPaymentMode=$event"></app-saved-card>
-                        </div>
-			<!-- add debit or credit card shared form -->
-                        <app-add-debit-credit-shared></app-add-debit-credit-shared>
-			<!-- net-banking selection -->
-                        <app-netbanking-shared (updateMode)="orderPaymentMode=$event"></app-netbanking-shared>
-			<!-- cash-on-delivary selection -->
-                        <app-cash-on-delivary-shared (updateMode)="orderPaymentMode=$event"></app-cash-on-delivary-shared>	
-			<!-- upi-payment-selection -->
-                        <app-upi-shared (updateMode)="orderPaymentMode=$event"></app-upi-shared>
+						<div class="addressContent">
+							<div class="titleAssres">
+								<h5><b>Payment Method</b></h5>
+							</div>
+							<!-- saved debit or credit card shared	 -->
+							<app-saved-card (updateMode)="orderPaymentMode=$event">
+							</app-saved-card>
+						</div>
+						<!-- add debit or credit card shared form -->
+						<app-add-debit-credit-shared></app-add-debit-credit-shared>
+						<!-- net-banking selection -->
+						<app-netbanking-shared (updateMode)="orderPaymentMode=$event">
+						</app-netbanking-shared>
+						<!-- cash-on-delivary selection -->
+						<app-cash-on-delivary-shared (updateMode)="orderPaymentMode=$event">
+						</app-cash-on-delivary-shared>
+						<!-- upi-payment-selection -->
+						<app-upi-shared (updateMode)="orderPaymentMode=$event"></app-upi-shared>
 
-                    </div>	
+					</div>
 
-                    <div class="col-lg-5">
-                        <app-shared-orders-details (place)="placeOrder($event);" [preventAbuse]="preventAbuse" [billingDetails]="ordersList[0].billingDetails" [products]="ordersList[0].orderdetails" *ngIf="!loader"></app-shared-orders-details>	
-                        <app-shared-skeleton-orders-details *ngIf="loader"></app-shared-skeleton-orders-details>
-                    </div>
-                </div>	
-            </div>	
-        </div>	
-    </section>	
+					<div class="col-lg-5">
+						<app-shared-orders-details (place)="placeOrder($event);"
+							[preventAbuse]="preventAbuse"
+							[billingDetails]="ordersList[0].billingDetails"
+							[products]="ordersList[0].orderdetails" *ngIf="!loader">
+						</app-shared-orders-details>
+						<app-shared-skeleton-orders-details *ngIf="loader">
+						</app-shared-skeleton-orders-details>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->
@@ -155,7 +177,7 @@ export class CheckoutComponent implements OnInit {
 					return {
 						orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
 							return {
-								Price: a.Price,
+								Price: (+a.Qty.split('.')[0] * +a.productPrice).toString(),
 								Qty: a.Qty.split('.')[0],
 								categoryID: a.categoryID,
 								categoryName: a.categoryName,
@@ -182,9 +204,9 @@ export class CheckoutComponent implements OnInit {
 						billingDetails: {
 							delivery_Tip: 10,
 							delivery_Fee: 30,
-							item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPrice).reduce((a, b) => a + b, 0),
+							item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0),
 							vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
-							net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.productPriceVat).reduce((a, b) => a + b, 0) + 30 + 10,
+							net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0) + 30 + 10 + d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
 						},
 						temporderDate: d.temporderDate,
 						temporderID: d.temporderID,
@@ -383,7 +405,7 @@ export class CheckoutComponent implements OnInit {
 				}
 				if (r.status === 'false') {
 					this.preventAbuse = false;
-					this.toastr.error('Error while placing order, please try again!');
+					this.toastr.error('Oops! Something went wrong.');
 					this.cd.markForCheck();
 				}
 			}, (err) => {

@@ -16,6 +16,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgProgressModule } from 'ngx-progressbar';
 import { HeaderModule } from 'src/app/header/header.module';
+import { SkeletonTopSellingComponent } from './skeleton/skeleton-top-selling.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +26,8 @@ import { HeaderModule } from 'src/app/header/header.module';
 		TopSellingComponent,
 		ItemsComponent,
 		SortHeaderComponent,
-		SkeletonComponent
+		SkeletonComponent,
+		SkeletonTopSellingComponent
 	],
 	imports: [
 		CommonModule,

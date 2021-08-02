@@ -7,8 +7,9 @@ import { AuthenticationService } from '../authentication.service';
 import { RootService } from '../root.service';
 import { Observable, of, Subject, merge } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
-import { ADDRESS } from '../interface';
+import { ADDRESS, ProductList } from '../interface';
 import { CookieService } from 'ngx-cookie-service';
+import { AddressListComponent } from './onboarding/address-list.component';
 
 @Component({
 	selector: 'app-header',
@@ -22,7 +23,7 @@ import { CookieService } from 'ngx-cookie-service';
 		  	</div> 
 			  <div class="selectedAddress d-none d-md-block" *ngIf="isLoggedID && defaultAddress">
 				<div class="callUs">
-					<a class="d-flex cursr">
+					<a class="d-flex cursr" (click)="openAddress(address_list, {}, 'false')">
 						<div class="callicon align-self-center pt-2"><i class="icofont-google-map"></i></div>
 						<div class="callnumber"><small>Deliver to</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
 					</a>
@@ -198,6 +199,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				console.error(res.data);
 			}
 		});
+	}
+	openAddress = (add: ADDRESS[], product?: ProductList, status?: string) => {
+		const initialState = {
+			list: [{
+				status: status,
+				product: product,
+				address: add
+			}]
+		};
+		this.bsModal = this.modal.show(AddressListComponent, { id: 499, initialState });
 	}
 	checkStatus = () => {
 		// getting auth user data

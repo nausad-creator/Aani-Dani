@@ -41,36 +41,106 @@ import { HeaderModule } from '../header/header.module';
 							{
 								path: 'my-account',
 								loadChildren: () => import('./my-account/my-account.module').then((m) => m.MyAccountModule),
+								data: {
+									seo: {
+										title: 'MY-ACCOUNT | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard]
 							},
 							{
 								path: 'saved-address',
 								loadChildren: () => import('./saved-addresses/saved-addresses.module').then((m) => m.SavedAddressesModule),
+								data: {
+									seo: {
+										title: 'SAVED ADDRESS | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							},
 							{
 								path: 'my-review',
 								loadChildren: () => import('./my-rewiews/my-rewiews.module').then((m) => m.MyRewiewsModule),
+								data: {
+									seo: {
+										title: 'MY REVIEW | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							},
 							{
 								path: 'my-wishlist',
 								loadChildren: () => import('./my-wishlist/my-wishlist.module').then((m) => m.MyWishlistModule),
+								data: {
+									seo: {
+										title: 'MY WISHLIST | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							},
 							{
 								path: 'notifications',
 								loadChildren: () => import('./notifications/notifications.module').then((m) => m.NotificationsModule),
+								data: {
+									seo: {
+										title: 'NOTIFICATIONS | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							},
 							{
 								path: 'settings',
 								loadChildren: () => import('./settings/settings.module').then((m) => m.SettingsModule),
+								data: {
+									seo: {
+										title: 'SETTINGS | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							},
 							{
 								path: 'customer-support',
 								loadChildren: () => import('./customer-support/customer-support.module').then((m) => m.CustomerSupportModule),
+								data: {
+									seo: {
+										title: 'CUSTOMER SUPPORT | AANI DANI',
+										metaTags: [
+											{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+											{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+											{ name: 'robots', content: 'index, follow' }
+										]
+									}
+								},
 								canActivate: [UserGuard],
 							}
 						]
@@ -78,6 +148,16 @@ import { HeaderModule } from '../header/header.module';
 					{
 						path: 'my-orders',
 						loadChildren: () => import('./my-orders/my-orders.module').then((m) => m.MyOrdersModule),
+						data: {
+							seo: {
+								title: 'MY ORDERS | AANI DANI',
+								metaTags: [
+									{ name: 'keywords', content: 'Restaurant Order management, Restaurant Kitchen management, Hotel Management' },
+									{ name: 'description', content: 'softQ is a Online Restaurant order management.' },
+									{ name: 'robots', content: 'index, follow' }
+								]
+							}
+						},
 						canActivate: [UserGuard],
 					}
 				]

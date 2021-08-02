@@ -31,10 +31,6 @@ import { SubSink } from 'subsink';
      </div>	
      <div class="addresDisplay" *ngIf="user.address.length === 0">
         <div class="addresItem pt-3">
-            <!-- <div>
-                <p class="text-center">No address found.</p>
-            </div> -->
-            <!-- <br> -->
             <div class="pt-1"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ Add New Address</button></div>
         </div>
     </div>	

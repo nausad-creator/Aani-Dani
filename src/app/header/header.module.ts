@@ -18,6 +18,8 @@ import { AddressListComponent } from './onboarding/address-list.component';
 import { MyFilterAdressPipe } from './onboarding/add.pipe';
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { AlertComponent } from './onboarding/alert.component';
+import { SharedAddAddressComponent } from './onboarding/shared-add-address.component';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 @NgModule({
 	declarations: [
@@ -33,7 +35,8 @@ import { AlertComponent } from './onboarding/alert.component';
 		LocationSelectionComponent,
 		AddressListComponent,
 		MyFilterAdressPipe,
-		AlertComponent
+		AlertComponent,
+		SharedAddAddressComponent
 	],
 	imports: [
 		CommonModule,
@@ -42,6 +45,7 @@ import { AlertComponent } from './onboarding/alert.component';
 		OwlNativeDateTimeModule,
 		ReactiveFormsModule,
 		FormsModule,
+		GooglePlaceModule,
 		NgSelectModule,
 		TooltipModule
 	],
@@ -49,7 +53,8 @@ import { AlertComponent } from './onboarding/alert.component';
 		HeaderComponent,
 		FooterComponent,
 		ScrollToTopComponent,
-		CommonModule
+		CommonModule,
+		GooglePlaceModule
 	]
 })
 export class HeaderModule { }

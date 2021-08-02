@@ -47,6 +47,17 @@ import { SubSink } from 'subsink';
 	</div>
 	</div>
   </div>
+  <div class="card mt-3" style="overflow:hidden;" style="margin-bottom: 1rem; min-height: 320px;"
+	*ngIf="products === undefined">
+	<div class="row">
+		<div class="col">
+			<div class="nodata_content text-center pt-lg-5">
+				<img src="assets/images/no-data.png" alt="No-Data">
+				<p class="text-muted" style="padding-right:32px;">No Data Found.</p>
+			</div>
+		</div>
+	</div>
+</div>
   `,
 	styles: [
 	],

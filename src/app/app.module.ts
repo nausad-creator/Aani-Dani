@@ -31,6 +31,7 @@ import { AuthenticationService } from './authentication.service';
 import { LocationService } from './location.service';
 import { OthersEffects } from './effects/others.effects';
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { SeoService } from './seo.service';
 
 @NgModule({
 	declarations: [
@@ -69,7 +70,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 		!environment.production ? StoreDevtoolsModule.instrument() : [],
 		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects])
 	],
-	providers: [RootService, AuthenticationService, LocationService],
+	providers: [RootService, AuthenticationService, LocationService, SeoService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

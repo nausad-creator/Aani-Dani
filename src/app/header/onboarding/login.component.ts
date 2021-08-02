@@ -15,56 +15,81 @@ import { RegistrationComponent } from './registration.component';
 	selector: 'app-login',
 	template: `
     <!--Modal Login-->
-	    <div class="modal-contents">
-	      <div class="modal-header">
-	      	<h5 class="modal-title w-100 text-center" id="exampleModalLabel">Login</h5>
-	     	 <button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
-	      </div>
-	      <div class="modal-body">
-		  <div class="alert alert-danger" role="alert" *ngIf="error">
-      			<h5 class="alert-heading text-center">Error!</h5>
-      			<p class="mb-0 text-center">{{error}}</p>
-    		</div>
-		      <form class="text-left profile-form" [formGroup]="logIn" (ngSubmit)="onClickLogin(logIn.value);"> 
-		        <div class="form-row CandidateForm">
-		            <div class="col-md-12 col-sm-12 form-group">
-		            	<label>Username<span class="required-field"></span></label>	
-				<input type="email" #emailInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" id="Email" class="form-control" placeholder="Enter username or e-mail">
-				<small class="text-danger" *ngIf="logIn.controls['userMobile'].hasError('required')">This field is required.</small>
-            			<small class="text-danger" *ngIf="logIn.controls['userMobile'].hasError('pattern') && (logIn.controls['userMobile'].dirty || logIn.controls['userMobile'].touched)">Please enter valid email address or phone number.</small>
-				</div>        
+<div class="modal-contents">
+	<div class="modal-header">
+		<h5 class="modal-title w-100 text-center" id="exampleModalLabel">Login</h5>
+		<button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal"
+			aria-label="Close"> <span aria-hidden="true">×</span></button>
+	</div>
+	<div class="modal-body">
+		<div class="alert alert-danger" role="alert" *ngIf="error">
+			<h5 class="alert-heading text-center">Error!</h5>
+			<p class="mb-0 text-center">{{error}}</p>
+		</div>
+		<form class="text-left profile-form" [formGroup]="logIn" (ngSubmit)="onClickLogin(logIn.value);">
+			<div class="form-row CandidateForm">
 				<div class="col-md-12 col-sm-12 form-group">
-				<div class="row">
-				<div class="col"><label>Password<span class="required-field"></span></label></div>
-				<div class="col text-right"><a class="cursr" id="forgot" (click)="openForgot()" style="color:#2660C0;" data-toggle="modal">Forgot?</a></div>
+					<label>Username<span class="required-field"></span></label>
+					<input type="email" #emailInput (keydown.space)="$event.preventDefault();"
+						formControlName="userMobile" id="Email" class="form-control"
+						placeholder="Enter username or e-mail">
+					<small class="text-danger"
+						*ngIf="logIn.controls['userMobile'].hasError('required')">This field is
+						required.</small>
+					<small class="text-danger"
+						*ngIf="logIn.controls['userMobile'].hasError('pattern') && (logIn.controls['userMobile'].dirty || logIn.controls['userMobile'].touched)">Please
+						enter valid email address or phone number.</small>
 				</div>
-				<div>
-				<a class="pasword-hideshowLogin cursr" (click)="hide=!hide"><i class="fa " [ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
-              			<input #passwordInput type="password" [type]=" hide ? 'password' : 'text' " id="password" (keydown.space)="$event.preventDefault()" placeholder="Enter password" class="form-control" formControlName="userPassword" name="password" autocomplete="off">
-              			<small class="text-danger" *ngIf="logIn.controls['userPassword'].hasError('required')">This field is required.</small>
-            			</div>
+				<div class="col-md-12 col-sm-12 form-group">
+					<div class="row">
+						<div class="col"><label>Password<span
+									class="required-field"></span></label></div>
+						<div class="col text-right"><a class="cursr" id="forgot"
+								(click)="openForgot()" style="color:#2660C0;"
+								data-toggle="modal">Forgot?</a></div>
+					</div>
+					<div>
+						<a class="pasword-hideshowLogin cursr" (click)="hide=!hide"><i
+								class="fa "
+								[ngClass]="{'fa-eye': !hide, 'fa-eye-slash': hide}"></i></a>
+						<input #passwordInput type="password"
+							[type]=" hide ? 'password' : 'text' " id="password"
+							(keydown.space)="$event.preventDefault()"
+							placeholder="Enter password" class="form-control"
+							formControlName="userPassword" name="password"
+							autocomplete="off">
+						<small class="text-danger"
+							*ngIf="logIn.controls['userPassword'].hasError('required')">This
+							field is required.</small>
+					</div>
 				</div>
-				    <div class="col-md-12 col-sm-12">													
-						<div class="row pt-3">
-						   <div class="col">
-							<button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? 'Wait..' : 'Log In' }}</button>
-						   </div> 
-						</div> 
-						<div class="text-center">
-						  <div class="custom-control custom-checkbox pl-0 pt-3">
-							<input type="checkbox" formControlName="terms" class="custom-control-input" id="customCheck" name="example1">
-							<label class="custom-control-label" for="customCheck">Keep me signed in</label>
-						  </div>
-						</div> 
-		            		</div>            
-					<div class="col-md-12 col-sm-12 mt-3 signupbtn text-center">
-						<br>
-					  <span>New Here?</span> <a class="cursr ml-1" (click)="openRegistration()" data-toggle="modal">Create an Account</a>
-					</div>        
-		        </div>
-		      </form>
-	      </div>      
-	    </div>
+				<div class="col-md-12 col-sm-12">
+					<div class="row pt-3">
+						<div class="col">
+							<button type="submit" [disabled]="preventAbuse"
+								class="btn btn-them btn-md w-100">{{ preventAbuse ?
+								'Wait..' : 'Log In' }}</button>
+						</div>
+					</div>
+					<div class="text-center">
+						<div class="custom-control custom-checkbox pl-0 pt-3">
+							<input type="checkbox" formControlName="terms"
+								class="custom-control-input" id="customCheck"
+								name="example1">
+							<label class="custom-control-label" for="customCheck">Keep me
+								signed in</label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 col-sm-12 mt-3 signupbtn text-center">
+					<br>
+					<span>New Here?</span> <a class="cursr ml-1" (click)="openRegistration()"
+						data-toggle="modal">Create an Account</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
   `,
 	styles: [
 		`.modal-contents {

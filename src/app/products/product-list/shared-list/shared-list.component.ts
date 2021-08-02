@@ -50,7 +50,8 @@ import { Store } from '@ngrx/store';
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event);" [categories]="categories$ | async"></app-shop-by-category>
 						<app-filter-by-price [preventAbuse]="preventAbuse" (filterByPrice)="onFilter($event); preventAbuse=true"></app-filter-by-price>
-						<app-top-selling></app-top-selling>
+						<app-top-selling [products]="product.bestselling" *ngIf="!loader"></app-top-selling>
+						<app-skeleton-top-selling *ngIf="loader"></app-skeleton-top-selling>
 					</div>
 					<br>
 				</div>
@@ -58,7 +59,7 @@ import { Store } from '@ngrx/store';
 					<div class="category_slider card">
 						<app-sort-header (sortBy)="onSort($event);" [categoryName]="route.snapshot.queryParams?.categoryName"></app-sort-header>
 						<div class="sparetor_title">
-				    <h5 class="mb-0">{{'Item ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')'}}</h5>
+				    <h5 class="mb-0">{{product.itemscount ? 'Item ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')' : 'Item ' + '('+ '00' +')'}}</h5>
 				    </div>
 					<app-items [products]="product.data" *ngIf="!loader"></app-items>
 					<app-skeleton *ngIf="loader"></app-skeleton>

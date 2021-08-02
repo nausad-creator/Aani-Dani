@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -29,7 +29,7 @@ import { SubSink } from 'subsink';
           <div class="supervisor_list demo-radio-button">
 	  <div class="d-flex">
 		<label _ngcontent-man-c117="">Address List</label>
-  		<div class="ml-auto"><a class="cursr" (click)="clickOnNavigate()">+ Add Address</a></div>
+  		<div class="ml-auto"><a class="cursr" (click)="click();">+ Add Address</a></div>
   	</div>
              <div class="message-center" *ngFor="let address of list[0].address | myfilterAddress">
                   <div class="radeio-list">					  	
@@ -45,6 +45,7 @@ import { SubSink } from 'subsink';
         </div>
       </form>
     </div>
+    <app-shared-add-address (update)="update($event)"></app-shared-add-address>
   `,
 	styles: [
 		`.modal-contents {
@@ -63,10 +64,13 @@ import { SubSink } from 'subsink';
     		padding: .75rem 0.25rem;
     		margin-bottom: 2rem;
     		border-radius: .25rem;
+	}
+	.none{
+		display:none;
 	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddressListComponent implements OnInit {
+export class AddressListComponent implements OnInit, OnDestroy {
 	error: string = '';
 	list: { status: string, product: ProductList, address: ADDRESS[] }[] = [];
 	preventAbuse = false;
@@ -92,13 +96,30 @@ export class AddressListComponent implements OnInit {
 			}
 		}));
 	}
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
+	}
 	clickOnNavigate = () => {
 		this.onClose();
 		setTimeout(() => {
 			this.router.navigate(['/user/saved-address'], { queryParams: { tag: 'add_new' } });
 		}, 300);
 	}
+	click = () => {
+		$('.AddressSidebar').addClass('opensidebar');
+	}
+	update = (status: { status: number }) => {
+		if (status.status === 200) {
+			this.list[0].address = this.logged_user.address;
+			this.cd.markForCheck();
+		}
+	}
 	ngOnInit(): void {
+		jQuery(() => {
+			$('.closeSidebar').on('click', function () {
+				$('.AddressSidebar').removeClass('opensidebar');
+			});
+		});
 		this.checked_address = this.list[0].address.filter(a => a.addressIsDefault === 'Yes')[0].addressID;
 	}
 	onClose = () => {
@@ -147,7 +168,16 @@ export class AddressListComponent implements OnInit {
 					this.root.update_user_status$.next('200');
 					sessionStorage.setItem('USER_LOGGED', JSON.stringify(tempUser));
 				}
-				this.add_to_cart();
+				if (this.list[0].status === 'true' || this.list[0].status === 'Location') {
+					this.add_to_cart();
+				}
+				if (this.list[0].status === 'false') {
+					this.preventAbuse = false;
+					this.cd.markForCheck();
+					setTimeout(() => {
+						this.onClose();
+					}, 300);
+				}
 			}
 			if (res.status === 'false') {
 				this.error = 'No store is found on selected address.';

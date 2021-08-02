@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { shareReplay, retry, catchError, map, takeUntil } from 'rxjs/operators';
-import { Banner, Category, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload } from './interface';
+import { Banner, Category, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload, Wishlist } from './interface';
 const CACHE_SIZE = 1;
 @Injectable({
 	providedIn: 'root',
@@ -31,6 +31,9 @@ export class RootService {
 	uploadFileUrl = '/users/file-upload';
 	productListUrl = '/products/get-product-list';
 	ordersUrl = '/orders/my-orders';
+	wishlistUrl = '/userfavorite/favorite-list';
+	remove_wishlistUrl = '/userfavorite/remove-favorite';
+	add_wishlistUrl = '/userfavorite/add-to-favorite';
 	userHomeUrl = '/users/user-home';
 	cmsUrl = '/cmspage/get-cmspage';
 	faqUrl = '/faq/faq-list';
@@ -281,6 +284,65 @@ export class RootService {
 				status: string;
 			}>(`${this.ordersUrl}`, form, this.httpOptions)
 			.pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
+	}
+	wishlists = (temp: string): Observable<{
+		count: number;
+		data: Wishlist[];
+		message: string;
+		status: string;
+	}> => {
+		const form = new FormData();
+		const json = `[{
+		"loginuserID":"${JSON.parse(temp).loginuserID}",
+		"apiType":"android",
+		"apiVersion":"1.0",
+		"page":"${JSON.parse(temp).page}",
+		"pagesize":"${JSON.parse(temp).pagesize}",
+		"languageID":"${JSON.parse(temp).languageID}"
+		}]`;
+		form.append('json', json);
+		return this.http
+			.post<{
+				count: number;
+				data: Wishlist[];
+				message: string;
+				status: string;
+			}[]>(`${this.wishlistUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
+	}
+	remove_wishlist = (temp: string): Observable<string> => {
+		const form = new FormData();
+		const json = `[{
+		"loginuserID":"${JSON.parse(temp).loginuserID}",
+		"apiType":"android",
+		"apiVersion":"1.0",
+		"productID":"${JSON.parse(temp).productID}",
+		"languageID":"${JSON.parse(temp).languageID}"
+		}]`;
+		form.append('json', json);
+		return this.http
+			.post<{
+				message: string;
+				status: string;
+			}[]>(`${this.remove_wishlistUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0].status), shareReplay(), retry(2), catchError(this.handleError));
+	}
+	add_wishlist = (temp: string): Observable<string> => {
+		const form = new FormData();
+		const json = `[{
+		"loginuserID":"${JSON.parse(temp).loginuserID}",
+		"apiType":"android",
+		"apiVersion":"1.0",
+		"productID":"${JSON.parse(temp).productID}",
+		"languageID":"${JSON.parse(temp).languageID}"
+		}]`;
+		form.append('json', json);
+		return this.http
+			.post<{
+				message: string;
+				status: string;
+			}[]>(`${this.add_wishlistUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0].status), shareReplay(), retry(2), catchError(this.handleError));
 	}
 	placeOrder = (temp: string): Observable<{
 		data: Orders[];

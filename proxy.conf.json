@@ -190,5 +190,23 @@
     "secure": false,
     "loglevel": "debug",
     "changeOrigin": true
+  },
+  "/userfavorite/favorite-list/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/userfavorite/add-to-favorite/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
+  },
+  "/userfavorite/remove-favorite/*": {
+    "target": "http://164.52.209.69/aanidani/backend/web/index.php/v1/",
+    "secure": false,
+    "loglevel": "debug",
+    "changeOrigin": true
   }
 }

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { HeaderComponent } from './header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ScrollToTopComponent } from '../footer/scroll-to-top/scroll-to-top.component';
@@ -52,9 +52,8 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 	exports: [
 		HeaderComponent,
 		FooterComponent,
-		ScrollToTopComponent,
-		CommonModule,
-		GooglePlaceModule
-	]
+		ScrollToTopComponent
+	],
+	providers: [TitleCasePipe]
 })
 export class HeaderModule { }

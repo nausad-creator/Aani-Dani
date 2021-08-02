@@ -67,3 +67,9 @@ export const tepmOrder = {
 	loginuserID: "",
 	languageID: "1"
 }
+export const wishlist = {
+	page: "0",
+	pagesize: '10',
+	loginuserID: "",
+	languageID: "1"
+}

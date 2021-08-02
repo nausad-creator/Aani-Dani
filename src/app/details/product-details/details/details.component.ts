@@ -1,6 +1,6 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { fadeIn } from 'src/app/animation';
@@ -53,7 +53,10 @@ import { SubSink } from 'subsink';
 				  			</div>
 
 				  			<div class="wishlistConten d-flex align-items-center">
-				  				<div class="pr-4"><a href="#"><i class="far fa-heart"></i> Add to Wishlist</a></div>
+				  				<div class="pr-4">
+									  <a class="cursr" (click)="add_favourite(product?.productID); product.isFavorite='Yes'" *ngIf="product?.isFavorite === 'No'"><i class="far fa-heart"></i> Add to Wishlist</a>
+									  <a class="cursr" (click)="remove(product?.productID); product.isFavorite='No'" *ngIf="product?.isFavorite === 'Yes'"><i class="fa fa-heart" style="color:red;"></i> Added to Wishlist</a>
+								</div>
 				  				<div class="shareDetail">
 				  					<span class="pr-2">Share:</span>
 				  					<a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -73,7 +76,7 @@ import { SubSink } from 'subsink';
 		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
 	@Input() product: ProductList;
 	stars: number[] = [1, 2, 3, 4, 5];
 	logged_user: USER_RESPONSE = null;
@@ -95,6 +98,23 @@ export class DetailsComponent implements OnInit {
 				this.cd.markForCheck();
 			}
 		}));
+	}
+	add_favourite = (productID: string) => {
+		this.root.add_wishlist(JSON.stringify({
+			loginuserID: this.logged_user.userID,
+			languageID: this.logged_user.languageID,
+			productID
+		})).subscribe()
+	}
+	remove = (productID: string) => {
+		this.root.remove_wishlist(JSON.stringify({
+			loginuserID: this.logged_user.userID,
+			languageID: this.logged_user.languageID,
+			productID
+		})).subscribe()
+	}
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
 	}
 	checkStatus = () => {
 		// getting auth user data
@@ -166,7 +186,7 @@ export class DetailsComponent implements OnInit {
 	placeTempOrder = (pro: ProductList) => {
 		pro.addedCartCount++;
 		return new Promise((resolve, reject) => {
-			this.root.placeNewOrderTemp(JSON.stringify({
+			this.subs.add(this.root.placeNewOrderTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderdetails: [{
@@ -185,10 +205,10 @@ export class DetailsComponent implements OnInit {
 						temporderID: r[0].data[0].temporderID
 					});
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while placing first temp item to cart!');
 				console.error('Oops! Something went wrong while placing first temp item to cart!');
-			};
+			}));
 		});
 	}
 	add = async (pro: ProductList) => {
@@ -202,7 +222,7 @@ export class DetailsComponent implements OnInit {
 	addItemToCart = (pro: ProductList) => {
 		pro.addedCartCount++;
 		return new Promise((resolve, reject) => {
-			this.root.addItemToCartTemp(JSON.stringify({
+			this.subs.add(this.root.addItemToCartTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderID: this.tempOrderID,
@@ -217,10 +237,10 @@ export class DetailsComponent implements OnInit {
 					});
 					resolve('Added_sucessfully');
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while adding item to cart!');
 				console.error('Oops! Something went wrong while adding item to cart!');
-			};
+			}));
 		});
 	}
 	delete = async (pro: ProductList) => {
@@ -234,7 +254,7 @@ export class DetailsComponent implements OnInit {
 	deleteItemFromCart = (pro: ProductList) => {
 		pro.addedCartCount--;
 		return new Promise((resolve, reject) => {
-			this.root.deleteItemFromCartTemp(JSON.stringify({
+			this.subs.add(this.root.deleteItemFromCartTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderID: this.cookie.get('Temp_Order_ID'),
@@ -250,10 +270,10 @@ export class DetailsComponent implements OnInit {
 					});
 					resolve('Deleted_sucessfully');
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while deleting item from cart!');
 				console.error('Oops! Something went wrong while adding item from cart!');
-			};
+			}));
 		});
 	}
 	addToLocal = (pro: {

@@ -1,8 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
-import { map, take } from 'rxjs/operators';
+import { delay, map, take } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { ADDRESS, ProductList, Store, TempCartItems, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
@@ -34,7 +33,7 @@ import { SubSink } from 'subsink';
              <div class="message-center" *ngFor="let address of list[0].address | myfilterAddress">
                   <div class="radeio-list">					  	
                       <input name="Supervisor" (change)="onChange($event.target.value)" [value]="address.addressID" [checked]="address.addressID === checked_address" type="radio" [id]="address.addressID" class="with-gap radio-col-black cursr">
-                      <label class="cursr" [for]="address.addressID">{{address.fullAddress}} <br>{{address.cityName + ' ' + address.countryName + ' ' + address.addressPincode}} </label>
+                      <label class="cursr" [for]="address.addressID">{{address.fullAddress | lowercase}} <br>{{(address.cityName | lowercase) + ', ' + (address.countryName | titlecase) + ' ' + address.addressPincode}} </label>
                   </div>				  
               </div>
           </div>
@@ -83,9 +82,7 @@ export class AddressListComponent implements OnInit, OnDestroy {
 		private root: RootService,
 		private cd: ChangeDetectorRef,
 		private auth: AuthenticationService,
-		private cookie: CookieService,
-		private router: Router
-	) {
+		private cookie: CookieService) {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
@@ -98,12 +95,6 @@ export class AddressListComponent implements OnInit, OnDestroy {
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
-	}
-	clickOnNavigate = () => {
-		this.onClose();
-		setTimeout(() => {
-			this.router.navigate(['/user/saved-address'], { queryParams: { tag: 'add_new' } });
-		}, 300);
 	}
 	click = () => {
 		$('.AddressSidebar').addClass('opensidebar');
@@ -143,7 +134,7 @@ export class AddressListComponent implements OnInit, OnDestroy {
 		}
 	}
 	get_store = (cordinate: string) => {
-		this.root.store(cordinate).subscribe((res: { status: string; data: Store[]; message: string; }) => {
+		this.subs.add(this.root.store(cordinate).pipe(delay(1000)).subscribe((res: { status: string; data: Store[]; message: string; }) => {
 			if (res.status === 'true') {
 				this.list[0].address.map(a => {
 					if (a.addressID === this.checked_address) {
@@ -199,10 +190,10 @@ export class AddressListComponent implements OnInit, OnDestroy {
 		}, (err: any) => {
 			this.preventAbuse = false;
 			throw new Error(`Oops! Something went wrong while fetching store: ${err}`);
-		});
+		}));
 	}
 	add_to_cart = () => {
-		this.root.ordersTemp(JSON.stringify({
+		this.subs.add(this.root.ordersTemp(JSON.stringify({
 			orderID: '0',
 			loginuserID: this.logged_user.userID,
 			languageID: '1'
@@ -253,11 +244,11 @@ export class AddressListComponent implements OnInit, OnDestroy {
 				}
 				this.onClose()
 			}, 100);
-		}, err => console.error(err));
+		}, err => console.error(err)));
 	}
 	placeTempOrder = (temp: { userID: string, tempID: string, product: ProductList }) => {
 		return new Promise((resolve, reject) => {
-			this.root.placeNewOrderTemp(JSON.stringify({
+			this.subs.add(this.root.placeNewOrderTemp(JSON.stringify({
 				loginuserID: temp.userID,
 				languageID: '1',
 				orderdetails: [{
@@ -276,15 +267,15 @@ export class AddressListComponent implements OnInit, OnDestroy {
 						temporderID: r[0].data[0].temporderID
 					});
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while placing first temp item to cart!');
 				console.error('Oops! Something went wrong while placing first temp item to cart!');
-			};
+			}));
 		});
 	}
 	addItemToCart = (temp: { userID: string, tempID: string, product: ProductList }) => {
 		return new Promise((resolve, reject) => {
-			this.root.addItemToCartTemp(JSON.stringify({
+			this.subs.add(this.root.addItemToCartTemp(JSON.stringify({
 				loginuserID: temp.userID,
 				languageID: '1',
 				orderID: temp.tempID,
@@ -299,10 +290,10 @@ export class AddressListComponent implements OnInit, OnDestroy {
 					});
 					resolve('Added_sucessfully');
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while adding item to cart!');
 				console.error('Oops! Something went wrong while adding item to cart!');
-			};
+			}));
 		});
 	}
 	addToLocal = (pro: {

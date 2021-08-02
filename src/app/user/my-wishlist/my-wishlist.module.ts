@@ -8,16 +8,22 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { SharedWishlistComponent } from './my-wishlist/shared-wishlist.component';
+import { SkeletonComponent } from './my-wishlist/skeleton.component';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 @NgModule({
 	declarations: [
-		MyWishlistComponent
+		MyWishlistComponent,
+		SharedWishlistComponent,
+		SkeletonComponent
 	],
 	imports: [
 		CommonModule,
 		HttpClientModule,
 		ReactiveFormsModule,
 		FormsModule,
+		TooltipModule,
 		NgSelectModule,
 		NgxPaginationModule,
 		LazyLoadImageModule,

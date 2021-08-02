@@ -11,21 +11,21 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-my-orders',
 	template: `
-    <!--start Listing area-->
-	<section id="product-list-section" class="pb-3 pt-4">
-    <div class="container">
-        <div class="row">
-           <div class="col-lg-3 col-md-4">
-           <app-side-filter></app-side-filter>
-           </div>
-           <div class="lefprolist mb-3 col-lg-9 col-md-8">
-           <app-shared-order [orders]="ordersList" *ngIf="!loader"></app-shared-order>
-           <app-skeleton *ngIf="loader"></app-skeleton>
-           </div>
-        </div>	
-    </div>		
-	</section>
-    <!--end Listing area-->
+   <!--start Listing area-->
+<section id="product-list-section" class="pb-3 pt-4">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-4">
+				<app-side-filter></app-side-filter>
+			</div>
+			<div class="lefprolist mb-3 col-lg-9 col-md-8">
+				<app-shared-order [orders]="ordersList" *ngIf="!loader"></app-shared-order>
+				<app-skeleton *ngIf="loader"></app-skeleton>
+			</div>
+		</div>
+	</div>
+</section>
+<!--end Listing area-->
   `,
 	styles: [
 	]

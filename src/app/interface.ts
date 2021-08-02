@@ -346,3 +346,28 @@ export interface AddressComponents {
 	short_name: string;
 	types: string[];
 }
+export interface Wishlist {
+	userfavproductID: string;
+	productID: string;
+	userID: string;
+	userfavproductDate: string;
+	categoryID: string;
+	subcatID: string;
+	productName: string;
+	productArabicNme: string;
+	productSKU: string;
+	productTag: string;
+	productDescription: string;
+	productPriceVat: string;
+	productPrice: string;
+	productMOQ: string;
+	productImage: string;
+	productPackagesize: string;
+	productReviewCount: string;
+	productRatingCount: string;
+	productRatingAvg: string;
+	productSoldCount: string;
+	productStatus: string;
+	productCreatedDate: string;
+	addedCartCount: number;
+}

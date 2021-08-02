@@ -10,6 +10,7 @@ import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { ADDRESS, ProductList } from '../interface';
 import { CookieService } from 'ngx-cookie-service';
 import { AddressListComponent } from './onboarding/address-list.component';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-header',
@@ -104,7 +105,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
 		private root: RootService,
-		private cookie: CookieService) {
+		private cookie: CookieService,
+		private titlecasePipe: TitleCasePipe) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === 'update_header') {
@@ -217,7 +219,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				tepmOrder.loginuserID = user.userID;
 				data.loginuserID = user.userID;
 				this.isLoggedID = true;
-				this.defaultAddress = user.address.filter(a => a.addressIsDefault === 'Yes').length > 0 ? `${user.address.filter(a => a.addressIsDefault === 'Yes')[0].cityName}, ${user.address.filter(a => a.addressIsDefault === 'Yes')[0].countryName}-${user.address.filter(a => a.addressIsDefault === 'Yes')[0].addressPincode}` : '';
+				this.defaultAddress = user.address.filter(a => a.addressIsDefault === 'Yes').length > 0 ? `${user.address.filter(a => a.addressIsDefault === 'Yes')[0].cityName}, ${this.titlecasePipe.transform(user.address.filter(a => a.addressIsDefault === 'Yes')[0].countryName)}-${user.address.filter(a => a.addressIsDefault === 'Yes')[0].addressPincode}` : '';
 				this.address_list = user.address;
 				this.cd.markForCheck();
 			}

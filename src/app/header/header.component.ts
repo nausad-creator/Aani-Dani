@@ -87,6 +87,8 @@ import { TitleCasePipe } from '@angular/common';
       </div>
     </div>
   </section>
+  <!-- add-address sidebar -->
+  <app-shared-add-address></app-shared-add-address>
   `,
 	styles: [
 	],

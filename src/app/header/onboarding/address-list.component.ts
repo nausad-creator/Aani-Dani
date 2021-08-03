@@ -44,7 +44,6 @@ import { SubSink } from 'subsink';
         </div>
       </form>
     </div>
-    <app-shared-add-address (update)="update($event)"></app-shared-add-address>
   `,
 	styles: [
 		`.modal-contents {
@@ -63,9 +62,6 @@ import { SubSink } from 'subsink';
     		padding: .75rem 0.25rem;
     		margin-bottom: 2rem;
     		border-radius: .25rem;
-	}
-	.none{
-		display:none;
 	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -92,18 +88,19 @@ export class AddressListComponent implements OnInit, OnDestroy {
 				this.logged_user = null;
 			}
 		}));
+		// for updating address-list
+		this.subs.add(this.root.update$.subscribe(status => {
+			if (status === 'update_address_list') {
+				this.list[0].address = this.logged_user.address;
+				this.cd.markForCheck();
+			}
+		}));
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
 	}
 	click = () => {
 		$('.AddressSidebar').addClass('opensidebar');
-	}
-	update = (status: { status: number }) => {
-		if (status.status === 200) {
-			this.list[0].address = this.logged_user.address;
-			this.cd.markForCheck();
-		}
 	}
 	ngOnInit(): void {
 		jQuery(() => {

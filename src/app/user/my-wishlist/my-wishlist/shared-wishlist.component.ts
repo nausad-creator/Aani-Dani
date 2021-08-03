@@ -16,7 +16,7 @@ import { SubSink } from 'subsink';
 	selector: 'app-shared-wishlist',
 	template: `
 <div class="orderDetailList cursr" *ngFor="let product of wishList; let i=index;"
-	(click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})">
+	(click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})" [@fadeIn]>
 	<div class="bodyOrder form-row m-0 align-items-center">
 		<div class="col-md-2 col-4">
 			<div class="smImg">
@@ -61,6 +61,9 @@ import { SubSink } from 'subsink';
 </div>
   `,
 	styles: [
+		`.linksOrde.cartbox{display: flex;justify-content:flex-end;align-items:center;}
+  		.linksOrde.cartbox .contercontern{margin:0;}
+		`
 	],
 	animations: [
 		trigger('fadeIn', fadeIn())

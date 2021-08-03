@@ -3416,6 +3416,10 @@ body {
   border: 1px solid #E3E3E3;
 }
 
+.orderDetailList:hover {
+  box-shadow: 0px 2px 7px #ddd;
+}
+
 .orderDetailList .headerOrder {
   background-color: #F0F0F0;
   padding: 15px;
@@ -4143,4 +4147,12 @@ html {
 
 .superviser_content+.modal-footer {
   border-top: 0;
+}
+
+.Sidebar-content {
+  z-index: 9999;
+}
+
+.AddressSidebar.opensidebar {
+  z-index: 9999;
 }

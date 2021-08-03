@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { GooglePlaceDirective } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
@@ -91,8 +91,8 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 		private service: AuthenticationService,
 		private loc: LocationService,
 		private cd: ChangeDetectorRef,
-		private root: RootService,
-		private auth: AuthenticationService) {
+		private auth: AuthenticationService,
+		private root: RootService) {
 		this.subs.add(this.service.user.subscribe(user => {
 			if (user) {
 				this.user = user;
@@ -194,7 +194,7 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 						this.clearControls();
 						setTimeout(() => {
 							$('.AddressSidebar').removeClass('opensidebar');
-							this.update.emit({ status: 200 });
+							this.root.update_user_status$.next('update_address_list');
 							this.preventAbuse = false;
 							this.toastr.success('Address added successfully');
 							this.cd.markForCheck();
@@ -208,15 +208,13 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 					if (!res) {
 						this.preventAbuse = false;
 						this.cd.markForCheck();
-						this.toastr.error('some error occured, please try again later', '', { positionClass: 'toast-center-center-error' });
+						this.toastr.error('Oops! Something went wrong, please try again later', '', { positionClass: 'toast-center-center-error' });
 					}
 				}).catch((error) => {
 					console.error(error);
 					this.preventAbuse = false;
 					this.cd.markForCheck();
-					this.toastr.error('some error occured, please try again later', '', {
-						positionClass: 'toast-center-center-error',
-					});
+					this.toastr.error('Oops! Something went wrong, please try again later');
 				});
 			}
 		}

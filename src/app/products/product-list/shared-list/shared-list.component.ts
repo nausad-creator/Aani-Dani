@@ -109,27 +109,15 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	loader = true;
 	preventAbuse: boolean;
 	subs = new SubSink();
-	product: {
-		data: ProductList[];
-		itemscount: string;
-		bestselling: ProductList[];
-		message: string;
-		status: string;
-	} = {
-			data: [],
-			itemscount: '0',
-			bestselling: [],
-			message: '',
-			status: ''
-		};
+	product: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; } = {
+		data: [],
+		itemscount: '0',
+		bestselling: [],
+		message: '',
+		status: ''
+	};
 	changedCountHeader: number;
-	products$: Observable<{
-		data: ProductList[];
-		itemscount: string;
-		bestselling: ProductList[];
-		message: string;
-		status: string;
-	}> = of(null);
+	products$: Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }> = of(null);
 	forceReload$ = new Subject<void>();
 	getProducts = (t: string) => {
 		return this.root.productLists(t).pipe(map(r => {
@@ -137,7 +125,33 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 				status: r.status,
 				message: r.message,
 				itemscount: r.itemscount,
-				bestselling: r.bestselling,
+				bestselling: r.bestselling.map(a => {
+					return {
+						productID: a.productID,
+						categoryID: a.categoryID,
+						subcatID: a.subcatID,
+						productName: a.productName,
+						productArabicNme: a.productArabicNme,
+						productSKU: a.productSKU,
+						productTag: a.productTag,
+						productDescription: a.productDescription,
+						productPriceVat: a.productPriceVat,
+						productPrice: a.productPrice,
+						productMOQ: a.productMOQ,
+						productImage: a.productImage,
+						productPackagesize: a.productPackagesize,
+						productReviewCount: a.productReviewCount,
+						productRatingCount: a.productRatingCount,
+						productRatingAvg: a.productRatingAvg.split('.')[0],
+						productSoldCount: a.productSoldCount,
+						productStatus: a.productStatus,
+						productCreatedDate: a.productCreatedDate,
+						categoryName: a.categoryName,
+						isFavorite: a.isFavorite,
+						similarproducts: a.similarproducts,
+						addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+					}
+				}),
 				data: r.data.map(a => {
 					return {
 						productID: a.productID,
@@ -208,28 +222,10 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	products = (temp: string) => {
 		// products
-		const initialProducts$ = this.getProducts(temp) as Observable<{
-			data: ProductList[];
-			itemscount: string;
-			bestselling: ProductList[];
-			message: string;
-			status: string;
-		}>;
-		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<{
-			data: ProductList[];
-			itemscount: string;
-			bestselling: ProductList[];
-			message: string;
-			status: string;
-		}>));
+		const initialProducts$ = this.getProducts(temp) as Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }>;
+		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
-		this.subs.add(this.products$.subscribe((res: {
-			data: ProductList[];
-			itemscount: string;
-			bestselling: ProductList[];
-			message: string;
-			status: string;
-		}) => {
+		this.subs.add(this.products$.subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
 			timer(500).subscribe(() => {
 				this.product = res;
 				this.loader = false;
@@ -243,34 +239,22 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	onFilter = ($temp: string) => {
 		data.minPrice = $temp.split(';')[0];
 		data.maxPrice = $temp.split(';')[1];
-		this.getProducts(JSON.stringify(data)).subscribe((res: {
-			data: ProductList[];
-			itemscount: string;
-			bestselling: ProductList[];
-			message: string;
-			status: string;
-		}) => {
+		this.subs.add(this.getProducts(JSON.stringify(data)).subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
 			this.product = res;
 			this.preventAbuse = false;
 			this.cd.markForCheck();
 		}, (err) => {
 			console.error(err);
-		});
+		}));
 	}
 	onSort = ($temp: string) => {
 		data.sortBy = $temp ? $temp : '';
-		this.getProducts(JSON.stringify(data)).subscribe((res: {
-			data: ProductList[];
-			itemscount: string;
-			bestselling: ProductList[];
-			message: string;
-			status: string;
-		}) => {
+		this.subs.add(this.getProducts(JSON.stringify(data)).subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
 			this.product = res;
 			this.cd.markForCheck();
 		}, (err) => {
 			console.error(err);
-		});
+		}));
 	}
 	jquery = () => {
 		jQuery(() => {

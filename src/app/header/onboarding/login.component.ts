@@ -104,8 +104,8 @@ import { RegistrationComponent } from './registration.component';
 		outline: 0;
 	}
 	.required-field::before {
-    	content: "*";
-    	color: red;
+    		content: "*";
+    		color: red;
   	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })

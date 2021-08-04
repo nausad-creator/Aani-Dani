@@ -93,32 +93,32 @@ import { OtpRegisterComponent } from './otp.register.component';
 		outline: 0;
 	}
 	.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
-        height: 37.5px;
-        font-size: 1rem;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
+        	height: 37.5px;
+		font-size: 1rem;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: 0.25rem;
 		background-color: #ECECEC;
-    	border-color: #E6E6E6;
-    	opacity: 1;
-    	height: calc(1.8em + .75rem + 2px);
-      }
-	  .ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
-    	color:#C2C2C2;
-  	   }
-	  .ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
-    	padding-right: 5px;
-	   }
-	   .ng-select.custom ::ng-deep .ng-arrow-wrapper {
+		border-color: #E6E6E6;
+		opacity: 1;
+		height: calc(1.8em + .75rem + 2px);
+      	}
+	.ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
+    		color:#C2C2C2;
+  	}
+	.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
+    		padding-right: 5px;
+	}
+	.ng-select.custom ::ng-deep .ng-arrow-wrapper {
    		display:none
-		}
-		.ng-select.custom ::ng-deep .ng-clear-wrapper {
-    	color: #999;
-    	top: 1px;
-		}
-		::ng-deep .cdk-overlay-container {
-    	z-index: 1200 !important;
-  		}`
+	}
+	.ng-select.custom ::ng-deep .ng-clear-wrapper {
+    		color: #999;
+    		top: 1px;
+	}
+	::ng-deep .cdk-overlay-container {
+    		z-index: 1200 !important;
+  	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrationComponent implements OnInit {
@@ -377,6 +377,12 @@ export class RegistrationComponent implements OnInit {
 	}
 	openlogin = () => {
 		this.onClose();
-		this.bsModal = this.modal.show(LoginComponent, { id: 99 });
+		const initialState = {
+			list: [{
+				status: 'Location',
+				product: this.list[0].product
+			}]
+		};
+		this.bsModal = this.modal.show(LoginComponent, { id: 99, initialState });
 	}
 }

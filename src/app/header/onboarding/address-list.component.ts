@@ -108,7 +108,7 @@ export class AddressListComponent implements OnInit, OnDestroy {
 				$('.AddressSidebar').removeClass('opensidebar');
 			});
 		});
-		this.checked_address = this.list[0].address.filter(a => a.addressIsDefault === 'Yes')[0].addressID;
+		this.checked_address = this.list[0].address.filter(a => a.addressIsDefault === 'Yes').length > 0 ? this.list[0].address.filter(a => a.addressIsDefault === 'Yes')[0].addressID : '';
 	}
 	onClose = () => {
 		this.bsModal.hide();

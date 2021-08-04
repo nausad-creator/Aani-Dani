@@ -14,10 +14,11 @@ import { Component, OnInit } from '@angular/core';
                     <div class="detailInfo">
                       <ngx-skeleton-loader count="1" [theme]="{ height: '22px', 'margin-bottom': '0px', width: '60%' }"></ngx-skeleton-loader>	
                         <div class="productInfo mt-2">
-                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '4%', 'border-radius': '50px' }"></ngx-skeleton-loader>
-                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '4%', 'margin-left': '5px', 'border-radius': '50px' }"></ngx-skeleton-loader>
-                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '4%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
-                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '4%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'margin-left': '5px', 'border-radius': '50px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
+			  <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
                           <br>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '35%' }"></ngx-skeleton-loader>
                           </div>
@@ -29,8 +30,7 @@ import { Component, OnInit } from '@angular/core';
                           <ngx-skeleton-loader count="1" [theme]="{ height: '33px', 'margin-bottom': '0px', width: '16%', 'border-radius': '20px' }"></ngx-skeleton-loader>
                           <div class="align-items-center detailBtn pt-2">
                               <div class="form-group mb-0">
-                                  <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', width: '16%', 'border-radius': '4px' }"></ngx-skeleton-loader>
-                                  <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', width: '22%', 'border-radius': '10px', 'margin-left': '10px' }"></ngx-skeleton-loader>				  					
+                                  <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', width: '22%', 'border-radius': '10px' }"></ngx-skeleton-loader>				  					
                               </div>	
                           </div>
                     </div>	
@@ -40,8 +40,8 @@ import { Component, OnInit } from '@angular/core';
               <div class="row">
                   <div class="col-md-8">
                       <div class="reviewSection" style="margin-top: 20px;">
-                            <ngx-skeleton-loader count="1" [theme]="{ height: '25px', 'margin-bottom': '0px', width: '15%', 'margin-left': '15px'  }"></ngx-skeleton-loader>
-                            <ngx-skeleton-loader count="1" [theme]="{ height: '25px', 'margin-bottom': '0px', width: '15%', 'margin-left': '15px' }"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{ height: '15px', 'margin-bottom': '0px', width: '15%', 'margin-left': '15px'  }"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" [theme]="{ height: '15px', 'margin-bottom': '0px', width: '15%', 'margin-left': '15px' }"></ngx-skeleton-loader>
                             <!-- <hr> -->
                         <div class="tab-content" id="myTabContent">
                           <div class="tab-pane fade show active" id="Discription" role="tabpanel" aria-labelledby="home-tab">
@@ -59,7 +59,7 @@ import { Component, OnInit } from '@angular/core';
                           <div class="card-header bg-white">
                             <div class="section-title row pb-0">
                               <div class="col-md-8 p-0">		
-                                  <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '60%' }"></ngx-skeleton-loader>
+                                  <ngx-skeleton-loader count="1" [theme]="{ height: '15px', 'margin-bottom': '0px', width: '60%' }"></ngx-skeleton-loader>
                               </div>				  	
                             </div>
                         </div>  

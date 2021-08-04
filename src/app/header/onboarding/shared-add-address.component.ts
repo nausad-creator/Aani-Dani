@@ -103,6 +103,28 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 				this.cd.markForCheck();
 			}
 		}));
+		// initialize form
+		this.addForm = this.fb.group({
+			loginuserID: [this.user ? this.user.userID : '0'],
+			languageID: [this.user ? this.user.languageID : '1'],
+			addressID: [''],
+			addressTitle: [''],
+			addressBuildingName: [''],
+			addressBlockNo: [''],
+			addressIsDefault: [this.user ? this.user.address.length === 0 ? 'Yes' : 'No' : 'No'],
+			addressMobile: ['', Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')],
+			addressStreetName: [''],
+			addressLongi: [''],
+			addressLati: [''],
+			houseNoFlatNo: [''],
+			addressLandmark: [''],
+			addressPincode: [''],
+			state: [''],
+			cityName: [''],
+			addressType: [''],
+			countryName: [''],
+			countryID: ['1']
+		});
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
@@ -126,7 +148,6 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 			}, err => console.error(err)));
 	}
 	async ngOnInit(): Promise<void> {
-		this.intialize();
 		this.getCurrentLocation();
 	}
 	getCurrentLocation = () => {
@@ -145,29 +166,6 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 				this.cd.markForCheck();
 			}
 		}, err => console.error(err)));
-	}
-	intialize = () => {
-		this.addForm = this.fb.group({
-			loginuserID: [this.user.userID],
-			languageID: [this.user.languageID],
-			addressID: [''],
-			addressTitle: [''],
-			addressBuildingName: [''],
-			addressBlockNo: [''],
-			addressIsDefault: [this.user.address.length === 0 ? 'Yes' : 'No'],
-			addressMobile: ['', Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')],
-			addressStreetName: [''],
-			addressLongi: [''],
-			addressLati: [''],
-			houseNoFlatNo: [''],
-			addressLandmark: [''],
-			addressPincode: [''],
-			state: [''],
-			cityName: [''],
-			addressType: [''],
-			countryName: [''],
-			countryID: ['1']
-		});
 	}
 	// on click update
 	onClickAdd = (post: {

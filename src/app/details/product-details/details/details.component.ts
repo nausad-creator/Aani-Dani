@@ -18,11 +18,15 @@ import { SubSink } from 'subsink';
 	template: `
 <div class="prInfo row align-items-center" [@fadeIn]>
 	<div class="col-lg-5 col-md-5">
-		<div class="bigIng" *ngIf="product"><img offset="0" style="width: 552px; height: 343px"
+		<div class="bigIng" *ngIf="product">
+			<a class="image-popup-no-margins" href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
+			<img offset="0" style="width: 552px; height: 343px"
 				defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
 				lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 				[errorImage]="'assets/images/error_not_found.png'" [alt]="product?.productName"
-				[title]="product?.productName"></div>
+				[title]="product?.productName" (click)="openImage()">
+			</a>
+			</div>
 	</div>
 	<div class="col-lg-7 col-md-7">
 		<div class="detailInfo">
@@ -84,6 +88,9 @@ import { SubSink } from 'subsink';
 </div>	
   `,
 	styles: [
+		`a img { cursor: -webkit-zoom-in;  cursor: zoom-in; }
+		
+		`
 	],
 	animations: [
 		trigger('fadeIn', fadeIn()),
@@ -112,6 +119,22 @@ export class DetailsComponent implements OnInit, OnDestroy {
 				this.cd.markForCheck();
 			}
 		}));
+	}
+	openImage = () => {
+		($('.image-popup-no-margins') as any).magnificPopup({
+			type: 'image',
+			closeOnContentClick: true,
+			closeBtnInside: true,
+			fixedContentPos: true,
+			mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+			image: {
+				verticalFit: true
+			},
+			zoom: {
+				enabled: true,
+				duration: 300 // don't foget to change the duration also in CSS
+			}
+		});
 	}
 	add_favourite = (productID: string) => {
 		this.root.add_wishlist(JSON.stringify({

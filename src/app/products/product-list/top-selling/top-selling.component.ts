@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -63,7 +63,7 @@ import { SubSink } from 'subsink';
 		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopSellingComponent implements OnInit {
+export class TopSellingComponent implements OnInit, OnDestroy {
 	@Input() products: ProductList[] = [];
 	stars: number[] = [1, 2, 3, 4, 5];
 	logged_user: USER_RESPONSE = null;
@@ -86,6 +86,9 @@ export class TopSellingComponent implements OnInit {
 				this.cd.markForCheck();
 			}
 		}));
+	}
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
 	}
 	addToCart = async (item: ProductList) => {
 		if (this.logged_user) {
@@ -160,7 +163,7 @@ export class TopSellingComponent implements OnInit {
 	placeTempOrder = (pro: ProductList) => {
 		pro.addedCartCount++;
 		return new Promise((resolve, reject) => {
-			this.root.placeNewOrderTemp(JSON.stringify({
+			this.subs.add(this.root.placeNewOrderTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderdetails: [{
@@ -179,10 +182,10 @@ export class TopSellingComponent implements OnInit {
 						temporderID: r[0].data[0].temporderID
 					});
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while placing first temp item to cart!');
 				console.error('Oops! Something went wrong while placing first temp item to cart!');
-			};
+			}));
 		});
 	}
 	add = async (pro: ProductList) => {
@@ -196,7 +199,7 @@ export class TopSellingComponent implements OnInit {
 	addItemToCart = (pro: ProductList) => {
 		pro.addedCartCount++;
 		return new Promise((resolve, reject) => {
-			this.root.addItemToCartTemp(JSON.stringify({
+			this.subs.add(this.root.addItemToCartTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderID: this.tempOrderID,
@@ -211,10 +214,10 @@ export class TopSellingComponent implements OnInit {
 					});
 					resolve('Added_sucessfully');
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while adding item to cart!');
 				console.error('Oops! Something went wrong while adding item to cart!');
-			};
+			}));
 		});
 	}
 	delete = async (pro: ProductList) => {
@@ -228,7 +231,7 @@ export class TopSellingComponent implements OnInit {
 	deleteItemFromCart = (pro: ProductList) => {
 		pro.addedCartCount--;
 		return new Promise((resolve, reject) => {
-			this.root.deleteItemFromCartTemp(JSON.stringify({
+			this.subs.add(this.root.deleteItemFromCartTemp(JSON.stringify({
 				loginuserID: this.logged_user.userID,
 				languageID: '1',
 				orderID: this.cookie.get('Temp_Order_ID'),
@@ -244,10 +247,10 @@ export class TopSellingComponent implements OnInit {
 					});
 					resolve('Deleted_sucessfully');
 				}
-			}), () => {
+			}, () => {
 				reject('Oops! Something went wrong while deleting item from cart!');
 				console.error('Oops! Something went wrong while adding item from cart!');
-			};
+			}));
 		});
 	}
 	addToLocal = (pro: {

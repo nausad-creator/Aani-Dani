@@ -14,8 +14,8 @@ import { FORGOT } from 'src/app/interface';
     <div class="modal-contents">
       <div class="modal-header text-center d-block position-relative" style="border: none;">
          <a (click)="!preventAbuse ? openforgetForm() : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
-         <h5 class="modal-title" id="exampleModalLabel">Forgot Password?</h5>
-         <p class="mb-0" style="color: #6a7081;">Enter your registered email address or mobile number to reset your password</p>
+         <h5 class="modal-title" id="exampleModalLabel">{{'forgot_password' | translate}}?</h5>
+         <p class="mb-0" style="color: #6a7081;">{{'enter_register_email_or_mobile_to_reset_password' | translate}}</p>
       </div>
       <div class="modal-body">
         <!-- error handler -->
@@ -27,12 +27,12 @@ import { FORGOT } from 'src/app/interface';
       <form class="text-left profile-form" [formGroup]="forgetForm" (ngSubmit)="onSubmitEmailOrMobile(forgetForm.value)">             
         <div class="form-row">
           <div class="col-md-12 col-sm-12 mb-2 form-group">
-              <input type="text" id="Email-Mobile" #forgotEmail (keydown.space)="$event.preventDefault()" formControlName="userEmail" class="form-control" placeholder="Enter Email/ Mobile Number*">
-              <small class="text-danger" *ngIf="forgetForm.controls['userEmail'].hasError('required')">This field is required.</small>
-              <small class="text-danger" *ngIf="forgetForm.controls['userEmail'].hasError('pattern') && (forgetForm.controls['userEmail'].dirty || forgetForm.controls['userEmail'].touched)">Please enter valid email address or phone number.</small>
+              <input type="text" id="Email-Mobile" #forgotEmail (keydown.space)="$event.preventDefault()" formControlName="userEmail" class="form-control" [placeholder]="'enter_email_or_mobile' | translate">
+              <small class="text-danger" *ngIf="forgetForm.controls['userEmail'].hasError('required')">{{'this_field_is_required' | translate}}</small>
+              <small class="text-danger" *ngIf="forgetForm.controls['userEmail'].hasError('pattern') && (forgetForm.controls['userEmail'].dirty || forgetForm.controls['userEmail'].touched)">{{'please_enter_valid_email_or_mobile' | translate}}</small>
           </div>        
           <div class="col-md-12 col-sm-12 mb-2 mt-3">                      
-              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? 'Wait..' : 'Send OTP' }}</button>            
+              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? ('wait' | translate) : ('send_otp' | translate) }}</button>            
           </div>                
         </div>                                    
       </form>

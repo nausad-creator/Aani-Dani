@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +32,12 @@ import { LocationService } from './location.service';
 import { OthersEffects } from './effects/others.effects';
 import { TooltipModule } from 'ng2-tooltip-directive';
 import { SeoService } from './seo.service';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+
+export function HttpLoaderFactory(http: HttpClient) {
+	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
 	declarations: [
@@ -53,7 +59,14 @@ import { SeoService } from './seo.service';
 		NgxPaginationModule,
 		LazyLoadImageModule,
 		TooltipModule,
-		NgxSkeletonLoaderModule,
+		NgxSkeletonLoaderModule.forRoot({ animation: 'progress' }),
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: HttpLoaderFactory,
+				deps: [HttpClient]
+			}
+		}),
 		ToastrModule.forRoot(
 			{
 				positionClass: 'toast-center-center',
@@ -71,6 +84,7 @@ import { SeoService } from './seo.service';
 		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects])
 	],
 	providers: [RootService, AuthenticationService, LocationService, SeoService],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
+	exports: [TranslateModule],
 })
 export class AppModule { }

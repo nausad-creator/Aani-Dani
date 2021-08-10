@@ -25,7 +25,8 @@ import { Component, OnInit } from '@angular/core';
                           <div class="align-items-center detailPrice mt-2">
                               <div class="price_text mt-3">
                               <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '16%', 'border-radius': '5px' }"></ngx-skeleton-loader>
-                              <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '16%', 'border-radius': '5px', 'margin-left': '5px' }"></ngx-skeleton-loader></div>
+                              <!-- <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '16%', 'border-radius': '5px', 'margin-left': '5px' }"></ngx-skeleton-loader> -->
+			</div>
                           </div>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '33px', 'margin-bottom': '0px', width: '16%', 'border-radius': '20px' }"></ngx-skeleton-loader>
                           <div class="align-items-center detailBtn pt-2">

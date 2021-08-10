@@ -13,7 +13,7 @@ import { SubSink } from 'subsink';
 	template: `
 <div class="tab-pane fade show active" id="MyWishlist" role="tabpanel" aria-labelledby="contact-tab">
 	<div class="titleAccount">
-		<h5>{{wishLists.count ? 'My Wishlist ' + '('+ (+wishLists.count<10?'0'+wishLists.count:wishLists.count) +')' : 'My Wishlist ' + '('+ '00' +')'}}</h5>
+		<h5>{{wishLists.count ? ('my_wishlist' | translate) + ' ('+ (+wishLists.count<10?'0'+wishLists.count:wishLists.count) +')' : ('my_wishlist' | translate) + ' ('+ '00' +')'}}</h5>
 	</div>
 	<div *ngIf="!loader">
 		<app-shared-wishlist (remove_fav)="remove($event)" [wishList]="wishLists.data" *ngIf="wishLists.data.length>0"></app-shared-wishlist>

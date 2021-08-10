@@ -10,8 +10,7 @@ import { terms_conditions, State } from 'src/app/reducers';
       <div class="container">
         <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> Terms of Service</span> </div>
 
-        <div class="card mt-3 p-3">
-          <div class="row">          
+        <div class="card mt-3 p-3">         
                   <div *ngIf="terms_conditions$ | async as content">
                         <div [innerHTML]="content.cmspageContents | safeHtml">
                      </div>
@@ -21,7 +20,6 @@ import { terms_conditions, State } from 'src/app/reducers';
                                 <p class="text-center">Loading...</p>
                             </div>
                      </div>
-          </div>
         </div>
 
       </div>

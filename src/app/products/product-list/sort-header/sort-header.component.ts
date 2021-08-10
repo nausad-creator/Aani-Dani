@@ -6,14 +6,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
     <div class="card-header bg-white">
 		<div class="section-title row pb-0">
 				<div class="col-md-6">		
-					        <div class="brandcamp"><a routerLink="/">Home</a> <span> > {{categoryName}}</span> </div>
+					        <div class="brandcamp"><a routerLink="/">{{'home' | translate}}</a> <span> > {{categoryName}}</span> </div>
 				</div>
 				<div class="col-md-6">	
 					<div class="sortby form-group d-flex align-items-center justify-content-end mb-0">
-						<label class="mr-3 mb-0" style="white-space:nowrap;">Sort By:</label>
+						<label class="mr-3 mb-0" style="white-space:nowrap;">{{'sort_by' | translate}}:</label>
 						<ng-select (change)="sortBy.emit($event)" appearance="outline" [searchable]="false" [clearable]="true"
-                        			 class="custom" placeholder="Select to sort">
-                        			<ng-option *ngFor="let s of sorting" [value]="s.value">{{s.label}}</ng-option>
+                        			 class="custom" [placeholder]="'select_to_sort' | translate">
+                        			<ng-option *ngFor="let s of sorting" [value]="s.value">{{s.label | translate}}</ng-option>
                       				</ng-select>	
 					</div>	
 				</div>				  	
@@ -64,13 +64,13 @@ export class SortHeaderComponent implements OnInit {
 	@Input() categoryName?: string;
 	@Output() sortBy = new EventEmitter<string>();
 	sorting = [{
-		label: 'Popular Item',
+		label: 'popular_item',
 		value: 'popular'
 	}, {
-		label: 'Price low to high',
+		label: 'price_low_to_high',
 		value: 'pricelowhigh'
 	}, {
-		label: 'Price high to low',
+		label: 'price_high_to_low',
 		value: 'pricehighlow'
 	}]
 	constructor() { }

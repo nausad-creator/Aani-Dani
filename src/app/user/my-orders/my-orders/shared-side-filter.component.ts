@@ -4,11 +4,11 @@ import { Component, OnInit } from '@angular/core';
 	selector: 'app-side-filter',
 	template: `
                 <div class="Mobilefilter">
-                    <a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
+                    <a href="#" class="FilterHandale"><i class="icofont-filter"></i> {{'filter' | translate}} </a>
                 </div>	
                 <div class="filterSection">
                     <div class="filterLeftContent card">
-                        <h5 class="mb-0">Order Placed</h5>	
+                        <h5 class="mb-0">{{'order_placed' | translate}}</h5>	
                         <div class="listcategory">
                             <a href="#">Last 30 days</a>
                             <a href="#">Last 60 days</a>
@@ -17,7 +17,7 @@ import { Component, OnInit } from '@angular/core';
                         </div>	
                     </div>
                     <div class="filterLeftContent mt-3 card">
-                        <h5 class="mb-0 pb-2">Store Name</h5>
+                        <h5 class="mb-0 pb-2">{{'store_name' | translate}}</h5>
                         <div class="searchStore">
                             <span class="search_addons"><i class="fas fa-search"></i></span>
                             <input type="text" class="form-control bg-white" placeholder="Search">
@@ -31,7 +31,7 @@ import { Component, OnInit } from '@angular/core';
                         </div>	
                     </div>
                     <div class="filterLeftContent mt-3 card">
-                        <h5 class="mb-0">Order Type</h5>	
+                        <h5 class="mb-0">{{'order_type' | translate}}</h5>	
                         <div class="listcategory">
                             <a href="#">Order Type 1</a>
                             <a href="#">Order Type 2</a>

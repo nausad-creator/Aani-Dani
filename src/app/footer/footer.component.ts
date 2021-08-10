@@ -12,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
             <div class="callUs">
 				  <a href="tel:920007709" class="d-flex text-white">
 					<div class="callicon align-self-center pt-2"><i class="icofont-headphone-alt"></i></div>
-					<div class="callnumber"><p class="mb-1">CALL US</p> <h6 class="mb-0">920007709</h6></div>
+					<div class="callnumber"><p class="mb-1">{{'call_us' | translate}}</p> <h6 class="mb-0">920007709</h6></div>
 				</a>
 			</div>
           </div>         
@@ -20,12 +20,12 @@ import { Component, OnInit } from '@angular/core';
             <div class="callUs">
 				<a href="mailto:info@aanidani.com" class="d-flex text-white">
 					<div class="callicon align-self-center pt-2"><i class="icofont-envelope"></i></div>
-					<div class="callnumber"><p class="mb-1">EMAIL US</p> <h6 class="mb-0">info@aanidani.com</h6></div>
+					<div class="callnumber"><p class="mb-1">{{'email_us' | translate}}</p> <h6 class="mb-0">info@aanidani.com</h6></div>
 				</a>
 			</div>
       </div>
 		  <div class="col-lg-3 col-md-6 col-sm-6 footer-links">
-            <p class="text-white">FOLLOW US</p>
+            <p class="text-white">{{'follow_us' | translate}}</p>
             <div class="footer-social-menu">
             	<a href="https://www.facebook.com/aanidani/" target="_blank"><i class="fab fa-facebook-square"></i></a>
             	<a href="https://twitter.com/aanidani/" target="_blank"><i class="fab fa-twitter-square"></i></a>
@@ -37,7 +37,7 @@ import { Component, OnInit } from '@angular/core';
             </div>	
           </div>
           <div class="col-lg-3 col-md-6 col-sm-6 footer-links">
-            <p class="text-white">DOWNLOAD APP</p>
+            <p class="text-white">{{'download_app' | translate}}</p>
             <div class="downloadbtnGrp">
             	<a href="#"><img src="assets/images/platstore-icon.png" alt="platstore"></a>
             	<a href="#"><img src="assets/images/appstore-icon.png" alt="appstore"></a>
@@ -48,13 +48,13 @@ import { Component, OnInit } from '@angular/core';
     </div>
 	<div class="footerMenu">
 		<div class="container">
-			<a routerLink="/content/about-us" routerLinkActive="active">About Us</a>
-			<a routerLink="/content/privacy-policy" routerLinkActive="active">Privacy Policy</a>
-			<a routerLink="/content/terms-and-conditions" routerLinkActive="active">Terms & Conditions</a>
-			<a routerLink="/content/contact-us" routerLinkActive="active">Contact Us</a>
-			<a routerLink="/content/faqs" routerLinkActive="active">FAQ</a>
-			<a href="#">Help</a>
-			<a href="#">Support</a>
+			<a routerLink="/content/about-us" routerLinkActive="active">{{'about_us' | translate}}</a>
+			<a routerLink="/content/privacy-policy" routerLinkActive="active">{{'privacy_policy' | translate}}</a>
+			<a routerLink="/content/terms-and-conditions" routerLinkActive="active">{{'terms_conditions' | translate}}</a>
+			<a routerLink="/content/contact-us" routerLinkActive="active">{{'contact_us' | translate}}</a>
+			<a routerLink="/content/faqs" routerLinkActive="active">{{'faq' | translate}}</a>
+			<a href="#">{{'help' | translate}}</a>
+			<a href="#">{{'support' | translate}}</a>
 		</div>	
 	</div>	
 	<div class="copyright">

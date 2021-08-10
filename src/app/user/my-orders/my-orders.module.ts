@@ -11,6 +11,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedOrderComponent } from './my-orders/shared-order.component';
 import { SideFilterComponent } from './my-orders/shared-side-filter.component';
 import { SkeletonComponent } from './skeleton/skeleton.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { SkeletonComponent } from './skeleton/skeleton.component';
 		NgSelectModule,
 		NgxPaginationModule,
 		LazyLoadImageModule,
+		TranslateModule,
 		NgxSkeletonLoaderModule,
 		RouterModule.forChild([
 			{

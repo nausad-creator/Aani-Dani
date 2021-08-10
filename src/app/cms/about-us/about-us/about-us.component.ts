@@ -10,9 +10,8 @@ import { about_us, State } from 'src/app/reducers';
     <section id="about" class="about pt-3">
       <div class="container">
         <div class="brandcamp"><a href="index.html">Home  &gt;</a> <span> About us</span> </div>
-        <div class="card mt-3 p-3">
-          <div class="row">          
-                     <div *ngIf="about_us$ | async as content">
+        <div class="card mt-3 p-3">         
+          <div *ngIf="about_us$ | async as content">
                         <div [innerHTML]="content.cmspageContents | safeHtml"></div>
                      <div *ngIf="(about_us$ | async) === null">
                             <div style="margin-top: 30px; min-height: 500px;">
@@ -20,7 +19,6 @@ import { about_us, State } from 'src/app/reducers';
                             </div>
                      </div>
             </div>
-          </div>
         </div>
       </div>
     </section><!-- End About Section -->

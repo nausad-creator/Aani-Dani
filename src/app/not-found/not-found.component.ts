@@ -5,9 +5,9 @@ import { Component } from '@angular/core';
 	template: `
   <div id="main">
   <div class="fof">
-          <h1>Error 404</h1>
+          <h1>{{'error' | translate}} 404</h1>
           <p ><a style="cursor: pointer; color: #f27b21;
-              border-color: #f27b21;" [routerLink]="['/']" routerLinkActive="active">Back to Home</a></p>
+              border-color: #f27b21;" [routerLink]="['/']" routerLinkActive="active">{{'back_to_home' | translate}}</a></p>
   </div>
 </div>
   `,

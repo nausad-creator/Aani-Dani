@@ -16,17 +16,17 @@ import { SubSink } from 'subsink';
 	selector: 'app-top-selling',
 	template: `
     <div class="filterLeftContent mt-3 card text-center topSallinFilter" *ngIf="products" [@fadeIn]>
-	<h5 class="mb-0">Top Selling Items</h5>
+	<h5 class="mb-0">{{'top_selling_items' | translate}}</h5>
 	<div class="slider_itemBox cursr"
 		(click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})"
 		*ngFor="let item of products | slice:0:1">
 		<img offset="0"
 			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
 			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
-			[errorImage]="'assets/images/error_not_found.png'" [alt]="item?.productName"
-			[title]="item?.productName">
+			[errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme"
+			[title]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme">
 		<div class="content_textContent">
-			<h5 class="text-dark mb-0">{{item?.productName}}</h5>
+			<h5 class="text-dark mb-0">{{(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme}}</h5>
 			<div class="d-flex align-items-center justify-content-center mt-2">
 				<div class="price_text">{{(item?.productPrice | number) + ' SR'}}</div>
 				<div class="mrp_text">{{(item?.productPriceVat | number) + ' SR'}}</div>
@@ -36,13 +36,13 @@ import { SubSink } from 'subsink';
 					<i [ngClass]="star <= item?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 						*ngFor="let star of stars"></i>
 				</div>
-				<p class="salinginfo">{{(item?.productSoldCount | number) + ' people bought this'}}</p>
+				<p class="salinginfo">{{(item?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
 			</div>
 
 			<div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
 				<a class="addcart-btn shopingcart-tbtn btn"
 					(click)="addToCart(item); $event.stopPropagation();" id="addcart-1"><i
-						class="icofont-shopping-cart"></i> Add to Cart</a>
+						class="icofont-shopping-cart"></i> {{'add_to_cart' | translate}}</a>
 				<div class="contercontern">
 					<div class="handle-counter d-flex" id="handleCounter">
 						<button (click)="delete(item); $event.stopPropagation();"

@@ -16,7 +16,7 @@ import { data } from 'src/app/global';
 				</div>
 				<div class="filterSection">
 					<div class="filterLeftContent card ">
-						<h5 class="mb-0" *ngIf="userName">Hey, {{userName | titlecase}}!</h5>
+						<h5 class="mb-0" *ngIf="userName">{{'hey' | translate}}, {{userName | titlecase}}!</h5>
 						<div class="accountTab pb-3">
 							<ul class="nav nav-tabs" id="myTab" role="tablist">
 								<li class="nav-item">
@@ -25,7 +25,7 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="icofont-ui-user"></i>
-										<span>My Account</span> <i
+										<span>{{'my_account' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -33,14 +33,13 @@ import { data } from 'src/app/global';
 										routerLink="/user/saved-address"
 										routerLinkActive="active"><i
 											class="icofont-address-book"></i>
-										<span>Saved Addresses</span> <i
+										<span>{{'saved_addresses' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link"
 										routerLink="/user/my-orders"><i
-											class="fas fa-box"></i> <span>My
-											Orders</span> <i
+											class="fas fa-box"></i> <span>{{'my_orders' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -48,7 +47,7 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="icofont-star"></i>
-										<span>My Reviews</span> <i
+										<span>{{'my_reviews' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -57,7 +56,7 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="icofont-heart"></i>
-										<span>My Wishlist</span> <i
+										<span>{{'my_wishlist' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -66,7 +65,7 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="fas fa-bell"></i>
-										<span>Notifications</span> <i
+										<span>{{'notifications' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -74,7 +73,7 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="icofont-settings-alt"></i>
-										<span>Settings</span> <i
+										<span>{{'settings' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
@@ -83,13 +82,13 @@ import { data } from 'src/app/global';
 										[routerLinkActiveOptions]="{ exact: true }"
 										routerLinkActive="active"><i
 											class="icofont-headphone-alt"></i>
-										<span>Customer Support</span> <i
+										<span>{{'customer_support' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link cursr" (click)="logout();"><i
 											class="icofont-logout"></i>
-										<span>Logout</span> <i
+										<span>{{'logout' | translate}}</span> <i
 											class="icofont-simple-right"></i></a>
 								</li>
 							</ul>

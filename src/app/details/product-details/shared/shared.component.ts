@@ -25,18 +25,22 @@ import { SubSink } from 'subsink';
 							<li class="drop-down categorymenu">
 								<a class="maindrop cursr"><i
 										class="icofont-navigation-menu mr-2"></i>
-									All Category</a>
+										{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
 											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}"
-											*ngFor="let category of categories">{{category?.categoryName
-											| titlecase}}</a></li>
+											*ngFor="let category of categories">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{category?.categoryName
-									| titlecase}}</a></li>
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 						</ul>
 					</nav><!-- .nav-menu -->
 				</div>

@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { shareReplay, retry, catchError, map, takeUntil } from 'rxjs/operators';
-import { Banner, Category, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload, Wishlist } from './interface';
+import { Banner, Category, Labels, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload, Wishlist } from './interface';
 const CACHE_SIZE = 1;
 @Injectable({
 	providedIn: 'root',
@@ -26,6 +26,7 @@ export class RootService {
 	reload$ = new Subject<void>();
 	// url's
 	languageUrl = '/language/get-language-list';
+	labelsUrl = '/language/list-labels';
 	categoryUrl = '/category/get-category-list';
 	storeUrl = '/users/get-store-list';
 	uploadFileUrl = '/users/file-upload';
@@ -47,6 +48,10 @@ export class RootService {
 	// Behavior-subjects
 	update_user_status$: Subject<string> = new BehaviorSubject<string>('201');
 	update$ = this.update_user_status$.asObservable();
+	update_user_language$: Subject<string> = new BehaviorSubject<string>('en');
+	languages$ = this.update_user_language$.asObservable();
+	update_flip$: Subject<boolean> = new BehaviorSubject<boolean>(false);
+	flip$ = this.update_flip$.asObservable();
 
 	constructor(private http: HttpClient) { }
 
@@ -107,11 +112,28 @@ export class RootService {
 		form.append('json', json);
 		return this.http
 			.post<{
-				date: Language[];
+				data: Language[];
 				message: string;
 				status: string;
-			}>(`${this.languageUrl}`, form, this.httpOptions)
+			}[]>(`${this.languageUrl}`, form, this.httpOptions)
 			.pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
+	}
+	getLabels = (languageID: string): Observable<Labels> => {
+		const form = new FormData();
+		const json = `[{
+		"langLabelModule":"",
+		"languageID":"${languageID}",
+		"apiType":"Android",
+		"apiVersion":"1.0"
+		}]`;
+		form.append('json', json);
+		return this.http
+			.post<{
+				data: Labels[];
+				message: string;
+				status: string;
+			}[]>(`${this.labelsUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0].data[0]), shareReplay(), retry(2), catchError(this.handleError));
 	}
 	get nationality(): Observable<Nationality[]> {
 		if (!this.nationalities$) {

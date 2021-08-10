@@ -10,7 +10,7 @@ import { fadeIn } from 'src/app/animation';
         <div class="card-header bg-white">
           <div class="section-title row pb-0">
             <div class="col-md-6">		
-                <h2 class="mb-0">Our Partners</h2>
+                <h2 class="mb-0">{{'our_partners' | translate}}</h2>
             </div>
           </div>
       </div>   

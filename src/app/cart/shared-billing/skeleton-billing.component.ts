@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TempOrders, OrderDetailsTemp } from 'src/app/interface';
-import { SubSink } from 'subsink';
+import { RootService } from 'src/app/root.service';
 
 @Component({
 	selector: 'app-skeleton-billing',
@@ -10,8 +9,8 @@ import { SubSink } from 'subsink';
                             <h5>Bill Details</h5>
                             <div class="coponCode">
                                 <div class="form-group mb-0">
-                                <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', width: '55%', 'border-radius': '5px' }"></ngx-skeleton-loader>
-                                <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', 'margin-left': '15px', width: '40%', 'border-radius': '8px' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', 'margin-left': (root.languages$ | async) === 'ar' ? '15px' : '0px', width: '55%', 'border-radius': '5px' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" [theme]="{ height: '40px', 'margin-bottom': '0px', 'margin-left': (root.languages$ | async) === 'en' ? '15px' : '0px', width: '40%', 'border-radius': '8px' }"></ngx-skeleton-loader>
                               </div>
                               <div class="pl-3">
                               </div>
@@ -57,13 +56,8 @@ import { SubSink } from 'subsink';
 export class SkeletonBillingComponent implements OnInit {
 	@Input() orders: TempOrders[];
 	data: OrderDetailsTemp;
-	isLoggedIN: boolean;
-	isLoggedID: string;
-	subs = new SubSink();
-	modalRef: BsModalRef;
 	@Output() updateCart: EventEmitter<{ data: string, res: number }> = new EventEmitter();
-	constructor() { }
-
+	constructor(public root: RootService) { }
 	ngOnInit(): void {
 	}
 }

@@ -27,26 +27,26 @@ interface Reset {
 	        status: 'true',
 	        message: ''
          }) : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
-         <h5 class="modal-title" id="exampleModalLabel">Reset Password?</h5>
-         <p class="mb-0" style="color: #6a7081;">Please type the verification code sent to your mobile number</p>
+         <h5 class="modal-title" id="exampleModalLabel">{{'reset_password' | translate}}?</h5>
+         <p class="mb-0" style="color: #6a7081;">{{'Please type the verification code sent to your mobile number'}}</p>
       </div>
       <div class="modal-body">
       <form class="text-left profile-form" [formGroup]="resetForm" (ngSubmit)="onReset(resetForm.value)">             
         <div class="form-row">
           <div class="col-md-12 col-sm-12 form-group">
               <a class="pasword-hideshow cursr" (click)="new=!new"><i class="fa " [ngClass]="{'fa-eye': !new, 'fa-eye-slash': new}"></i></a>
-              <input #userNewPassword type="password" [type]=" new ? 'password' : 'text' " formControlName="userNewPassword" (keydown.space)="$event.preventDefault()" placeholder="Enter new password" class="form-control" id="NewPassword" name="NewPassword" />
-              <small class="text-danger" *ngIf="resetForm.controls['userNewPassword'].hasError('required')">Please enter new password.</small>
-              <small class="text-danger" *ngIf="resetForm.controls['userNewPassword'].hasError('pattern') && (resetForm.controls['userNewPassword'].dirty || resetForm.controls['userNewPassword'].touched)">Password needs to be at least eight characters, one uppercase letter and one number.</small>
+              <input #userNewPassword type="password" [type]=" new ? 'password' : 'text' " formControlName="userNewPassword" (keydown.space)="$event.preventDefault()" [placeholder]="'enter_new_password' | translate" class="form-control" id="NewPassword" name="NewPassword" />
+              <small class="text-danger" *ngIf="resetForm.controls['userNewPassword'].hasError('required')">{{'please_enter_password' | translate}}</small>
+              <small class="text-danger" *ngIf="resetForm.controls['userNewPassword'].hasError('pattern') && (resetForm.controls['userNewPassword'].dirty || resetForm.controls['userNewPassword'].touched)">{{'password_with_8_char_uppercase_and_number' | translate}}</small>
           </div>
           <div class="col-md-12 col-sm-12 form-group">
               <a class="pasword-hideshow cursr" (click)="confirm=!confirm"><i class="fa " [ngClass]="{'fa-eye': !confirm, 'fa-eye-slash': confirm}"></i></a>
-              <input #userReNewPassword type="password" [type]=" confirm ? 'password' : 'text' " formControlName="userReNewPassword" (keydown.space)="$event.preventDefault()" class="form-control" placeholder="Enter re-new password" id="ConfirmPassword" name="ConfirmPassword" />
-              <small class="text-danger" *ngIf="resetForm.controls['userReNewPassword'].hasError('required')">Please enter Re-enter new password.</small>
-              <small class="text-danger " *ngIf="resetForm.hasError('confirmedValidator')">Re-enter Password is not match.</small>
+              <input #userReNewPassword type="password" [type]=" confirm ? 'password' : 'text' " formControlName="userReNewPassword" (keydown.space)="$event.preventDefault()" class="form-control" [placeholder]="'re_enter_new_password' | translate" id="ConfirmPassword" name="ConfirmPassword" />
+              <small class="text-danger" *ngIf="resetForm.controls['userReNewPassword'].hasError('required')">{{'please_re_enter_password' | translate}}</small>
+              <small class="text-danger " *ngIf="resetForm.hasError('confirmedValidator')">{{'re_entered_password_is_not_match' | translate}}</small>
           </div>  
           <div class="col-md-12 col-sm-12 mt-3">                      
-              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? 'Wait..' : 'Reset Password' }}</button>            
+              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? ('wait' | translate) : ('reset_password' | translate) }}</button>            
           </div>                
         </div>                                    
       </form>

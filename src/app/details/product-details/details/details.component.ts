@@ -23,22 +23,21 @@ import { SubSink } from 'subsink';
 			<img offset="0" style="width: 552px; height: 343px"
 				defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
 				lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
-				[errorImage]="'assets/images/error_not_found.png'" [alt]="product?.productName"
-				[title]="product?.productName" (click)="openImage()">
+				[errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
+				[title]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme" (click)="openImage()">
 			</a>
 			</div>
 	</div>
 	<div class="col-lg-7 col-md-7">
 		<div class="detailInfo">
-			<h4 class="" *ngIf="product"><b>{{product?.productName}}</b></h4>
+			<h4 class="" *ngIf="product"><b>{{(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme}}</b></h4>
 			<div class="productInfo">
 				<div class="ratings">
 					<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 						*ngFor="let star of stars"></i>
 					<span>{{product?.productRatingCount | number}}</span>
 				</div>
-				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' people
-					bought this'}}</p>
+				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
 			</div>
 			<div class="d-flex align-items-center detailPrice">
 				<div class="price_text" *ngIf="product">{{(product?.productPrice | number) + ' SR'}}
@@ -51,7 +50,7 @@ import { SubSink } from 'subsink';
 			<div class="d-flex align-items-center detailBtn pt-1">
 				<div class="cartbox" [ngClass]="{'show-counter': product?.addedCartCount>0}">
 					<a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(product);"
-						id="addcart-1"> Add to Cart</a>
+						id="addcart-1"> {{'add_to_cart' | translate}}</a>
 					<div class="contercontern">
 						<div class="handle-counter d-flex" id="handleCounter">
 							<button (click)="delete(product);"
@@ -68,14 +67,14 @@ import { SubSink } from 'subsink';
 				<div class="pr-4">
 					<a class="cursr"
 						(click)="add_favourite(product?.productID); product.isFavorite='Yes';"
-						*ngIf="product?.isFavorite === 'No'"><i class="far fa-heart"></i> Add to Wishlist</a>
+						*ngIf="product?.isFavorite === 'No'"><i class="far fa-heart"></i> {{'add_to_wishlist' | translate}}</a>
 					<a class="cursr"
 						(click)="remove(product?.productID); product.isFavorite='No';"
 						*ngIf="product?.isFavorite === 'Yes'"><i class="fa fa-heart"
-						 [@shakeOnEnter] style="color:red;"></i> Added to Wishlist</a>
+						 [@shakeOnEnter] style="color:red;"></i> {{'added_to_wishlist' | translate}}</a>
 				</div>
 				<div class="shareDetail">
-					<span class="pr-2">Share:</span>
+					<span class="pr-2">{{'share' | translate}}:</span>
 					<a href="#"><i class="fab fa-facebook-f"></i></a>
 					<a href="#"><i class="fab fa-twitter"></i></a>
 					<a href="#"><i class="fab fa-pinterest"></i></a>
@@ -89,7 +88,6 @@ import { SubSink } from 'subsink';
   `,
 	styles: [
 		`a img { cursor: -webkit-zoom-in;  cursor: zoom-in; }
-		
 		`
 	],
 	animations: [

@@ -28,7 +28,7 @@ import { SubSink } from 'subsink';
 			</div>
 		</div>
 		<div class="col-md-5 col-8">
-			<p class="mb-0">{{product?.productName}}</p>
+			<p class="mb-0">{{(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme}}</p>
 			<div class="ratings">
 				<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 					*ngFor="let star of stars;"></i>
@@ -45,7 +45,7 @@ import { SubSink } from 'subsink';
 					<span tooltip="Remove" width="50" autoPlacement="false" placement="left"
 						show-delay="100"><i class="icofont-trash"></i></span></a>
 				<a (click)="addToCart(product); $event.stopPropagation();"
-					class="addcart-btn shopingcart-tbtn btn"> Add to Cart</a>
+					class="addcart-btn shopingcart-tbtn btn"> {{'add_to_cart' | translate}}</a>
 				<div class="contercontern">
 					<div class="handle-counter d-flex">
 						<button (click)="delete(product); $event.stopPropagation();"

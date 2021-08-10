@@ -17,36 +17,34 @@ import { RegistrationComponent } from './registration.component';
     <!--Modal Login-->
 <div class="modal-contents">
 	<div class="modal-header">
-		<h5 class="modal-title w-100 text-center" id="exampleModalLabel">Login</h5>
+		<h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'login' | translate}}</h5>
 		<button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal"
 			aria-label="Close"> <span aria-hidden="true">×</span></button>
 	</div>
 	<div class="modal-body">
 		<div class="alert alert-danger" role="alert" *ngIf="error">
-			<h5 class="alert-heading text-center">Error!</h5>
+			<h5 class="alert-heading text-center">{{'error' | translate}}!</h5>
 			<p class="mb-0 text-center">{{error}}</p>
 		</div>
 		<form class="text-left profile-form" [formGroup]="logIn" (ngSubmit)="onClickLogin(logIn.value);">
 			<div class="form-row CandidateForm">
 				<div class="col-md-12 col-sm-12 form-group">
-					<label>Username<span class="required-field"></span></label>
+					<label>{{'user_name' | translate}}<span class="required-field"></span></label>
 					<input type="email" #emailInput (keydown.space)="$event.preventDefault();"
 						formControlName="userMobile" id="Email" class="form-control"
-						placeholder="Enter username or e-mail">
+						[placeholder]="'enter_username_or_email' | translate">
 					<small class="text-danger"
-						*ngIf="logIn.controls['userMobile'].hasError('required')">This field is
-						required.</small>
+						*ngIf="logIn.controls['userMobile'].hasError('required')">{{'this_field_is_required' | translate}}</small>
 					<small class="text-danger"
-						*ngIf="logIn.controls['userMobile'].hasError('pattern') && (logIn.controls['userMobile'].dirty || logIn.controls['userMobile'].touched)">Please
-						enter valid email address or phone number.</small>
+						*ngIf="logIn.controls['userMobile'].hasError('pattern') && (logIn.controls['userMobile'].dirty || logIn.controls['userMobile'].touched)">{{'please_enter_valid_email_or_mobile' | translate}}</small>
 				</div>
 				<div class="col-md-12 col-sm-12 form-group">
 					<div class="row">
-						<div class="col"><label>Password<span
+						<div class="col"><label>{{'password' | translate}}<span
 									class="required-field"></span></label></div>
 						<div class="col text-right"><a class="cursr" id="forgot"
 								(click)="openForgot()" style="color:#2660C0;"
-								data-toggle="modal">Forgot?</a></div>
+								data-toggle="modal">{{'forgot' | translate}}?</a></div>
 					</div>
 					<div>
 						<a class="pasword-hideshowLogin cursr" (click)="hide=!hide"><i
@@ -55,12 +53,11 @@ import { RegistrationComponent } from './registration.component';
 						<input #passwordInput type="password"
 							[type]=" hide ? 'password' : 'text' " id="password"
 							(keydown.space)="$event.preventDefault()"
-							placeholder="Enter password" class="form-control"
+							[placeholder]="'enter_password' | translate" class="form-control"
 							formControlName="userPassword" name="password"
 							autocomplete="off">
 						<small class="text-danger"
-							*ngIf="logIn.controls['userPassword'].hasError('required')">This
-							field is required.</small>
+							*ngIf="logIn.controls['userPassword'].hasError('required')">{{'this_field_is_required' | translate}}</small>
 					</div>
 				</div>
 				<div class="col-md-12 col-sm-12">
@@ -68,7 +65,7 @@ import { RegistrationComponent } from './registration.component';
 						<div class="col">
 							<button type="submit" [disabled]="preventAbuse"
 								class="btn btn-them btn-md w-100">{{ preventAbuse ?
-								'Wait..' : 'Log In' }}</button>
+								('wait' | translate) : ('log_in' | translate) }}</button>
 						</div>
 					</div>
 					<div class="text-center">
@@ -76,15 +73,14 @@ import { RegistrationComponent } from './registration.component';
 							<input type="checkbox" formControlName="terms"
 								class="custom-control-input" id="customCheck"
 								name="example1">
-							<label class="custom-control-label" for="customCheck">Keep me
-								signed in</label>
+							<label class="custom-control-label" for="customCheck">{{'keep_me_signed' | translate}}</label>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-12 col-sm-12 mt-3 signupbtn text-center">
 					<br>
-					<span>New Here?</span> <a class="cursr ml-1" (click)="openRegistration()"
-						data-toggle="modal">Create an Account</a>
+					<span>{{'new_here' | translate}}?</span> <a class="cursr ml-1" (click)="openRegistration()"
+						data-toggle="modal">{{'create_an_account' | translate}}</a>
 				</div>
 			</div>
 		</form>

@@ -7,10 +7,12 @@ import { AuthenticationService } from '../authentication.service';
 import { RootService } from '../root.service';
 import { Observable, of, Subject, merge } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
-import { ADDRESS, ProductList } from '../interface';
+import { ADDRESS, Language, ProductList } from '../interface';
 import { CookieService } from 'ngx-cookie-service';
 import { AddressListComponent } from './onboarding/address-list.component';
 import { TitleCasePipe } from '@angular/common';
+import { selectLanguage, State } from '../reducers';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'app-header',
@@ -26,7 +28,7 @@ import { TitleCasePipe } from '@angular/common';
 				<div class="callUs">
 					<a class="d-flex cursr" (click)="openAddress(address_list, {}, 'false')">
 						<div class="callicon align-self-center pt-2"><i class="icofont-google-map"></i></div>
-						<div class="callnumber"><small>Deliver to</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
+						<div class="callnumber"><small>{{'deliver_to' | translate}}</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
 					</a>
 				</div>
 			</div>
@@ -35,8 +37,8 @@ import { TitleCasePipe } from '@angular/common';
 				  	<div class="searproduct">
 				  		<div class="form-group d-flex align-items-center mb-0">
 				  			<span class="search_addons"><i class="fas fa-search"></i></span>
-				  			<input type="text" class="form-control" name="searchTop" id="searchTop" placeholder="Search products…">	
-				  			<a href="#" class="search_btn"><span>Search</span> <i class="fas fa-search"></i></a>  
+				  			<input type="text" class="form-control" name="searchTop" id="searchTop" [placeholder]="'search_products' | translate">	
+				  			<a href="#" class="search_btn"><span>{{'search' | translate}}</span> <i class="fas fa-search"></i></a>  
 				  		</div>	
 				  	</div>	
 				</form>
@@ -47,21 +49,19 @@ import { TitleCasePipe } from '@angular/common';
 				<div class="callUs">
 					<a class="d-flex cursr">
 						<div class="callicon align-self-center pt-2"><i class="icofont-google-map"></i></div>
-						<div class="callnumber"><small>Deliver to</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
+						<div class="callnumber"><small>{{'deliver_to' | translate}}</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
 					</a>
 				</div>
 			</div>  	
 			<div class="dropdown_language pt-1">
-				<select class="form-control custom-select">
-					<option value="english">English</option>
-					<option value="arabic">Arabic</option>
-					<option value="french">French</option>				
+				<select class="form-control custom-select cursr" [(ngModel)]="selected" (change)="onChangeLang($event.target.value === '1' ? 'en' : 'ar')">
+					<option [value]="language.languageID" *ngFor="let language of language$ | async">{{language.languageName}}</option>				
 				</select>
 			</div>
 			<div class="callUs" *ngIf="(!isLoggedID && !defaultAddress) || (isLoggedID && !defaultAddress)">
 				<a href="tel:920007709" class="d-flex">
 					<div class="callicon align-self-center pt-2"><i class="icofont-headphone-alt"></i></div>
-					<div class="callnumber"><small>CALL US</small> <h6 class="mb-0">920007709</h6></div>
+					<div class="callnumber"><small>{{'call_us' | translate}}</small> <h6 class="mb-0">920007709</h6></div>
 				</a>
 			</div>
 			<div class="signbtn" *ngIf="!isLoggedID"><a (click)="openLogin()" data-toggle="modal" class="btn user-cart-btrn"><i class="icofont-ui-user"></i></a></div>
@@ -69,12 +69,12 @@ import { TitleCasePipe } from '@angular/common';
 				<div class="dropdown userDropDwn">
 					<a href="#" class="btn user-cart-btrn dropdown-toggle" data-toggle="dropdown">  <i class="icofont-ui-user"></i></a>
 					<div class="dropdown-menu customUserMenu">
-						<a routerLink="/user" routerLinkActive="active" class="btn"><i class="icofont-ui-user"></i> My Account</a>
-						<a routerLink="/user/my-review" routerLinkActive="active" class="btn"><i class="icofont-star"></i> My Reviews</a>
-						<a routerLink="/user/my-wishlist" routerLinkActive="active" class="btn"><i class="icofont-heart"></i> My Wishlist</a>
-						<a routerLink="/user/my-orders" routerLinkActive="active" class="btn"><i class="fa fa-list"></i> My Orders</a>
-						<a routerLink="/user/notifications" routerLinkActive="active" class="btn"><i class="icofont-notification"></i> Notifications</a>
-						<a (click)="logout();" class="btn"><i class="icofont-logout"></i> Logout</a>
+						<a routerLink="/user" routerLinkActive="active" class="btn"><i class="icofont-ui-user"></i> {{'my_account' | translate}}</a>
+						<a routerLink="/user/my-review" routerLinkActive="active" class="btn"><i class="icofont-star"></i> {{'my_reviews' | translate}}</a>
+						<a routerLink="/user/my-wishlist" routerLinkActive="active" class="btn"><i class="icofont-heart"></i> {{'my_wishlist' | translate}}</a>
+						<a routerLink="/user/my-orders" routerLinkActive="active" class="btn"><i class="fa fa-list"></i> {{'my_orders' | translate}}</a>
+						<a routerLink="/user/notifications" routerLinkActive="active" class="btn"><i class="icofont-notification"></i> {{'notifications' | translate}}</a>
+						<a (click)="logout();" class="btn"><i class="icofont-logout"></i> {{'logout' | translate}}</a>
 					</div>	
 				</div>
 			</div>
@@ -100,15 +100,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	cartCount: number = 0;
 	cartTotal: number = 0;
 	bsModal: BsModalRef;
+	selected: string;
 	defaultAddress: string;
 	address_list: ADDRESS[];
+	language$: Observable<Language[]> = this.store.select(selectLanguage);
 	constructor(
 		private modal: BsModalService,
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
 		private root: RootService,
 		private cookie: CookieService,
-		private titlecasePipe: TitleCasePipe) {
+		private titlecasePipe: TitleCasePipe,
+		private store: Store<State>) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === 'update_header') {
@@ -116,6 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				this.root.update_user_status$.next('not_found');
 			}
 		}));
+		this.root.languages$.subscribe(lang => lang === 'ar' ? this.selected = '2' : this.selected = '1');
 	}
 	orders$: Observable<{
 		status: string;
@@ -184,6 +188,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					total: number;
 				}]
 			}[]>;
+	}
+	onChangeLang = (lang: string) => {
+		this.root.update_user_language$.next(lang);
+		this.root.update_flip$.next(true);
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();

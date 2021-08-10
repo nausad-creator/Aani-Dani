@@ -12,10 +12,10 @@ import { SubSink } from 'subsink';
     					<div class="reviewSection" [@fadeIn]>
 		      				<ul class="nav nav-tabs" id="myTab" role="tablist">
 							  <li class="nav-item">
-							    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Discription" role="tab" aria-controls="home" aria-selected="true">Discription</a>
+							    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#Discription" role="tab" aria-controls="home" aria-selected="true">{{'description' | translate}}</a>
 							  </li>
 							  <li class="nav-item">
-							    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Reviews(6)</a>
+							    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{{'reviews' | translate}}(6)</a>
 							  </li>							  
 							</ul>
 							<div class="tab-content" id="myTabContent">
@@ -24,7 +24,7 @@ import { SubSink } from 'subsink';
 							  		<p>{{product.productDescription}}</p>
 							  	</div>
 								  <div class="p-3" *ngIf="!product.productDescription">
-							  		<p class="text-center">No descriptions to show.</p>
+							  		<p class="text-center">{{'no_descriptions' | translate}}</p>
 							  	</div>
 							  </div>
 

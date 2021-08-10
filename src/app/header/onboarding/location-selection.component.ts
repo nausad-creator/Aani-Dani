@@ -9,13 +9,13 @@ import { LoginComponent } from './login.component';
     <!--loaction selection-->
     <div class="modal-contents">
 	      <div class="modal-header d-block">
-	      	<h5 class="modal-title text-center mb-2" id="exampleModalLabel">Select your address</h5>
-	      	<p class="text-center mb-0">Select a delivery location to see product availbility and delivery options.</p>
+	      	<h5 class="modal-title text-center mb-2" id="exampleModalLabel">{{'select_your_address' | translate}}</h5>
+	      	<p class="text-center mb-0">{{'select_a_delivery_location_to_see_products_availbility_and_delivery_options' | translate}}</p>
 	      </div>
 	      <div class="modal-body">	      	
 		      <form class="text-center profile-form"> 
 		      	<div class="col pb-3">
-					<button type="button" (click)="openLogin()" class="btn btn-them btn-md w-100">Login to see your address</button>
+					<button type="button" (click)="openLogin()" class="btn btn-them btn-md w-100">{{'login_to_see_your_address' | translate}}</button>
 			</div>
 		      </form>
 	      </div>      

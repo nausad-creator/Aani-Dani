@@ -11,6 +11,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedWishlistComponent } from './my-wishlist/shared-wishlist.component';
 import { SkeletonComponent } from './my-wishlist/skeleton.component';
 import { TooltipModule } from 'ng2-tooltip-directive';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 		NgSelectModule,
 		NgxPaginationModule,
 		LazyLoadImageModule,
+		TranslateModule,
 		NgxSkeletonLoaderModule,
 		RouterModule.forChild([
 			{

@@ -11,27 +11,27 @@ import { SubSink } from 'subsink';
 	template: `
     <div class="tab-pane fade show active" id="SavedAddresses" role="tabpanel" aria-labelledby="profile-tab" *ngIf="user">
     <div class="titleAccount">
-         <h5>Saved Address {{'(' + user.address.length + ')'}}</h5>						  			
+         <h5>{{'saved_address' | translate}} {{'(' + user.address.length + ')'}}</h5>						  			
      </div>
      <div class="addresDisplay" *ngIf="user.address.length > 0">
          <div class="addresItem pt-3" *ngFor="let address of user.address | myfilterAddress; let last = last;">
              <div class="d-flex">
                  <h6 class=""><b>{{address.addressType | titlecase}}</b></h6>
-                 <div *ngIf="address.addressIsDefault === 'Yes'" class="iconEdit ml-auto text-success"><i class="icofont-check"></i> <small>Default</small></div>
+                 <div *ngIf="address.addressIsDefault === 'Yes'" class="iconEdit ml-auto text-success"><i class="icofont-check"></i> <small>{{'default' | translate}}</small></div>
              </div>
              <p>{{address.fullAddress}} <br>{{address.cityName + ' ' + address.countryName + ' ' + address.addressPincode}} </p>
              <div>
-                 <a (click)="click();add_or_edit=false; data=address" class="mr-3 cursr">Edit</a>
-                 <a class="mr-3 cursr" (click)="onMarkAsDefault(address.addressID)" *ngIf="address.addressIsDefault === 'No'">Mark as Default</a>
-               <a class="cursr" (click)="onDelete(address.addressID)">Delete</a>
+                 <a (click)="click();add_or_edit=false; data=address" class="mr-3 cursr">{{'edit' | translate}}</a>
+                 <a class="mr-3 cursr" (click)="onMarkAsDefault(address.addressID)" *ngIf="address.addressIsDefault === 'No'">{{'mark_as_deafult' | translate}}</a>
+               <a class="cursr" (click)="onDelete(address.addressID)">{{'delete' | translate}}</a>
              </div>
              <br *ngIf="last">
-             <div *ngIf="last" class="pt-3"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ Add New Address</button></div>
+             <div *ngIf="last" class="pt-3"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ {{'add_new_address' | translate}}</button></div>
          </div>
      </div>	
      <div class="addresDisplay" *ngIf="user.address.length === 0">
         <div class="addresItem pt-3">
-            <div class="pt-1"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ Add New Address</button></div>
+            <div class="pt-1"><button type="button" (click)="click(); add_or_edit=true" class="btn btn-them btn-md">+ {{'add_new_address' | translate}}</button></div>
         </div>
     </div>	
 </div>

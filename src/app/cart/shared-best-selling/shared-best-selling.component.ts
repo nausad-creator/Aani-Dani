@@ -23,7 +23,7 @@ import { SubSink } from 'subsink';
 				<div class="card-header bg-white">
 					<div class="section-title row pb-0">
 						<div class="col-md-8 p-0">
-							<h5 class="mb-0"><b>Bestselling Items</b></h5>
+							<h5 class="mb-0"><b>{{'best_selling_items' | translate}}</b></h5>
 						</div>
 					</div>
 				</div>
@@ -37,11 +37,11 @@ import { SubSink } from 'subsink';
 										defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
 										lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
 										[errorImage]="'assets/images/error_not_found.png'"
-										[alt]="item?.productName"
-										[title]="item?.productName">
+										[alt]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme"
+										[title]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme">
 									<div class="content_textContent">
 										<h5 class="text-dark mb-0">
-											{{item?.productName}}</h5>
+											{{(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme}}</h5>
 										<div
 											class="d-flex align-items-center justify-content-center mt-2">
 											<div class="price_text">
@@ -59,8 +59,7 @@ import { SubSink } from 'subsink';
 											</div>
 											<p class="salinginfo">
 												{{(item?.productSoldCount
-												| number) + ' people
-												bought this'}}</p>
+												| number) + ' ' + ('people_bought_this' | translate)}}</p>
 										</div>
 										<div class="cartbox"
 											[ngClass]="{'show-counter': item?.addedCartCount>0}">
@@ -68,7 +67,7 @@ import { SubSink } from 'subsink';
 												(click)="addToCart(item); $event.stopPropagation();"
 												id="addcart-1"><i
 													class="icofont-shopping-cart"></i>
-												Add to Cart</a>
+													{{'add_to_cart' | translate}}</a>
 											<div class="contercontern">
 												<div class="handle-counter d-flex"
 													id="handleCounter">

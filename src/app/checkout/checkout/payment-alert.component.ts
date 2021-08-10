@@ -6,13 +6,13 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 	template: `
     		<div class="modal-contents">
       			<div class="modal-header">
-        			<h5 class="modal-title ml-auto text-danger" id="exampleModalLabel">Alert</h5>
+        			<h5 class="modal-title ml-auto text-danger" id="exampleModalLabel">{{'alert' | translate}}</h5>
         			<button type="button" (click)="onClose()" class="close" data-dismiss="modal" aria-label="Close">
           			<span aria-hidden="true">&times;</span>
         			</button>
       			</div>
       			<div class="modal-body">
-        			<h5 class="text-center"> Please select any payment method.</h5>
+        			<h5 class="text-center"> {{'please_select_any_payment_option' | translate}}</h5>
 				<br>
 			<div class="text-center pb-1">
 				<button type="button" (click)="onClose()" class="addcart-btn shopingcart-tbtn btn">Ok</button></div>

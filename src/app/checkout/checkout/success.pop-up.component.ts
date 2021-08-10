@@ -9,18 +9,18 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
       <div class="modal-body">
         <div class="contenttopText text-center">
         	<div class="p-3 checkIcon"><i class="fas fa-check-circle text-success"></i></div>
-        	<h5 class="">Order Successfully Placed</h5>
+        	<h5 class="">{{'order_successfully_placed' | translate}}</h5>
         	<small>Order ID: {{list[0].orderID}}</small>
-        	<p class="pt-3">Thanks for placing your order with us</p>
-        	<p class="mb-0">for any queations and futher information please contact our customer support</p>        	
+        	<p class="pt-3">{{'thanks_for_placing_order_with_us' | translate}}</p>
+        	<p class="mb-0">{{'query_and_further_information_contact_customer_support' | translate}}</p>        	
         </div>	
         <br>
         <div class="pt-3">
         	<div class="col-12 pb-3">
-				<button type="button" (click)="bsModal.hide()" routerLink='/user/my-orders' class="btn btn-them w-100 btn-md">Track Order</button>
+				<button type="button" (click)="bsModal.hide()" routerLink='/user/my-orders' class="btn btn-them w-100 btn-md">{{'tarck_order' | translate}}</button>
 			</div>	
 			<div class="col-12">
-				<a (click)="bsModal.hide()" routerLink='/' class="btn w-100 btn-outline-secondary btn-md">Continue Shopping</a>
+				<a (click)="bsModal.hide()" routerLink='/' class="btn w-100 btn-outline-secondary btn-md">{{'continue_shopping' | translate}}</a>
 			</div>				
 		</div>
 		<br>	

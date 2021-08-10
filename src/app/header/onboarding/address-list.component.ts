@@ -14,7 +14,7 @@ import { SubSink } from 'subsink';
      <div class="modal-contents">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Select Address</h4>
+        <h4 class="modal-title">{{'select_address' | translate}}</h4>
         <button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
@@ -27,8 +27,8 @@ import { SubSink } from 'subsink';
           <div class="superviser_content">
           <div class="supervisor_list demo-radio-button">
 	  <div class="d-flex">
-		<label _ngcontent-man-c117="">Address List</label>
-  		<div class="ml-auto"><a class="cursr" (click)="click();">+ Add Address</a></div>
+		<label _ngcontent-man-c117="">{{'address_list' | translate}}</label>
+  		<div class="ml-auto"><a class="cursr" (click)="click();">+ {{'add_address' | translate}}</a></div>
   	</div>
              <div class="message-center" *ngFor="let address of list[0].address | myfilterAddress">
                   <div class="radeio-list">					  	
@@ -39,7 +39,7 @@ import { SubSink } from 'subsink';
           </div>
          </div>
           <div class="modal-footer">
-            <button class="btn btn-them btn-md w-100" [disabled]="preventAbuse" type="submit">{{ preventAbuse ? 'Wait..' : 'Done' }} </button>
+            <button class="btn btn-them btn-md w-100" [disabled]="preventAbuse" type="submit">{{ preventAbuse ? ('wait' | translate) : ('done' | translate) }} </button>
           </div>
         </div>
       </form>

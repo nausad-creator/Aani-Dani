@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/authentication.service';
 import { Category } from 'src/app/interface';
 import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { SubSink } from 'subsink';
+import { RootService } from '../root.service';
 
 @Component({
 	selector: 'app-landing-my-order',
@@ -22,19 +23,22 @@ import { SubSink } from 'subsink';
 						<ul>
 							<li class="drop-down categorymenu">
 								<a class="maindrop" href="#"><i
-										class="icofont-navigation-menu mr-2"></i>
-									All Category</a>
+										class="icofont-navigation-menu mr-2"></i>{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
 											[queryParams]="{page: '0', categoryID: category?.categoryID}"
-											*ngFor="let category of categories">{{category?.categoryName
-											| titlecase}}</a></li>
+											*ngFor="let category of categories">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
-									| titlecase}}</a></li>
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 						</ul>
 					</nav><!-- .nav-menu -->
 				</div>
@@ -58,7 +62,8 @@ export class LandingMyOrderComponent implements OnInit, OnDestroy, AfterViewInit
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
-		private auth: AuthenticationService) {
+		private auth: AuthenticationService,
+		public root: RootService) {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {

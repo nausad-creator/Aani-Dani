@@ -26,18 +26,22 @@ import { SubSink } from 'subsink';
 							<li class="drop-down categorymenu">
 								<a class="maindrop" href="#"><i
 										class="icofont-navigation-menu mr-2"></i>
-									All Category</a>
+										{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
 											[queryParams]="{page: '0', categoryID: category?.categoryID}"
-											*ngFor="let category of categories">{{category?.categoryName
-											| titlecase}}</a></li>
+											*ngFor="let category of categories">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
-									| titlecase}}</a></li>
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 						</ul>
 					</nav><!-- .nav-menu -->
 				</div>
@@ -49,7 +53,7 @@ import { SubSink } from 'subsink';
 <main id="main">
 	<section id="cart-section" class="pb-3 pt-4">
 		<div class="container">
-			<div class="brandcamp"><a routerLink='/'>Home &gt;</a> <span> My Cart</span> </div>
+			<div class="brandcamp"><a routerLink='/'>{{'home' | translate}} &gt;</a> <span> {{'my_cart' | translate}}</span> </div>
 			<div class="card mt-3">
 				<div class="row m-0 pt-3 pb-3">
 					<div class="col-lg-8">
@@ -67,7 +71,7 @@ import { SubSink } from 'subsink';
 						<div class="table-responsive"
 							style="margin-top: 20px; min-height: 280px"
 							*ngIf="ordersList[0].orderdetails.length===0">
-							<p class="text-center pt-20">Currently Your Cart is Empty.</p>
+							<p class="text-center pt-20">{{'currently_cart_is_empty' | translate}}</p>
 						</div>
 					</div>
 				</div>

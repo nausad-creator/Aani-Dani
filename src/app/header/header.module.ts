@@ -20,6 +20,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 import { AlertComponent } from './onboarding/alert.component';
 import { SharedAddAddressComponent } from './onboarding/shared-add-address.component';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -47,12 +48,14 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 		FormsModule,
 		GooglePlaceModule,
 		NgSelectModule,
-		TooltipModule
+		TooltipModule,
+		TranslateModule
 	],
 	exports: [
 		HeaderComponent,
 		FooterComponent,
-		ScrollToTopComponent
+		ScrollToTopComponent,
+		TranslateModule
 	],
 	providers: [TitleCasePipe]
 })

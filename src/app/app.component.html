@@ -1,2 +1,4 @@
-<router-outlet (activate)="onActivate()"></router-outlet>
+<div [@flip]="animationState">
+	<router-outlet (activate)="onActivate()"></router-outlet>
+</div>
 <ng-progress class="root-progress-bar" [thick]="true" [meteor]="false" [spinner]="false"></ng-progress>

@@ -31,18 +31,22 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 							<li class="drop-down categorymenu">
 								<a class="maindrop" href="#"><i
 										class="icofont-navigation-menu mr-2"></i>
-									All Category</a>
+										{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
 											[queryParams]="{page: '0', categoryID: category?.categoryID}"
-											*ngFor="let category of categories">{{category?.categoryName
-											| titlecase}}</a></li>
+											*ngFor="let category of categories">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName
-									| titlecase}}</a></li>
+									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -54,14 +58,14 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 <main id="main">
 	<section id="cart-section" class="pb-3 pt-4">
 		<div class="container">
-			<div class="brandcamp"><a routerLink='/'>Home &gt;</a> <span> Checkout</span> </div>
+			<div class="brandcamp"><a routerLink='/'>{{'home' | translate}} &gt;</a> <span> {{'checkout' | translate}}</span> </div>
 			<div class="card mt-3">
 				<div class="row m-0 pt-3 pb-3">
 					<div class="col-lg-7">
 						<div class="addressContent">
 							<div class="d-flex">
 								<div class="titleAssres">
-									<h5><b>Delivery Address</b></h5>
+									<h5><b>{{'delivery_address' | translate}}</b></h5>
 									<p class="mb-0" *ngIf="selectedAddress">
 										{{selectedAddress.address}}<br>
 										{{(selectedAddress.city | titlecase) +
@@ -74,7 +78,7 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 
 						<div class="addressContent">
 							<div class="titleAssres">
-								<h5><b>Payment Method</b></h5>
+								<h5><b>{{'payment_method' | translate}}</b></h5>
 							</div>
 							<!-- saved debit or credit card shared	 -->
 							<app-saved-card (updateMode)="orderPaymentMode=$event">

@@ -4070,6 +4070,21 @@ html {
   color: #dd5709
 }
 
+.inputWithIcon input [type="password"] {
+  padding-right: 40px;
+}
+
+.inputWithIcon {
+  position: relative;
+}
+
+.inputWithIcon i {
+  position: absolute;
+  right: 0px;
+  top: 3px;
+  padding: 9px 12px;
+}
+
 .pasword-hideshowLogin {
   font-size: 14px;
   position: absolute;

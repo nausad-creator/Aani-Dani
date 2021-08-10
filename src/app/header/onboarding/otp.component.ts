@@ -27,15 +27,15 @@ interface Otp {
 	    <div class="modal-contents">
 	      <div class="modal-header text-center d-block position-relative" style="border: none;">
 	         <a (click)="!preventAbuse ? openForgot() : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
-	         <h5 class="modal-title" id="exampleModalLabel">Verification</h5>
-	         <p class="mb-0" style="color: #6a7081;">Please enter the 4 - digit OTP <br>received on your email/ mobile number</p>
+	         <h5 class="modal-title" id="exampleModalLabel">{{'verification' | translate}}</h5>
+	         <p class="mb-0" style="color: #6a7081;">{{'please_enter_4_digit_otp_received_on_email_phone' | translate}}</p>
 	      </div>
 
 	      <div class="modal-body">
 			  <!-- error handler -->
 			  <div class="alert alert-danger" role="alert" *ngIf="error">
         			<h5 class="alert-heading text-center">Error!</h5>
-        			<p class="mb-0 text-center">{{error}}</p>
+        			<p class="mb-0 text-center">{{error | translate}}</p>
       			</div>
       			<!-- handler end -->
 		      <form class="text-left profile-form otp-adding" [formGroup]="verificationForm" (ngSubmit)="onSubmitOTP(verificationForm.value)" action="post">             
@@ -54,8 +54,8 @@ interface Otp {
 		          </div>        
 		          
 		          <div class="col-md-12 col-sm-12 mb-2 mt-3 text-center">
-		              <a (click)="onResendClick(); error=''" class="text-blue cursr">Resend OTP</a>
-		              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100 mt-2">{{ preventAbuse ? 'Wait..' : 'Submit' }}</button>
+		              <a (click)="onResendClick(); error=''" class="text-blue cursr">{{'resend_otp' | translate}}</a>
+		              <button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100 mt-2">{{ preventAbuse ? ('wait' | translate) : ('submit' | translate) }}</button>
 		          </div>                
 		        </div>                                    
 		      </form>
@@ -177,9 +177,9 @@ export class OtpComponent implements OnInit {
 				if (response) {
 					resolve(response);
 				} else {
-					reject('Invalid OTP!');
+					reject('invalid_otp');
 				}
-			}, () => reject('Invalid OTP!'));
+			}, () => reject('invalid_otp'));
 		});
 	}
 	findInvalidControls = () => {

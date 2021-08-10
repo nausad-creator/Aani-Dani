@@ -20,7 +20,7 @@ import { SubSink } from 'subsink';
     <div class="card-header bg-white">
       <div class="section-title row pb-0">
         <div class="col-md-8 p-0">		
-            <h6 class="mb-0"><b>Similar Items</b></h6>
+            <h6 class="mb-0"><b>{{'similar_items' | translate}}</b></h6>
         </div>				  	
       </div>
   </div>  
@@ -29,30 +29,30 @@ import { SubSink } from 'subsink';
       <div class="">
         <owl-carousel-o [options]="caseOptions">
             <ng-template carouselSlide *ngFor="let item of similarproduct">
-              <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item.categoryID, productID: item.productID}); onScroll()">
+              <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item?.categoryID, productID: item?.productID}); onScroll()">
               <img offset="50" class="w-auto m-auto"
-                    defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-                    lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item.productImage}}"
-                    [errorImage]="'assets/images/error_not_found.png'" [alt]="item.productName" [title]="item.productName">
+                    defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
+                    lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
+                    [errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme" [title]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme">
                     <div class="content_textContent">
-                        <h5 class="text-dark mb-0">{{item.productName}}</h5>
+                        <h5 class="text-dark mb-0">{{(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme}}</h5>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            <div class="price_text">{{(item.productPrice | number) + ' SR'}}</div>
-                            <div class="mrp_text">{{(item.productPriceVat | number) + ' SR'}}</div>					  		
+                            <div class="price_text">{{(item?.productPrice | number) + ' SR'}}</div>
+                            <div class="mrp_text">{{(item?.productPriceVat | number) + ' SR'}}</div>					  		
                         </div>
                         <div class="productInfo">
                             <div class="ratings">
                             <i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
                             </div>
-                            <p class="salinginfo">{{(item.productSoldCount | number) + ' people bought this'}}</p>
+                            <p class="salinginfo">{{(item?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
                         </div>		
                         
-                        <div class="cartbox" [ngClass]="{'show-counter': item.addedCartCount>0}">
-                        <a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> Add to Cart</a>
+                        <div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
+                        <a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> {{'add_to_cart' | translate}}</a>
                               <div class="contercontern">
 				<div class="handle-counter d-flex" id="handleCounter">
 				<button (click)="delete(item); $event.stopPropagation();" class="counter-minus btn">-</button>
-				<input type="text" [ngModel]="item.addedCartCount" readonly>
+				<input type="text" [ngModel]="item?.addedCartCount" readonly>
 				<button (click)="add(item); $event.stopPropagation();" class="counter-plus btn">+</button>
 				</div>
 			</div>

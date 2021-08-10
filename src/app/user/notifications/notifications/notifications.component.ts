@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 	template: `
     <div class="tab-pane fade show active" id="Notifications" role="tabpanel" aria-labelledby="contact-tab">
 						  		<div class="titleAccount">
-						  			<h5>Notifications</h5>						  			
+						  			<h5>{{'notifications' | translate}}</h5>						  			
 						  		</div>	
 						  		<div class="notificationlist">
 									<ul>

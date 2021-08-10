@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoadHome } from './actions/home.action';
 import { State } from './reducers';
 import { about_us, data, home, privacy_policy, search, terms_conditions } from 'src/app/global';
 import { LoadAboutUs, LoadFaqs, LoadPrivacyPolicy, LoadTermsCondition } from './actions/cms.action';
-import { LoadNationality } from './actions/others.action';
+import { LoadLabels, LoadLanguage, LoadNationality } from './actions/others.action';
 import { AuthenticationService } from './authentication.service';
 import { SubSink } from 'subsink';
 import { USER_RESPONSE } from './interface';
@@ -13,14 +13,20 @@ import { CookieService } from 'ngx-cookie-service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { SeoService } from './seo.service';
+import { TranslateService } from '@ngx-translate/core';
+import { DOCUMENT } from '@angular/common';
+import { flipAnimation } from 'angular-animations';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	animations: [
+		flipAnimation({}),
+	]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 	subs = new SubSink();
+	animationState = false;
 	constructor(
 		private store: Store<State>,
 		private auth: AuthenticationService,
@@ -28,8 +34,30 @@ export class AppComponent implements OnInit {
 		private cookie: CookieService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,
-		private seoService: SeoService) {
+		private seoService: SeoService,
+		private translate: TranslateService,
+		@Inject(DOCUMENT) private document: Document) {
 		this.checkStatus();
+		this.translate.addLangs(['en', 'ar']);
+		this.subs.add(this.root.languages$.subscribe(language => {
+			if (language) {
+				this.translate.setDefaultLang(language);
+				this.translate.use(language);
+				this.changeLangage(language);
+				localStorage.setItem('lang', language);
+			}
+		}));
+		this.store.dispatch(new LoadLanguage());
+		this.store.dispatch(new LoadLabels('1'));
+	}
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
+	}
+	animate() {
+		this.animationState = false;
+		setTimeout(() => {
+			this.animationState = true;
+		});
 	}
 	onActivate = () => {
 		window.scroll(0, 0);
@@ -80,7 +108,7 @@ export class AppComponent implements OnInit {
 		this.store.dispatch(new LoadPrivacyPolicy(privacy_policy.code));
 		this.store.dispatch(new LoadNationality(search.code));
 		// detect route changing
-		this.router.events.pipe(filter(e => e instanceof NavigationEnd),
+		this.subs.add(this.router.events.pipe(filter(e => e instanceof NavigationEnd),
 			map((r: {
 				id: number;
 				url: string;
@@ -106,7 +134,7 @@ export class AppComponent implements OnInit {
 				const seoData = data.seo;
 				this.seoService.updateTitle(seoData.title);
 				this.seoService.updateMetaTags(seoData.metaTags);
-			});
+			}));
 		// scrolling
 		jQuery(() => {
 			($(window) as any).scroll(() => {
@@ -117,6 +145,32 @@ export class AppComponent implements OnInit {
 					$('body').removeClass('stick-header');
 				}
 			});
-		})
+		});
+		this.subs.add(this.root.flip$.subscribe(flip => {
+			if (flip) {
+				this.animate();
+			}
+		}));
+	}
+	changeLangage(lang: string) {
+		let htmlTag = this.document.getElementsByTagName("html")[0] as HTMLHtmlElement;
+		htmlTag.dir = lang === "ar" ? "rtl" : "ltr";
+		htmlTag.lang = lang === "ar" ? "ar" : "en";
+		this.changeCssFile(lang);
+	}
+	changeCssFile(lang: string) {
+		let headTag = this.document.getElementsByTagName("head")[0] as HTMLHeadElement;
+		let existingLink = this.document.getElementById("langCss") as HTMLLinkElement;
+		let bundleName = lang === "ar" ? "arabicStyle.css" : "englishStyle.css";
+		if (existingLink) {
+			existingLink.href = bundleName;
+		} else {
+			let newLink = this.document.createElement("link");
+			newLink.rel = "stylesheet";
+			newLink.type = "text/css";
+			newLink.id = "langCss";
+			newLink.href = bundleName;
+			headTag.appendChild(newLink);
+		}
 	}
 }

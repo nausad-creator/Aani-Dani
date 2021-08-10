@@ -7,13 +7,13 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 	template: `
     		<div class="modal-contents">
       			<div class="modal-header">
-        			<h5 class="modal-title ml-auto text-danger" id="exampleModalLabel">Alert </h5>
+        			<h5 class="modal-title ml-auto text-danger" id="exampleModalLabel">{{'alert' | translate}} </h5>
         			<button type="button" (click)="onClose()" class="close" data-dismiss="modal" aria-label="Close">
           			<span aria-hidden="true">&times;</span>
         			</button>
       			</div>
       			<div class="modal-body">
-        			<h5 class="text-center"> Please add address to avail this service.</h5>
+        			<h5 class="text-center"> {{'please_add_address_to_avail_this_service' | translate}}</h5>
 				<br>
 			<div class="text-center pb-3">
 				<button type="button" (click)="clickOnNavigate()" class="addcart-btn shopingcart-tbtn btn">Ok</button></div>

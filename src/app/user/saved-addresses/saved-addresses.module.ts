@@ -11,6 +11,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SharedAddressComponent } from './saved-addresses/shared-address.component';
 import { MyFilterAdressPipe } from './saved-addresses/add.pipe';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 		GooglePlaceModule,
 		NgxPaginationModule,
 		LazyLoadImageModule,
+		TranslateModule,
 		NgxSkeletonLoaderModule,
 		RouterModule.forChild([
 			{

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Nationality, TempOrders } from '../interface';
+import { Labels, Language, Nationality, TempOrders } from '../interface';
 
 export enum NationalityActionTypes {
 	LoadNationality = '[Nationality] Load Nationality',
@@ -51,4 +51,52 @@ export class LoadTempCartFailure implements Action {
 }
 
 export type TempCartActions = LoadTempCart | LoadTempCartSuccess | LoadTempCartFailure;
+
+// labels action
+export enum LabelsActionTypes {
+	LoadLabels = '[Labels] Load Labels',
+	LoadLabelsSuccess = '[Labels] Load Labels Success',
+	LoadLabelsFailure = '[Labels] Load Labels Failure',
+}
+
+export class LoadLabels implements Action {
+	readonly type = LabelsActionTypes.LoadLabels;
+	constructor(public languageID: string) { }
+}
+
+export class LoadLabelsSuccess implements Action {
+	readonly type = LabelsActionTypes.LoadLabelsSuccess;
+	constructor(public data: Labels) { }
+}
+
+export class LoadLabelsFailure implements Action {
+	readonly type = LabelsActionTypes.LoadLabelsFailure;
+	constructor(public temp: string, public payload: any) { }
+}
+
+export type LabelsActions = LoadLabels | LoadLabelsSuccess | LoadLabelsFailure;
+
+// language action
+export enum LanguageActionTypes {
+	LoadLanguage = '[Language] Load Language',
+	LoadLanguageSuccess = '[Language] Load Language Success',
+	LoadLanguageFailure = '[Language] Load Language Failure',
+}
+
+export class LoadLanguage implements Action {
+	readonly type = LanguageActionTypes.LoadLanguage;
+	constructor() { }
+}
+
+export class LoadLanguageSuccess implements Action {
+	readonly type = LanguageActionTypes.LoadLanguageSuccess;
+	constructor(public data: Language[]) { }
+}
+
+export class LoadLanguageFailure implements Action {
+	readonly type = LanguageActionTypes.LoadLanguageFailure;
+	constructor(public payload: any) { }
+}
+
+export type LanguageActions = LoadLanguage | LoadLanguageSuccess | LoadLanguageFailure;
 

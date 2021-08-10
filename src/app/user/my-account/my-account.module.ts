@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -21,6 +22,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
 		OwlDateTimeModule,
 		OwlNativeDateTimeModule,
 		NgxSkeletonLoaderModule,
+		TranslateModule,
 		RouterModule.forChild([
 			{
 				path: '',

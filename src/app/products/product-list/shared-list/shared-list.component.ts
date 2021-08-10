@@ -24,12 +24,18 @@ import { Store } from '@ngrx/store';
 		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
 		        <ul>
 		          <li class="drop-down categorymenu">
-		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
+		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> {{'all_category' | translate}}</a>
 		          		<ul>
-						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
+						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});" *ngFor="let category of categories">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});">{{category?.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});">{{(root.languages$
+											| async) === 'en' ?
+											category?.categoryName :
+											category?.categoryArabicName}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			
@@ -45,7 +51,7 @@ import { Store } from '@ngrx/store';
 			<div class="row">			
 				<div class="col-lg-3 col-md-4">
 					<div class="Mobilefilter">
-						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> Filter </a>
+						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> {{'filter' | translate}} </a>
 					</div>	
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event);" [categories]="categories$ | async"></app-shop-by-category>
@@ -59,7 +65,7 @@ import { Store } from '@ngrx/store';
 					<div class="category_slider card">
 						<app-sort-header (sortBy)="onSort($event);" [categoryName]="route.snapshot.queryParams?.categoryName"></app-sort-header>
 						<div class="sparetor_title">
-				    <h5 class="mb-0">{{product.itemscount ? 'Item ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')' : 'Item ' + '('+ '00' +')'}}</h5>
+				    <h5 class="mb-0">{{product.itemscount ? ('item' | translate) + ' ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')' : ('item' | translate) + ' ' + '('+ '00' +')'}}</h5>
 				    </div>
 					<app-items [products]="product.data" *ngIf="!loader"></app-items>
 					<app-skeleton *ngIf="loader"></app-skeleton>

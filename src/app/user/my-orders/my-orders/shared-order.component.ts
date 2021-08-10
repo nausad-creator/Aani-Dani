@@ -2,6 +2,7 @@ import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { fadeIn } from 'src/app/animation';
 import { Orders } from 'src/app/interface';
+import { RootService } from 'src/app/root.service';
 
 @Component({
 	selector: 'app-shared-order',
@@ -10,7 +11,7 @@ import { Orders } from 'src/app/interface';
 	<div class="card-header bg-white">
 		<div class="section-title row pb-0">
 			<div class="col-md-6">
-				<div class="brandcamp"><a routerLink="/">Home > </a> <span> My Orders</span> </div>
+				<div class="brandcamp"><a routerLink="/">{{'home' | translate}} > </a> <span> {{'my_orders' | translate}}</span> </div>
 			</div>
 
 		</div>
@@ -20,16 +21,16 @@ import { Orders } from 'src/app/interface';
 		<div class="orderDetailList" *ngFor="let order of orders">
 			<div class="headerOrder form-row m-0 align-items-center">
 				<div class="col-md-3 col-6">
-					<p class="mb-0">Order Placed <br> {{order.orderDate | date: 'mediumDate'}}</p>
+					<p class="mb-0">{{'order_placed' | translate}} <br> {{order.orderDate | date: 'mediumDate'}}</p>
 				</div>
 				<div class="col-md-3 col-6">
-					<p class="mb-0">Total <br> {{order.orderNetAmount | number}}</p>
+					<p class="mb-0">{{'total' | translate}} <br> {{order.orderNetAmount | number}}</p>
 				</div>
 				<div class="col-md-6 text-md-right mt-2 mt-md-0">
-					<p class="mb-0">Order # {{order.orderID | number}}</p>
+					<p class="mb-0">{{'order' | translate}} # {{order.orderID | number}}</p>
 					<div class="linksOrde">
-						<a class="mr-3" href="order-details.html">Order Details</a>
-						<a href="#">Invoice</a>
+						<a class="mr-3" href="order-details.html">{{'order_details' | translate}}</a>
+						<a href="#">{{'invoice' | translate}}</a>
 					</div>
 				</div>
 			</div>
@@ -41,25 +42,24 @@ import { Orders } from 'src/app/interface';
 							defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 							lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 							[errorImage]="'assets/images/error_not_found.png'"
-							[alt]="product?.productName" [title]="product?.productName">
+							[alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme" [title]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme">
 					</div>
 				</div>
 				<div class="col-md-5 col-8">
-					<p class="mb-0">{{product?.productName}}</p>
+					<p class="mb-0">{{(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme}}</p>
 					<p class="mb-0 qty">{{(product?.orderdetailsQty | number) + ' qty'}}</p>
 					<h6 class="mb-0"><b>{{(product?.productPrice | number) + ' SR'}}</b></h6>
 				</div>
 				<div class="col-md-5 text-md-right" *ngIf="i===0">
-					<p class="mb-0" *ngIf="order.orderDeliveryDate">Delivery Expected by
+					<p class="mb-0" *ngIf="order.orderDeliveryDate">{{'delivery_expected_by' | translate}}
 						{{order.orderDeliveryDate |
 						date: 'mediumDate'}}</p>
-					<p class="mb-0" *ngIf="order.statusName === 'Placed'">Your order has been placed
+					<p class="mb-0" *ngIf="order.statusName === 'Placed'">{{'your_order_has_been_placed' | translate}}
 					</p>
 					<div class="linksOrde pt-2">
-						<button type="button" class="btn btn-outline-secondary m-1">Track
-							Order</button>
+						<button type="button" class="btn btn-outline-secondary m-1">{{'tarck_order' | translate}}</button>
 						<button type="button"
-							class="btn btn-outline-secondary m-1">Reorder</button>
+							class="btn btn-outline-secondary m-1">{{'re_order' | translate}}</button>
 					</div>
 				</div>
 			</div>
@@ -80,7 +80,7 @@ import { Orders } from 'src/app/interface';
 })
 export class SharedOrderComponent implements OnInit {
 	@Input() orders: Orders[];
-	constructor() { }
+	constructor(public root: RootService) { }
 	ngOnInit(): void {
 	}
 

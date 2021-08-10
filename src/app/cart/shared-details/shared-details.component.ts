@@ -19,10 +19,10 @@ import { SubSink } from 'subsink';
 			<thead>
 				<tr>
 					<th></th>
-					<th>Product</th>
-					<th>Price</th>
-					<th>Quantity</th>
-					<th>Subtotal</th>
+					<th>{{'product' | translate}}</th>
+					<th>{{'price' | translate}}</th>
+					<th>{{'quantity' | translate}}</th>
+					<th>{{'subtotal' | translate}}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -36,10 +36,10 @@ import { SubSink } from 'subsink';
 								defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 								lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 								[errorImage]="'assets/images/error_not_found.png'"
-								width="80" [alt]="product?.productName"
-								[title]="product?.productName"></div>
+								width="80" [alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
+								[title]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"></div>
 					</td>
-					<td class="align-middle cursr" (click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})">{{product?.productName}}</td>
+					<td class="align-middle cursr" (click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})">{{(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme}}</td>
 					<td class="align-middle">{{(product?.productPrice | number) + ' SR'}}</td>
 					<td class="align-middle">
 						<div class="form-group mb-0 detailBtn">
@@ -70,7 +70,7 @@ import { SubSink } from 'subsink';
 	<div class="modal-contents">
 		<div class="modal-body">
 			<div class="pt-3">
-				<p class="text-center">Are you sure you want to remove this product?</p>
+				<p class="text-center">{{'are_you_sure_you_want_to_remove_this_product' | translate}}</p>
 				<div class="text-center p-3">
 					<button class="btn btn-default btn-sm btn-cancel pl-3 pr-3" (click)="decline()"
 						aria-label="Close"> No

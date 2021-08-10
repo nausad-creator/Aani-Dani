@@ -17,36 +17,36 @@ import { SubSink } from 'subsink';
 	<div class="AddressSidebar">
 		<div class="Sidebar-content">
 			<a (click)="changeQuery()" class="closeSidebar cursr">&times;</a>	
-			<h5>Save Delivery Address</h5>
-			<div id="map" style="height:250px;"></div>
+			<h5>{{'save_delivery_address' | translate}}</h5>
+			<div id="map" style="height:240px;"></div>
 			<form class="text-left form-addree" (ngSubmit)="add ? onClickAdd(addressAddEditForm.getRawValue()) : onClickUpdate(addressAddEditForm.getRawValue())" [formGroup]="addressAddEditForm">	
 				<div class="typeAddress">
 					<div class="row" *ngIf="address_Type.length > 0">
-						<div class="col-4" *ngFor="let item of address_Type"><a (click)="addressAddEditForm.get('addressType').patchValue(item.type); addressAddEditForm.get('addressTitle').patchValue(item.type)" [ngClass]="{'selected': item.type===addressAddEditForm.get('addressType').value}" class="cursr" name="addressType"><i class="icofont-home"></i> {{item.type}}</a></div>
+						<div class="col-4" *ngFor="let item of address_Type"><a (click)="addressAddEditForm.get('addressType').patchValue(item.type); addressAddEditForm.get('addressTitle').patchValue(item.type)" [ngClass]="{'selected': item.type===addressAddEditForm.get('addressType').value}" class="cursr" name="addressType"><i class="icofont-home"></i> {{item.type | translate}}</a></div>
 					</div>		
 				</div>	
 				<div class="form-group">
 				<input type="text" id="autoGoogle" formControlName="addressBlockNo" ngx-google-places-autocomplete
                     		[options]='options' #placesRef="ngx-places" (onAddressChange)="handleAddressAdd($event)"
-                    		class="form-control bg-white" placeholder="Address">
-                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressBlockNo'].hasError('required')">Please enter Address.</small>
+                    		class="form-control bg-white" [placeholder]="'address' | translate">
+                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressBlockNo'].hasError('required')">{{'please_enter_address' | translate}}</small>
 				</div>
 				<div class="form-group">
-				<input type="text" formControlName="addressBuildingName" id="House" class="form-control bg-white" placeholder="House No, Flat No">
-                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressBuildingName'].hasError('required')">Please enter House No, Flat No.</small>
+				<input type="text" formControlName="addressBuildingName" id="House" class="form-control bg-white" [placeholder]="'house_no_flat_no' | translate">
+                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressBuildingName'].hasError('required')">{{'please_enter_house_flat' | translate}}</small>
 				</div>
 				<div class="form-group">
-				<input type="text" formControlName="addressLandmark" id="Landmark" class="form-control bg-white" placeholder="Landmark">
-                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressLandmark'].hasError('required')">Please enter Landmark.</small>
+				<input type="text" formControlName="addressLandmark" id="Landmark" class="form-control bg-white" [placeholder]="'landmark' | translate">
+                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressLandmark'].hasError('required')">{{'please_enter_landmark' | translate}}</small>
 				</div>
 				<div class="form-group">
-				<input type="text" maxlength="10" id="Mobile" formControlName="addressMobile" class="form-control bg-white" placeholder="Mobile no">
-                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressMobile'].hasError('required')">Please enter mobile.</small>
-				<small class="text-danger" *ngIf="addressAddEditForm.controls['addressMobile'].hasError('pattern') && (addressAddEditForm.controls['addressMobile'].dirty || addressAddEditForm.controls['addressMobile'].touched)">Please enter valid number.</small>
+				<input type="text" maxlength="10" id="Mobile" formControlName="addressMobile" class="form-control bg-white" [placeholder]="'mobile_number' | translate">
+                    		<small class="text-danger small" *ngIf="addressAddEditForm.controls['addressMobile'].hasError('required')">{{'please_enter_mobile' | translate}}</small>
+				<small class="text-danger" *ngIf="addressAddEditForm.controls['addressMobile'].hasError('pattern') && (addressAddEditForm.controls['addressMobile'].dirty || addressAddEditForm.controls['addressMobile'].touched)">{{'please_enter_valid_mobile_number' | translate}}</small>
 				</div>
 				<div class="pt-3">
-                    		<small class="text-danger text-center small" *ngIf="addressAddEditForm.controls['addressType'].hasError('required')">Please select Address Type.</small>
-				<button type="submit" class="btn btn-them btn-md w-100"  data-toggle="modal"> {{preventAbuse ? 'Please wait...':'Save Address & Proceed'}}</button>
+                    		<small class="text-danger text-center small" *ngIf="addressAddEditForm.controls['addressType'].hasError('required')">{{'please_select_address_type' | translate}}</small>
+				<button type="submit" class="btn btn-them btn-md w-100"  data-toggle="modal"> {{preventAbuse ? ('please_wait' | translate) : 'Save Address & Proceed'}}</button>
 				</div>																						
 			</form>
 		</div>	
@@ -71,15 +71,15 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 	};
 	address_Type = [
 		{
-			type: 'Home',
+			type: 'home',
 			id: '1'
 		},
 		{
-			type: 'Work',
+			type: 'work',
 			id: '2'
 		},
 		{
-			type: 'Other',
+			type: 'other',
 			id: '3'
 		}
 	]

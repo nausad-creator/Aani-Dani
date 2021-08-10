@@ -4,7 +4,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 	selector: 'app-saved-card',
 	template: `
     		<div class="cartlist-conten">
-                              <p>Saved Cards</p>
+                              <p>{{'saved_cards' | translate}}</p>
 
                               <div class="saved-card mt-2">
                                   <div class="debitcarditem" *ngFor="let card of dummy_saved_card;">

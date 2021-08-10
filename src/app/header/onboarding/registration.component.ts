@@ -16,7 +16,7 @@ import { OtpRegisterComponent } from './otp.register.component';
     <!--Modal Signup -->
 		<div class="modal-contents">
 		  <div class="modal-header">
-		   <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Sign up</h5>
+		   <h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'sign_up' | translate}}</h5>
 		   <button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
 		  </div>
 		  <div class="modal-body">
@@ -24,56 +24,56 @@ import { OtpRegisterComponent } from './otp.register.component';
 				<div class="CandidateRegister">	
 				  <div class="form-row">
 					  <div class="col-md-12 col-sm-12 form-group">
-						 <input type="text" #userFullNameInput formControlName="userFullName" id="name" class="form-control" placeholder="Full Name*">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('required')">Please enter name.</small>
-						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('minlength')">Input fields will not be less than 3 characters.</small>
-                      	 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('maxlength')">Input fields will not be more than 60 characters.</small>
+						 <input type="text" #userFullNameInput formControlName="userFullName" id="name" class="form-control" [placeholder]="'full_name' | translate">
+						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('required')">{{'please_enter_name' | translate}}</small>
+						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('minlength')">{{'input_fields_will_not_be_less_than_3_characters' | translate}}</small>
+                      	 			 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters' | translate}}</small>
 					  </div> 
 					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" id="Email" #userEmailInput (keydown.space)="$event.preventDefault();" formControlName="userEmail" class="form-control" placeholder="Email Address*">
-						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('required')">Please enter email.</small>
+						<input type="text" id="Email" #userEmailInput (keydown.space)="$event.preventDefault();" formControlName="userEmail" class="form-control" [placeholder]="'email_address' | translate">
+						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('required')">{{'please_enter_email' | translate}}</small>
 						<small class="text-danger" *ngIf="registerForm.controls['userEmail'].hasError('emailAlreadyExist')">email already exist.</small>
-						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('pattern')">Please enter valid email.</small>
+						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email' | translate}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" maxlength="10" id="phone" #userMobileInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" class="form-control" placeholder="Mobile Number*">
-						<small class="text-danger small" *ngIf="registerForm.controls['userMobile'].hasError('required')">Please enter mobile.</small>
+						<input type="text" maxlength="10" id="phone" #userMobileInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" class="form-control" [placeholder]="'mobile_number' | translate">
+						<small class="text-danger small" *ngIf="registerForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile' | translate}}</small>
 						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('mobileExist')">mobile already exist.</small>
-						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('pattern') && (registerForm.controls['userMobile'].dirty || registerForm.controls['userMobile'].touched)">Please enter valid mobile number.</small>
+						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('pattern') && (registerForm.controls['userMobile'].dirty || registerForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number' | translate}}</small>
 					  </div>  
 					  <div class="col-md-12 col-sm-12 form-group">
 					  	 <a class="pasword-hideshow cursr" (click)="hideNew=!hideNew"><i class="fa " [ngClass]="{'fa-eye': !hideNew, 'fa-eye-slash': hideNew}"></i></a>
-						 <input type="password" [type]=" hideNew ? 'password' : 'text' " #userPasswordInput (keydown.space)="$event.preventDefault();" formControlName="userPassword" id="defaultPassword" class="form-control" placeholder="Password*">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userPassword'].hasError('required')">Please enter password.</small>
-						 <small class="text-danger" *ngIf="registerForm.controls['userPassword'].hasError('pattern') && (registerForm.controls['userPassword'].dirty || registerForm.controls['userPassword'].touched)">Password needs to be at least eight characters, one uppercase letter and one number.</small>
+						 <input type="password" [type]=" hideNew ? 'password' : 'text' " #userPasswordInput (keydown.space)="$event.preventDefault();" formControlName="userPassword" id="defaultPassword" class="form-control" [placeholder]="'password' | translate">
+						 <small class="text-danger small" *ngIf="registerForm.controls['userPassword'].hasError('required')">{{'please_enter_password' | translate}}</small>
+						 <small class="text-danger" *ngIf="registerForm.controls['userPassword'].hasError('pattern') && (registerForm.controls['userPassword'].dirty || registerForm.controls['userPassword'].touched)">{{'password_with_8_char_uppercase_and_number' | translate}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
 					  	 <a class="pasword-hideshow cursr" (click)="hideReenter=!hideReenter"><i class="fa " [ngClass]="{'fa-eye': !hideReenter, 'fa-eye-slash': hideReenter}"></i></a>
-						 <input type="password" [type]=" hideReenter ? 'password' : 'text' " #userRePasswordInput (keydown.space)="$event.preventDefault();" formControlName="userRePassword" id="confirmtPassword" class="form-control" placeholder="Confirm Password*">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userRePassword'].hasError('required')">Please re-enter password.</small>
-						 <small class="text-danger " *ngIf="registerForm.hasError('confirmedValidator')">Re-enter Password is not match.</small>
+						 <input type="password" [type]=" hideReenter ? 'password' : 'text' " #userRePasswordInput (keydown.space)="$event.preventDefault();" formControlName="userRePassword" id="confirmtPassword" class="form-control" [placeholder]="'confirm_password' | translate">
+						 <small class="text-danger small" *ngIf="registerForm.controls['userRePassword'].hasError('required')">{{'please_re_enter_password' | translate}}</small>
+						 <small class="text-danger " *ngIf="registerForm.hasError('confirmedValidator')">{{'re_entered_password_is_not_match' | translate}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
 					    <a class="pasword-hideshow cursr"><i [owlDateTimeTrigger]="dt5" class="fa fa-calendar"></i></a>
 					    <input class="form-control" #userDOBInput [owlDateTimeTrigger]="dt5" (keydown)="$event.preventDefault();" maxlength=14 [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
-                         <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
-						 <small class="text-danger small" *ngIf="registerForm.controls['userDOB'].hasError('required')">Please select DOB.</small>
+                         		    <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+					    <small class="text-danger small" *ngIf="registerForm.controls['userDOB'].hasError('required')">{{'please_select_dob' | translate}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
 					  <ng-select [closeOnSelect]="true" [searchable]="true" bindLabel="nationalityName" bindValue="nationalityID"
-                  	   appearance="outline" #userNationInput formControlName="nationalityID" [items]="nationalities$ | async"
-                  	   [clearable]="true" class="custom" placeholder="Select Nationality*">
-               		   </ng-select>
-					  <small class="text-danger small" *ngIf="registerForm.controls['nationalityID'].hasError('required')">Please select nationality.</small>
+                  	   			appearance="outline" #userNationInput formControlName="nationalityID" [items]="nationalities$ | async"
+                  	   			[clearable]="true" class="custom" [placeholder]="'select_nationality' | translate">
+               		   		</ng-select>
+					  <small class="text-danger small" *ngIf="registerForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality' | translate}}</small>
 					  </div>			
 				  </div> 
 				  <div class="form-row pt-3">
 					  <div class="col">
-						<button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100" data-toggle="modal" data-target="#OTPVerification">{{ preventAbuse ? 'Wait..' : 'Sign Up' }}</button>
+						<button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? ('wait' | translate) : ('sign_up' | translate) }}</button>
 					  </div> 
 				  </div>  	
 				  <div class="pt-3 signupbtn text-center">
-					  <span>Already having account?</span> <a class="cursr ml-1" (click)="openlogin()" data-toggle="modal">Login</a>
+					  <span>{{'already_having_account' | translate}}?</span> <a class="cursr ml-1" (click)="openlogin()" data-toggle="modal">Login</a>
 				  </div> 
 				</div> 						
 			  </form>

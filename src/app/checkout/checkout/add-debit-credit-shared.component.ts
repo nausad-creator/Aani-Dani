@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     		<div class="addressContent">
                             <div class="controlgroup" style="padding-left:20px;">
                               <label class="control control--radio" for="Debit"> 
-                                <input type="radio" name="defaultExampleRadios" class="form-check-input" id="Debit">Add Credit/ Debit Card</label>						
+                                <input type="radio" name="defaultExampleRadios" class="form-check-input" id="Debit">{{'add_credit_debit' | translate}}</label>						
                           </div>	
                           <form class="text-left form-paymeny pt-2">							
                             <div class="form-row">
@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
                               <div class="col-md-12 col-sm-12">
                                   <div class="custom-control custom-checkbox mb-3">
                                     <input type="checkbox" class="custom-control-input" id="Save" name="Save1">
-                                    <label class="custom-control-label" for="Save"> Save details for future transactions</label>
+                                    <label class="custom-control-label" for="Save"> {{'save_details_for_future_use' | translate}}</label>
                                   </div>
                               </div>
                               <div class="col-md-12 col-sm-12">

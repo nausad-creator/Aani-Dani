@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { SubSink } from 'subsink';
 import { AuthenticationService } from '../authentication.service';
 import { data } from 'src/app/global';
@@ -113,7 +113,7 @@ import { data } from 'src/app/global';
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
+export class LandingComponent implements OnInit, OnDestroy {
 	subs = new SubSink();
 	isLoggedID: boolean;
 	userName: string;
@@ -125,8 +125,6 @@ export class LandingComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
-	}
-	ngAfterViewInit(): void {
 	}
 	checkStatus = () => {
 		// getting auth user data

@@ -15,13 +15,13 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { SeoService } from './seo.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
-import { flipAnimation } from 'angular-animations';
+import { shakeAnimation } from 'angular-animations';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	animations: [
-		flipAnimation({}),
+		shakeAnimation({ delay: 200 }),
 	]
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(
 		private store: Store<State>,
 		private auth: AuthenticationService,
-		private root: RootService,
+		public root: RootService,
 		private cookie: CookieService,
 		private router: Router,
 		private activatedRoute: ActivatedRoute,

@@ -1,4 +1,5 @@
-<div [@flip]="animationState">
+<div [@shake]="animationState">
 	<router-outlet (activate)="onActivate()"></router-outlet>
+	<ng-progress [direction]="(root.languages$ | async) === 'ar' ? 'rtl-' : 'ltr+'" [fixed]="true"
+		class="root-progress-bar" [thick]="true" [meteor]="false" [spinner]="false"></ng-progress>
 </div>
-<ng-progress class="root-progress-bar" [thick]="true" [meteor]="false" [spinner]="false"></ng-progress>

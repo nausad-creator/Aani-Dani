@@ -202,5 +202,15 @@
   "popular_item": "عنصر شعبي",
   "price_low_to_high": "السعر من الارخص للاعلى",
   "price_high_to_low": "السعر الاعلى الى الادنى",
-  "your_order": "طلبك"
+  "your_order": "طلبك",
+  "last_30_days": "آخر 30 يومًا",
+  "last_60_days": "آخر 60 يومًا",
+  "last_90_days": "آخر 90 يومًا",
+  "last_1_year": "العام الماضي",
+  "card_number": "رقم البطاقة",
+  "enter_card_holder_name": "إسم صاحب البطاقة",
+  "pay_now": "ادفع الآن",
+  "cash_on_delivery": "الدفع عند الاستلام",
+  "order_id": "رقم التعريف الخاص بالطلب",
+  "save_address_and_proceed": "حفظ العنوان والمتابعة"
 }

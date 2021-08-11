@@ -11,10 +11,10 @@ import { Component } from '@angular/core';
                           <form class="text-left form-paymeny pt-2">							
                             <div class="form-row">
                                 <div class="col-md-12 col-sm-12">
-                                <div class="form-group"><input type="text" id="CardNumber" class="form-control bg-white" placeholder="Card Number"></div>
+                                <div class="form-group"><input type="text" id="CardNumber" class="form-control bg-white" [placeholder]="'card_number' | translate"></div>
                               </div>
                               <div class="col-md-12 col-sm-12">
-                                <div class="form-group is-empty"><input type="text" id="defaultRegisterFormFirstName" class="form-control bg-white" placeholder="Enter Holder Name"><span class="material-input"></span></div>
+                                <div class="form-group is-empty"><input type="text" id="defaultRegisterFormFirstName" class="form-control bg-white" [placeholder]="'enter_card_holder_name' | translate"><span class="material-input"></span></div>
                               </div>										 							
                               <div class="col-md-6 col-sm-6">
                                 <div class="form-group"><input type="date" class="form-control bg-white" placeholder="Valid Till(MM/YY)"></div>
@@ -30,7 +30,7 @@ import { Component } from '@angular/core';
                               </div>
                               <div class="col-md-12 col-sm-12">
                                   <div class="pt-3">
-                                      <a href="javascript:voil(0)" class="apply-btn shopingcart-tbtn btn"> Pay Now</a>
+                                      <a href="javascript:voil(0)" class="apply-btn shopingcart-tbtn btn"> {{'pay_now' | translate}}</a>
                                   </div>
                               </div>											
                             </div>																		

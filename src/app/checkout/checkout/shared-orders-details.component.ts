@@ -77,7 +77,7 @@ import { RootService } from 'src/app/root.service';
 			<button (click)="place.emit(orderNote.value)" type="button" class="btn btn-them w-100">
 				<span class="spinner-border spinner-border-sm" style="margin: 1px;" role="status"
 					aria-hidden="true" *ngIf="preventAbuse"></span>
-				{{preventAbuse ? ('please_wait' | translate) : ('proceed_to_pay' | translate)}}</button>
+				{{preventAbuse ? ('please_wait...' | translate) : ('proceed_to_pay' | translate)}}</button>
 		</div>
 	</div>
 </div>

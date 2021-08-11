@@ -26,7 +26,7 @@ import { RootService } from '../root.service';
 										class="icofont-navigation-menu mr-2"></i>{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
-											[queryParams]="{page: '0', categoryID: category?.categoryID}"
+											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}"
 											*ngFor="let category of categories">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
@@ -35,7 +35,7 @@ import { RootService } from '../root.service';
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{(root.languages$
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
 											category?.categoryArabicName}}</a></li>

@@ -8,7 +8,7 @@ import { RootService } from 'src/app/root.service';
     <div class="filterLeftContent card" *ngIf="categories">
 	<h5 class="mb-0">{{'shop_by_categories' | translate}}</h5>	
 		<div class="listcategory" *ngFor="let category of categories">
-			<a class="cursr" (click)="change.emit({categoryID: category?.categoryID, categoryName: category?.categoryName})">{{(root.languages$
+			<a class="cursr" (click)="change.emit(category)">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
 											category?.categoryArabicName}}</a>
@@ -21,7 +21,7 @@ import { RootService } from 'src/app/root.service';
 export class ShopByCategoryComponent implements OnInit {
 
 	@Input() categories: Category[] = []
-	@Output() change = new EventEmitter<{ categoryID: string, categoryName: string }>();
+	@Output() change = new EventEmitter<Category>();
 
 	constructor(public root: RootService) { }
 

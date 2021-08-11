@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject, Observable, of, merge, timer } from 'rxjs';
@@ -28,7 +28,7 @@ import { SubSink } from 'subsink';
 										{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
-											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}"
+											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}"
 											*ngFor="let category of categories">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
@@ -37,7 +37,7 @@ import { SubSink } from 'subsink';
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}">{{(root.languages$
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
 											category?.categoryArabicName}}</a></li>
@@ -77,7 +77,7 @@ import { SubSink } from 'subsink';
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SharedComponent implements OnInit, OnDestroy {
 	data = {
 		loginuserID: '1',
 		languageID: '1',
@@ -175,55 +175,6 @@ export class SharedComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.forceReload$.next();
 			}
 		}));
-	}
-	ngAfterViewInit(): void {
-		jQuery(() => {
-			// Mobile Navigation
-			if ($('.nav-menu').length) {
-				var $mobile_nav = $('.nav-menu').clone().prop({
-					class: 'mobile-nav d-lg-none'
-				});
-				$('body').append($mobile_nav);
-				$('body').prepend('<button type="button" class="mobile-nav-toggle d-lg-none"><i class="icofont-navigation-menu"></i></button>');
-				$('body').append('<div class="mobile-nav-overly"></div>');
-
-				$(document).on('click', '.mobile-nav-toggle', function (e) {
-					$('body').toggleClass('mobile-nav-active');
-					$('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
-					$('.mobile-nav-overly').toggle();
-				});
-
-				$(document).on('click', '.mobile-nav .drop-down > a', function (e) {
-					e.preventDefault();
-					$(this).next().slideToggle(300);
-					$(this).parent().toggleClass('active');
-				});
-
-				$(document).on('click', function (e) {
-					var container = $(".mobile-nav, .mobile-nav-toggle");
-					if (!container.is(e.target.nodeName) && container.has(e.target.nodeName).length === 0) {
-						if ($('body').hasClass('mobile-nav-active')) {
-							$('body').removeClass('mobile-nav-active');
-							$('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
-							$('.mobile-nav-overly').fadeOut();
-						}
-					}
-				});
-			} else if ($(".mobile-nav, .mobile-nav-toggle").length) {
-				$(".mobile-nav, .mobile-nav-toggle").hide();
-			}
-			// Stick the header at top on scroll
-			($("#header") as any).sticky({
-				topSpacing: 0,
-				zIndex: '50'
-			});
-			// Real view height for mobile devices
-			if (window.matchMedia("(max-width: 767px)").matches) {
-				($('#hero') as any).css({
-					height: $(window).height()
-				});
-			}
-		});
 	}
 	updateCart = () => {
 		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];

@@ -10,7 +10,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
         <div class="contenttopText text-center">
         	<div class="p-3 checkIcon"><i class="fas fa-check-circle text-success"></i></div>
         	<h5 class="">{{'order_successfully_placed' | translate}}</h5>
-        	<small>Order ID: {{list[0].orderID}}</small>
+        	<small>{{'order_id' | translate}}: {{list[0].orderID}}</small>
         	<p class="pt-3">{{'thanks_for_placing_order_with_us' | translate}}</p>
         	<p class="mb-0">{{'query_and_further_information_contact_customer_support' | translate}}</p>        	
         </div>	

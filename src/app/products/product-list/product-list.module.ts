@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedListComponent } from './shared-list/shared-list.component';
+import { ArabicPipe, EnglishPipe, SharedListComponent } from './shared-list/shared-list.component';
 import { ShopByCategoryComponent } from './shop-by-category/shop-by-category.component';
 import { FilterByPriceComponent } from './filter-by-price/filter-by-price.component';
 import { TopSellingComponent } from './top-selling/top-selling.component';
@@ -27,7 +27,9 @@ import { SkeletonTopSellingComponent } from './skeleton/skeleton-top-selling.com
 		ItemsComponent,
 		SortHeaderComponent,
 		SkeletonComponent,
-		SkeletonTopSellingComponent
+		SkeletonTopSellingComponent,
+		EnglishPipe,
+		ArabicPipe
 	],
 	imports: [
 		CommonModule,

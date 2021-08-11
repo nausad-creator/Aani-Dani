@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { fadeIn } from 'src/app/animation';
 import { Category } from 'src/app/interface';
@@ -22,7 +22,7 @@ import { RootService } from 'src/app/root.service';
           <div class="category_slider">
               <owl-carousel-o [options]="caseOptions">
               <ng-template carouselSlide *ngFor="let category of categories">
-              <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName}" [@fadeIn]>
+              <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}" [@fadeIn]>
                     <div class="form-row">
                         <div class="col-4">
                             <div class="catImgBox"><img offset="50"
@@ -54,7 +54,7 @@ import { RootService } from 'src/app/root.service';
 		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MostPopularBestSellerComponent implements OnInit, AfterViewInit {
+export class MostPopularBestSellerComponent {
 	@Input() categories: Category[] = []
 	caseOptions: OwlOptions = {
 		dots: false,
@@ -81,8 +81,4 @@ export class MostPopularBestSellerComponent implements OnInit, AfterViewInit {
 		}
 	};
 	constructor(public root: RootService) { }
-	ngAfterViewInit(): void {
-	}
-	ngOnInit(): void {
-	}
 }

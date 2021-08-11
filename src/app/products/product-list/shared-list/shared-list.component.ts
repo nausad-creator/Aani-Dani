@@ -14,70 +14,89 @@ import { Store } from '@ngrx/store';
 @Component({
 	selector: 'app-shared-list',
 	template: `
-	<app-header></app-header> <!-- Top Bar -->
-	<!-- Header -->
-	<header id="header">
-    <div class="container">
-	    <div class="">		    
-	      <div class="menu-content">
-	      	<div class="main-menu d-flex align-items-center">
-		      <nav class="nav-menu d-none d-lg-block" *ngIf="categories$ | async as categories">
-		        <ul>
-		          <li class="drop-down categorymenu">
-		          		<a class="maindrop cursr"><i class="icofont-navigation-menu mr-2"></i> {{'all_category' | translate}}</a>
-		          		<ul>
-						  <li><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});" *ngFor="let category of categories">{{(root.languages$
+<app-header></app-header>
+<!-- Header -->
+<header id="header">
+	<div class="container">
+		<div class="">
+			<div class="menu-content">
+				<div class="main-menu d-flex align-items-center">
+					<nav class="nav-menu d-none d-lg-block"
+						*ngIf="categories$ | async as categories">
+						<ul>
+							<li class="drop-down categorymenu">
+								<a class="maindrop cursr"><i
+										class="icofont-navigation-menu mr-2"></i>
+									{{'all_category' | translate}}</a>
+								<ul>
+									<li><a class="cursr"
+											(click)="onChange(category);"
+											*ngFor="let category of categories">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
-											category?.categoryArabicName}}</a></li>
-		          		</ul>	
-		          </li>
-		          <li *ngFor="let category of categories"><a class="cursr" (click)="onChange({categoryID: category?.categoryID, categoryName: category?.categoryName});">{{(root.languages$
-											| async) === 'en' ?
-											category?.categoryName :
-											category?.categoryArabicName}}</a></li>		  
-		        </ul>
-		      </nav><!-- .nav-menu -->			
-			</div> 			
-		  </div>
-		</div>  	  
-    </div>
-  </header>
-  <!-- End Header -->
-    <main id="main">
-  	<!--start Listing area-->
-    <section id="product-list-section" class="pb-3 pt-4">
+											category?.categoryArabicName}}</a>
+									</li>
+								</ul>
+							</li>
+							<li *ngFor="let category of categories"><a class="cursr"
+									(click)="onChange(category);">{{(root.languages$
+									| async) === 'en' ?
+									category?.categoryName :
+									category?.categoryArabicName}}</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<!-- End Header -->
+<main id="main">
+	<section id="product-list-section" class="pb-3 pt-4">
 		<div class="container">
-			<div class="row">			
+			<div class="row">
 				<div class="col-lg-3 col-md-4">
 					<div class="Mobilefilter">
-						<a href="#" class="FilterHandale"><i class="icofont-filter"></i> {{'filter' | translate}} </a>
-					</div>	
+						<a href="#" class="FilterHandale"><i class="icofont-filter"></i>
+							{{'filter' | translate}} </a>
+					</div>
 					<div class="filterSection">
-						<app-shop-by-category (change)="onChange($event);" [categories]="categories$ | async"></app-shop-by-category>
-						<app-filter-by-price [preventAbuse]="preventAbuse" (filterByPrice)="onFilter($event); preventAbuse=true"></app-filter-by-price>
-						<app-top-selling [products]="product.bestselling" *ngIf="!loader"></app-top-selling>
+						<app-shop-by-category (change)="onChange($event);"
+							[categories]="categories$ | async"></app-shop-by-category>
+						<app-filter-by-price [preventAbuse]="preventAbuse"
+							(filterByPrice)="onFilter($event); preventAbuse=true">
+						</app-filter-by-price>
+						<app-top-selling [products]="product.bestselling" *ngIf="!loader">
+						</app-top-selling>
 						<app-skeleton-top-selling *ngIf="loader"></app-skeleton-top-selling>
 					</div>
 					<br>
 				</div>
-				<div class="lefprolist mb-3 col-lg-9 col-md-8">	
+				<div class="lefprolist mb-3 col-lg-9 col-md-8">
 					<div class="category_slider card">
-						<app-sort-header (sortBy)="onSort($event);" [categoryName]="route.snapshot.queryParams?.categoryName"></app-sort-header>
+						<app-sort-header (sortBy)="onSort($event);"
+							[categoryName]="(root.languages$
+									| async) === 'en' ?
+									(route.snapshot.queryParams?.categoryName | splitEnglish) :
+									(route.snapshot.queryParams?.categoryName | splitArabic)">
+						</app-sort-header>
 						<div class="sparetor_title">
-				    <h5 class="mb-0">{{product.itemscount ? ('item' | translate) + ' ' + '('+ (+product.itemscount<10?'0'+product.itemscount:product.itemscount) +')' : ('item' | translate) + ' ' + '('+ '00' +')'}}</h5>
-				    </div>
-					<app-items [products]="product.data" *ngIf="!loader"></app-items>
-					<app-skeleton *ngIf="loader"></app-skeleton>
-					</div>				
+							<h5 class="mb-0">{{product.itemscount ? ('item' | translate) + '
+								' + '('+ (+product.itemscount
+								<10?'0'+product.itemscount:product.itemscount) +')' :
+									('item' | translate) + ' ' + '(' + '00'
+									+')'}}</h5>
+						</div>
+						<app-items [products]="product.data" *ngIf="!loader"></app-items>
+						<app-skeleton *ngIf="loader"></app-skeleton>
+					</div>
 				</div>
-			</div>	
-		</div>		
-    </section>
-    <!--end Listing area-->
-  </main><!-- End #main -->
-  <app-footer></app-footer> <!-- Footer Section -->
-  <app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
+			</div>
+		</div>
+	</section>
+</main>
+<app-footer></app-footer>
+<app-scroll-to-top></app-scroll-to-top>
   `,
 	styles: [
 	], changeDetection: ChangeDetectionStrategy.OnPush
@@ -88,7 +107,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
-		private root: RootService,
+		public root: RootService,
 		private auth: AuthenticationService,
 		public route: ActivatedRoute,
 		private cd: ChangeDetectorRef
@@ -122,7 +141,6 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		message: '',
 		status: ''
 	};
-	changedCountHeader: number;
 	products$: Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }> = of(null);
 	forceReload$ = new Subject<void>();
 	getProducts = (t: string) => {
@@ -201,23 +219,23 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngOnInit(): void {
 		// query changes
 		data.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		data.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'null';
+		data.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'undefined';
 		data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
 		this.products(JSON.stringify(data));
 	}
-	onChange = async (category: { categoryID: string, categoryName: string }) => {
+	onChange = async (category: Category) => {
 		if (category?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
 			// query changes
 			this.loader = true;
 			dataChange.page = '0';
 			dataChange.categoryID = category?.categoryID ? category?.categoryID : '0';
-			dataChange.categoryName = category?.categoryName ? category?.categoryName : 'null';
+			dataChange.categoryName = category?.categoryName ? category?.categoryName : 'undefined';
 			this.products(JSON.stringify(dataChange));
 			// updating query-param
 			data.page = '0';
 			data.categoryID = category?.categoryID ? category?.categoryID : '0';
-			data.categoryName = category?.categoryName ? category?.categoryName : 'null';
-			const queryParams: Params = { page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName };
+			data.categoryName = category?.categoryName ? category?.categoryName : 'undefined';
+			const queryParams: Params = { page: '0', categoryID: category?.categoryID, categoryName: `${category?.categoryName}_${category?.categoryArabicName}` };
 			this.router.navigate([],
 				{
 					relativeTo: this.route,
@@ -315,5 +333,29 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 				$(this).toggleClass("ShowClose");
 			});
 		})
+	}
+}
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+	name: 'splitArabic'
+})
+export class ArabicPipe implements PipeTransform {
+	transform(name: string): string {
+		if (name == "" || name == null) {
+			name = "undefined";
+		}
+		return name.split("_")[1];
+	}
+}
+@Pipe({
+	name: 'splitEnglish'
+})
+export class EnglishPipe implements PipeTransform {
+	transform(name: string): string {
+		if (name == "" || name == null) {
+			name = "undefined";
+		}
+		return name.split("_")[0];
 	}
 }

@@ -46,7 +46,7 @@ import { SubSink } from 'subsink';
 				</div>
 				<div class="pt-3">
                     		<small class="text-danger text-center small" *ngIf="addressAddEditForm.controls['addressType'].hasError('required')">{{'please_select_address_type' | translate}}</small>
-				<button type="submit" class="btn btn-them btn-md w-100"  data-toggle="modal"> {{preventAbuse ? ('please_wait' | translate) : 'Save Address & Proceed'}}</button>
+				<button type="submit" class="btn btn-them btn-md w-100"  data-toggle="modal"> {{preventAbuse ? ('please_wait...' | translate) : ('save_address_and_proceed' | translate)}}</button>
 				</div>																						
 			</form>
 		</div>	

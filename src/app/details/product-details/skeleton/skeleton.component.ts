@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RootService } from 'src/app/root.service';
 
 @Component({
 	selector: 'app-skeleton',
@@ -12,19 +13,28 @@ import { Component, OnInit } from '@angular/core';
                 </div>	
                 <div class="col-lg-7 col-md-7">	
                     <div class="detailInfo">
-                      <ngx-skeleton-loader count="1" [theme]="{ height: '22px', 'margin-bottom': '0px', width: '60%' }"></ngx-skeleton-loader>	
-                        <div class="productInfo mt-2">
+                      <ngx-skeleton-loader count="1" [theme]="{ height: '22px', 'margin-bottom': '0px', width: '50%' }"></ngx-skeleton-loader>	
+                        <div class="productInfo mt-2" *ngIf="(root.languages$ | async) === 'ar'">
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'margin-right': '5px', 'border-radius': '50px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-right': '5px' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-right': '5px' }"></ngx-skeleton-loader>
+			  <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-right': '5px' }"></ngx-skeleton-loader>
+                          <br>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '25%' }"></ngx-skeleton-loader>
+                          </div>
+			  <div class="productInfo mt-2" *ngIf="(root.languages$ | async) === 'en'">
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px' }"></ngx-skeleton-loader>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'margin-left': '5px', 'border-radius': '50px' }"></ngx-skeleton-loader>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
 			  <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
                           <br>
-                          <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '35%' }"></ngx-skeleton-loader>
+                          <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '25%' }"></ngx-skeleton-loader>
                           </div>
                           <div class="align-items-center detailPrice mt-2">
                               <div class="price_text mt-3">
-                              <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '16%', 'border-radius': '5px' }"></ngx-skeleton-loader>
+                              <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '26%', 'border-radius': '5px' }"></ngx-skeleton-loader>
                               <!-- <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '16%', 'border-radius': '5px', 'margin-left': '5px' }"></ngx-skeleton-loader> -->
 			</div>
                           </div>
@@ -69,9 +79,9 @@ import { Component, OnInit } from '@angular/core';
                           <div class="productListingPage">
                               <div class="slider_itemBoxskeleton">
                                     <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '220px', height: '200px'}"></ngx-skeleton-loader>
-                                    <div class="content_textContent">
+                                    <div class="justify-content-center">
                                         <ngx-skeleton-loader count="1" [theme]="{ height: '15px', 'margin-bottom': '0px', width: '80%' }"></ngx-skeleton-loader>
-                                        <div class="form-group select_unit mb-1 mt-2">
+                                        <div class="justify-content-center mb-1 mt-2">
                                             <ngx-skeleton-loader count="1" [theme]="{ height: '30px', 'margin-bottom': '0px', width: '36%', 'border-radius': '20px' }"></ngx-skeleton-loader>
                                         </div>
                                         <div class="align-items-center justify-content-center">
@@ -101,7 +111,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SkeletonComponent implements OnInit {
 
-	constructor() { }
+	constructor(public root: RootService) { }
 
 	ngOnInit(): void {
 	}

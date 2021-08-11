@@ -29,7 +29,7 @@ import { SubSink } from 'subsink';
 										{{'all_category' | translate}}</a>
 								<ul>
 									<li><a routerLink="/products"
-											[queryParams]="{page: '0', categoryID: category?.categoryID}"
+											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}"
 											*ngFor="let category of categories">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
@@ -38,7 +38,7 @@ import { SubSink } from 'subsink';
 							</li>
 							<li *ngFor="let category of categories"><a
 									routerLink="/products"
-									[queryParams]="{page: '0', categoryID: category?.categoryID}">{{(root.languages$
+									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?
 											category?.categoryName :
 											category?.categoryArabicName}}</a></li>

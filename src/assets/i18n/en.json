@@ -202,5 +202,15 @@
   "popular_item": "Popular Item",
   "price_low_to_high": "Price low to high",
   "price_high_to_low": "Price high to low",
-  "your_order": "Your Order"
+  "your_order": "Your Order",
+  "last_30_days": "Last 30 days",
+  "last_60_days": "Last 60 days",
+  "last_90_days": "Last 90 days",
+  "last_1_year": "Last 1 year",
+  "card_number": "Card Number",
+  "enter_card_holder_name": "Card Holder Name",
+  "pay_now": "Pay Now",
+  "cash_on_delivery": "Cash on Delivery",
+  "order_id": "Order ID",
+  "save_address_and_proceed": "Save Address & Proceed"
 }

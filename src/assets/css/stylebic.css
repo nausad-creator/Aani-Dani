@@ -4541,3 +4541,9 @@ html {
   left: 10px;
   right: auto;
 }
+
+.Sidebar-content {
+  left: 0;
+  right: auto;
+  transform: translateX(-150%);
+}

@@ -8,6 +8,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
 	declarations: [
@@ -19,6 +20,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 		ReactiveFormsModule,
 		FormsModule,
 		NgSelectModule,
+		TranslateModule,
 		NgxPaginationModule,
 		LazyLoadImageModule,
 		NgxSkeletonLoaderModule,

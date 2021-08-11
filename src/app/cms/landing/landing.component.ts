@@ -22,10 +22,10 @@ import { SubSink } from 'subsink';
 		          <li class="drop-down categorymenu">
 		          		<a class="maindrop" href="#"><i class="icofont-navigation-menu mr-2"></i> All Category</a>
 		          		<ul>
-						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
+						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID}">{{category?.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			

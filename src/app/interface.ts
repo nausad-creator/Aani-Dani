@@ -66,6 +66,39 @@ export interface ProductList {
 	isFavorite: string;
 	similarproducts: SimilarProducts[];
 }
+export interface ProductListDetails {
+	productID: string;
+	categoryID: string;
+	subcatID: string;
+	addedCartCount: number;
+	productName: string;
+	productArabicNme: string;
+	productSKU: string;
+	productTag: string;
+	productDescription: string;
+	productPriceVat: string;
+	productPrice: string;
+	productMOQ: string;
+	productImage: string;
+	productPackagesize: string;
+	productReviewCount: string;
+	productRatingCount: string;
+	productRatingAvg: string;
+	productSoldCount: string;
+	productStatus: string;
+	productCreatedDate: string;
+	categoryName: string;
+	isFavorite: string;
+	similarproducts: SimilarProducts[];
+	productImageArray: string[];
+	productImageArrayCopy: {
+		src_id: string;
+		src_name_eng: string;
+		src_name_arb: string;
+		src_img: string;
+		src: string;
+	}[];
+}
 export interface SimilarProducts {
 	productID: string;
 	categoryID: string;

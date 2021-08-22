@@ -114,7 +114,24 @@ export class SharedComponent implements OnInit, OnDestroy {
 				productPriceVat: a.productPriceVat,
 				productPrice: a.productPrice,
 				productMOQ: a.productMOQ,
-				productImage: a.productImage,
+				productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
+				productImageArray: a.productImage ? a.productImage.split(',').map(str => {
+					return {
+						src_id: `str_${Math.random()}`,
+						src_name_eng: `${a.productName}`,
+						src_name_arb: `${a.productArabicNme}`,
+						src_img: str
+					}
+				}) : [],
+				productImageArrayCopy: a.productImage ? a.productImage.split(',').map(str => {
+					return {
+						src_id: `str_${Math.random()}`,
+						src_name_eng: `${a.productName}`,
+						src_name_arb: `${a.productArabicNme}`,
+						src_img: str,
+						src: `http://164.52.209.69/aanidani/backend/web/uploads/products/${str}`
+					}
+				}) : [],
 				productPackagesize: a.productPackagesize,
 				productReviewCount: a.productReviewCount,
 				productRatingCount: a.productRatingCount,
@@ -137,7 +154,15 @@ export class SharedComponent implements OnInit, OnDestroy {
 						productPriceVat: pr.productPriceVat,
 						productPrice: pr.productPrice,
 						productMOQ: pr.productMOQ,
-						productImage: pr.productImage,
+						productImage: pr.productImage ? pr.productImage.split(',')[0] : 'xyz.png',
+						productImageArray: pr.productImage ? pr.productImage.split(',').map(str => {
+							return {
+								src_id: `str_${Math.random()}`,
+								src_name_eng: `${pr.productName}`,
+								src_name_arb: `${pr.productArabicNme}`,
+								src_img: str
+							}
+						}) : [],
 						productPackagesize: pr.productPackagesize,
 						productReviewCount: pr.productReviewCount,
 						productRatingCount: pr.productRatingCount,

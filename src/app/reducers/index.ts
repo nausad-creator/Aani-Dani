@@ -1,9 +1,11 @@
 import { ActionReducerMap, createSelector, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import { ProductList } from '../interface';
 import { categoriesReducer, CategoryState } from './categories.reducer';
 import { AboutUsState, about_usReducer, faqsReducer, FaqsState, PrivacyPolicyState, privacy_policyReducer, TermsCondtionState, terms_conditionReducer } from './cms.reducers';
 import { homeReducer, HomeState } from './home.reducer';
 import { LabelsReducer, LabelsState, LanguageReducer, LanguageState, NationalityReducer, NationalityState, TempCartReducer, TempCartState } from './others.reducer';
+import { productReducer, ProductsState } from './products.reducer';
 
 export interface State {
 	categories: CategoryState,
@@ -15,7 +17,8 @@ export interface State {
 	nationalities: NationalityState,
 	tempCart: TempCartState,
 	language: LanguageState,
-	labels: LabelsState
+	labels: LabelsState,
+	products: ProductsState
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -28,7 +31,8 @@ export const reducers: ActionReducerMap<State> = {
 	nationalities: NationalityReducer,
 	tempCart: TempCartReducer,
 	language: LanguageReducer,
-	labels: LabelsReducer
+	labels: LabelsReducer,
+	products: productReducer
 };
 
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
@@ -43,6 +47,7 @@ const selectPrivacyPolicyState = (state: State) => state.privacy_policy;
 const selectTempCartState = (state: State) => state.tempCart;
 const selectLanguageState = (state: State) => state.language;
 const selectLabelsState = (state: State) => state.labels;
+const selectProductState = (state: State) => state.products;
 
 export const selectLanguage = createSelector(selectLanguageState, (state: LanguageState) => state.Language);
 export const selectLabels = createSelector(selectLabelsState, (state: LabelsState) => state.Labels);
@@ -56,3 +61,4 @@ export const terms_conditions = createSelector(selectTermsConditionsState, (stat
 export const privacy_policy = createSelector(selectPrivacyPolicyState, (state: PrivacyPolicyState) => state.privacy_policy);
 export const selectCategoryList = createSelector(selectCategoriesState, (state: CategoryState) => state.categories);
 export const selectNationalyList = createSelector(selectNationalityState, (state: NationalityState) => state.Nationality);
+export const selectProductList = createSelector(selectProductState, (state: ProductsState) => state);

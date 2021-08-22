@@ -2612,7 +2612,20 @@ ul.links_offers li a.active {
   top: -40px;
 }
 
-.category_slider .owl-nav button {
+.category_slider .owl-nav .owl-prev {
+  text-align: center;
+  display: inline-block;
+  border: 1px solid #eee !important;
+  border-radius: 4px;
+  width: 25px;
+  height: 25px;
+  margin-left: 5px;
+  background-color: #e3e3e3 !important;
+}
+
+.category_slider .owl-nav .owl-next {
+  text-align: center;
+  display: inline-block;
   border: 1px solid #eee !important;
   border-radius: 4px;
   width: 25px;
@@ -4170,4 +4183,43 @@ html {
 
 .AddressSidebar.opensidebar {
   z-index: 9999;
+}
+
+.productImg-content .owl-stage-outer {
+  border-right: 1px solid #eee;
+}
+
+.productImg-content .itemPrImg {
+  display: block;
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-right: -1px;
+}
+
+.productImg-content .selected {
+  border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+.productImg-content .owl-theme .owl-nav span {
+  position: absolute;
+  top: 25%;
+}
+
+.productImg-content .owl-nav .owl-prev span {
+  left: -10px;
+}
+
+.productImg-content .owl-nav .owl-next span {
+  right: -10px;
+}
+
+.productImg-content .owl-nav span {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #eee;
+  font-size: 22px;
+}
+
+.productImg-content .owl-item {
+  max-width: 107px !important;
 }

@@ -1,15 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable, Subject, of, merge, timer } from 'rxjs';
-import { take, catchError, mergeMap, map } from 'rxjs/operators';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable, Subject, of, merge } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Category, ProductList, TempCartItems } from 'src/app/interface';
-import { selectHomeCategoryList, State } from 'src/app/reducers';
+import { selectHomeCategoryList, selectProductList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 import { data } from 'src/app/global';
 import { dataChange } from 'src/app/global';
 import { Store } from '@ngrx/store';
+import { Pipe, PipeTransform } from '@angular/core';
+import { FilterQuery, LoadInitial, SearchNewQuery, SortingQuery } from 'src/app/actions/products.action';
 
 @Component({
 	selector: 'app-shared-list',
@@ -63,32 +65,29 @@ import { Store } from '@ngrx/store';
 					<div class="filterSection">
 						<app-shop-by-category (change)="onChange($event);"
 							[categories]="categories$ | async"></app-shop-by-category>
-						<app-filter-by-price [preventAbuse]="preventAbuse"
-							(filterByPrice)="onFilter($event); preventAbuse=true">
+						<app-filter-by-price [preventAbuse]="(product_state$ | async)?.isFilter"
+							(filterByPrice)="onFilter($event);">
 						</app-filter-by-price>
-						<app-top-selling [products]="product.bestselling" *ngIf="!loader">
+						<app-top-selling [products]="(product_state$ | async)?.products$?.bestselling" *ngIf="!(product_state$ | async)?.isSearching">
 						</app-top-selling>
-						<app-skeleton-top-selling *ngIf="loader"></app-skeleton-top-selling>
+						<app-skeleton-top-selling *ngIf="(product_state$ | async)?.isSearching"></app-skeleton-top-selling>
 					</div>
 					<br>
 				</div>
 				<div class="lefprolist mb-3 col-lg-9 col-md-8">
 					<div class="category_slider card">
 						<app-sort-header (sortBy)="onSort($event);"
+							[preventAbuse]="(product_state$ | async)?.isSorting"
 							[categoryName]="(root.languages$
 									| async) === 'en' ?
 									(route.snapshot.queryParams?.categoryName | splitEnglish) :
 									(route.snapshot.queryParams?.categoryName | splitArabic)">
 						</app-sort-header>
 						<div class="sparetor_title">
-							<h5 class="mb-0">{{product.itemscount ? ('item' | translate) + '
-								' + '('+ (+product.itemscount
-								<10?'0'+product.itemscount:product.itemscount) +')' :
-									('item' | translate) + ' ' + '(' + '00'
-									+')'}}</h5>
+							<h5 class="mb-0">{{(product_state$ | async)?.products$?.itemscount ? ('item' | translate) + ' ' + '('+ (+(product_state$ | async)?.products$?.itemscount<10?'0'+(product_state$ | async)?.products$?.itemscount:(product_state$ | async)?.products$?.itemscount) +')' : ('item' | translate) + ' ' + '(' + '00' + ')'}}</h5>
 						</div>
-						<app-items [products]="product.data" *ngIf="!loader"></app-items>
-						<app-skeleton *ngIf="loader"></app-skeleton>
+						<app-items [products]="(product_state$ | async)?.products$?.data" *ngIf="!(product_state$ | async)?.isSearching"></app-items>
+						<app-skeleton *ngIf="(product_state$ | async)?.isSearching"></app-skeleton>
 					</div>
 				</div>
 			</div>
@@ -99,20 +98,33 @@ import { Store } from '@ngrx/store';
 <app-scroll-to-top></app-scroll-to-top>
   `,
 	styles: [
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
+	subs = new SubSink();
+	forceReload$ = new Subject<void>();
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
+	product_state$: Observable<{
+		isSearching: boolean;
+		isFilter: boolean;
+		isSorting: boolean;
+		preset: string;
+		query: string;
+		products$: {
+			data: ProductList[];
+			itemscount: string;
+			bestselling: ProductList[];
+			message: string;
+			status: string;
+		}
+	}>
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
 		public root: RootService,
 		private auth: AuthenticationService,
-		public route: ActivatedRoute,
-		private cd: ChangeDetectorRef
-	) {
-		// getting auth user data
+		public route: ActivatedRoute) {
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
 				data.loginuserID = '1';
@@ -125,94 +137,6 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 			}
 		}));
 	}
-	ngAfterViewInit(): void {
-		this.jquery();
-	}
-	ngOnDestroy(): void {
-		this.subs.unsubscribe();
-	}
-	loader = true;
-	preventAbuse: boolean;
-	subs = new SubSink();
-	product: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; } = {
-		data: [],
-		itemscount: '0',
-		bestselling: [],
-		message: '',
-		status: ''
-	};
-	products$: Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }> = of(null);
-	forceReload$ = new Subject<void>();
-	getProducts = (t: string) => {
-		return this.root.productLists(t).pipe(map(r => {
-			return {
-				status: r.status,
-				message: r.message,
-				itemscount: r.itemscount,
-				bestselling: r.bestselling.map(a => {
-					return {
-						productID: a.productID,
-						categoryID: a.categoryID,
-						subcatID: a.subcatID,
-						productName: a.productName,
-						productArabicNme: a.productArabicNme,
-						productSKU: a.productSKU,
-						productTag: a.productTag,
-						productDescription: a.productDescription,
-						productPriceVat: a.productPriceVat,
-						productPrice: a.productPrice,
-						productMOQ: a.productMOQ,
-						productImage: a.productImage,
-						productPackagesize: a.productPackagesize,
-						productReviewCount: a.productReviewCount,
-						productRatingCount: a.productRatingCount,
-						productRatingAvg: a.productRatingAvg.split('.')[0],
-						productSoldCount: a.productSoldCount,
-						productStatus: a.productStatus,
-						productCreatedDate: a.productCreatedDate,
-						categoryName: a.categoryName,
-						isFavorite: a.isFavorite,
-						similarproducts: a.similarproducts,
-						addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
-					}
-				}),
-				data: r.data.map(a => {
-					return {
-						productID: a.productID,
-						categoryID: a.categoryID,
-						subcatID: a.subcatID,
-						productName: a.productName,
-						productArabicNme: a.productArabicNme,
-						productSKU: a.productSKU,
-						productTag: a.productTag,
-						productDescription: a.productDescription,
-						productPriceVat: a.productPriceVat,
-						productPrice: a.productPrice,
-						productMOQ: a.productMOQ,
-						productImage: a.productImage,
-						productPackagesize: a.productPackagesize,
-						productReviewCount: a.productReviewCount,
-						productRatingCount: a.productRatingCount,
-						productRatingAvg: a.productRatingAvg.split('.')[0],
-						productSoldCount: a.productSoldCount,
-						productStatus: a.productStatus,
-						productCreatedDate: a.productCreatedDate,
-						categoryName: a.categoryName,
-						isFavorite: a.isFavorite,
-						similarproducts: a.similarproducts,
-						addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
-					}
-				})
-			}
-		}), take(1),
-			catchError(() => of([]))) as Observable<{
-				data: ProductList[];
-				itemscount: string;
-				bestselling: ProductList[];
-				message: string;
-				status: string;
-			}>;
-	}
 	updateCart = () => {
 		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	}
@@ -221,64 +145,148 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		data.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
 		data.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'undefined';
 		data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
-		this.products(JSON.stringify(data));
+		this.store.dispatch(new LoadInitial(JSON.stringify(data)));
+		this.state_product();
+	}
+	state_product = () => {
+		// products
+		const initial$ = this.state() as Observable<{
+			isSearching: boolean;
+			isFilter: boolean;
+			isSorting: boolean;
+			preset: string;
+			query: string;
+			products$: {
+				data: ProductList[];
+				itemscount: string;
+				bestselling: ProductList[];
+				message: string;
+				status: string;
+			}
+		}>;
+		const updates$ = this.forceReload$.pipe(mergeMap(() => this.state() as Observable<{
+			isSearching: boolean;
+			isFilter: boolean;
+			isSorting: boolean;
+			preset: string;
+			query: string;
+			products$: {
+				data: ProductList[];
+				itemscount: string;
+				bestselling: ProductList[];
+				message: string;
+				status: string;
+			}
+		}>));
+		this.product_state$ = merge(initial$, updates$);
+	}
+	state = () => {
+		return this.store.select(selectProductList).pipe(
+			map(r => {
+				return {
+					isSearching: r.isSearching,
+					isSorting: r.isSorting,
+					isFilter: r.isFilter,
+					preset: r.preset,
+					query: r.query,
+					products$: {
+						status: r.products$.status,
+						message: r.products$.message,
+						itemscount: r.products$.itemscount,
+						bestselling: r.products$.bestselling.map(a => {
+							return {
+								productID: a.productID,
+								categoryID: a.categoryID,
+								subcatID: a.subcatID,
+								productName: a.productName,
+								productArabicNme: a.productArabicNme,
+								productSKU: a.productSKU,
+								productTag: a.productTag,
+								productDescription: a.productDescription,
+								productPriceVat: a.productPriceVat,
+								productPrice: a.productPrice,
+								productMOQ: a.productMOQ,
+								productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
+								productPackagesize: a.productPackagesize,
+								productReviewCount: a.productReviewCount,
+								productRatingCount: a.productRatingCount,
+								productRatingAvg: a.productRatingAvg.split('.')[0],
+								productSoldCount: a.productSoldCount,
+								productStatus: a.productStatus,
+								productCreatedDate: a.productCreatedDate,
+								categoryName: a.categoryName,
+								isFavorite: a.isFavorite,
+								similarproducts: a.similarproducts,
+								addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+							}
+						}),
+						data: r.products$.data.map(a => {
+							return {
+								productID: a.productID,
+								categoryID: a.categoryID,
+								subcatID: a.subcatID,
+								productName: a.productName,
+								productArabicNme: a.productArabicNme,
+								productSKU: a.productSKU,
+								productTag: a.productTag,
+								productDescription: a.productDescription,
+								productPriceVat: a.productPriceVat,
+								productPrice: a.productPrice,
+								productMOQ: a.productMOQ,
+								productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
+								productPackagesize: a.productPackagesize,
+								productReviewCount: a.productReviewCount,
+								productRatingCount: a.productRatingCount,
+								productRatingAvg: a.productRatingAvg.split('.')[0],
+								productSoldCount: a.productSoldCount,
+								productStatus: a.productStatus,
+								productCreatedDate: a.productCreatedDate,
+								categoryName: a.categoryName,
+								isFavorite: a.isFavorite,
+								similarproducts: a.similarproducts,
+								addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
+							}
+						})
+					}
+				}
+			}),
+			catchError(() => of([]))) as Observable<{
+				isSearching: boolean;
+				isFilter: boolean;
+				isSorting: boolean;
+				preset: string;
+				query: string;
+				products$: {
+					data: ProductList[];
+					itemscount: string;
+					bestselling: ProductList[];
+					message: string;
+					status: string;
+				}
+			}>;
 	}
 	onChange = async (category: Category) => {
-		if (category?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
-			// query changes
-			this.loader = true;
-			dataChange.page = '0';
-			dataChange.categoryID = category?.categoryID ? category?.categoryID : '0';
-			dataChange.categoryName = category?.categoryName ? category?.categoryName : 'undefined';
-			this.products(JSON.stringify(dataChange));
-			// updating query-param
-			data.page = '0';
-			data.categoryID = category?.categoryID ? category?.categoryID : '0';
-			data.categoryName = category?.categoryName ? category?.categoryName : 'undefined';
-			const queryParams: Params = { page: '0', categoryID: category?.categoryID, categoryName: `${category?.categoryName}_${category?.categoryArabicName}` };
-			this.router.navigate([],
-				{
-					relativeTo: this.route,
-					queryParams: queryParams,
-					queryParamsHandling: 'merge', // remove to replace all query params by provided
-				});
-		}
-	}
-	products = (temp: string) => {
-		// products
-		const initialProducts$ = this.getProducts(temp) as Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }>;
-		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts(temp) as Observable<{ data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }>));
-		this.products$ = merge(initialProducts$, updatesProducts$);
-		this.subs.add(this.products$.subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
-			timer(500).subscribe(() => {
-				this.product = res;
-				this.loader = false;
-				this.cd.markForCheck();
-			});
-		}, (err) => {
-			this.loader = false;
-			console.error(err);
-		}));
+		dataChange.page = '0';
+		dataChange.categoryID = category?.categoryID ? category?.categoryID : '0';
+		dataChange.categoryName = category?.categoryName ? `${category?.categoryName}_${category?.categoryArabicName}` : 'undefined';
+		this.store.dispatch(new SearchNewQuery(JSON.stringify(dataChange)));
 	}
 	onFilter = ($temp: string) => {
 		data.minPrice = $temp.split(';')[0];
 		data.maxPrice = $temp.split(';')[1];
-		this.subs.add(this.getProducts(JSON.stringify(data)).subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
-			this.product = res;
-			this.preventAbuse = false;
-			this.cd.markForCheck();
-		}, (err) => {
-			console.error(err);
-		}));
+		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new FilterQuery(JSON.stringify(data)));
 	}
 	onSort = ($temp: string) => {
 		data.sortBy = $temp ? $temp : '';
-		this.subs.add(this.getProducts(JSON.stringify(data)).subscribe((res: { data: ProductList[]; itemscount: string; bestselling: ProductList[]; message: string; status: string; }) => {
-			this.product = res;
-			this.cd.markForCheck();
-		}, (err) => {
-			console.error(err);
-		}));
+		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new SortingQuery(JSON.stringify(data)));
+	}
+	ngAfterViewInit(): void {
+		this.jquery();
+	}
+	ngOnDestroy(): void {
+		this.subs.unsubscribe();
 	}
 	jquery = () => {
 		jQuery(() => {
@@ -335,7 +343,6 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		})
 	}
 }
-import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
 	name: 'splitArabic'

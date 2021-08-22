@@ -90,7 +90,7 @@ export class MyWishlistComponent implements OnInit {
 						productPriceVat: a.productPriceVat,
 						productPrice: a.productPrice,
 						productMOQ: a.productMOQ,
-						productImage: a.productImage,
+						productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
 						productPackagesize: a.productPackagesize,
 						productReviewCount: a.productReviewCount,
 						productRatingCount: a.productRatingCount,

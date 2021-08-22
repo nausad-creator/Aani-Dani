@@ -26,7 +26,6 @@ import { SubSink } from 'subsink';
   </div>  
 
   <div class="category_slider" [@fadeIn]>
-      <div class="">
         <owl-carousel-o [options]="caseOptions">
             <ng-template carouselSlide *ngFor="let item of similarproduct">
               <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item?.categoryID, productID: item?.productID}); onScroll()">
@@ -62,7 +61,6 @@ import { SubSink } from 'subsink';
                 </ng-template>
             </owl-carousel-o>							   			       
       </div>
-  </div>
 </div>
   `,
 	styles: [

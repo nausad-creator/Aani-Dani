@@ -13,7 +13,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 						<label class="mr-3 mb-0" style="white-space:nowrap;">{{'sort_by' | translate}}:</label>
 						<ng-select (change)="sortBy.emit($event)" appearance="outline" [searchable]="false" [clearable]="true"
                         			 class="custom" [placeholder]="'select_to_sort' | translate">
-                        			<ng-option *ngFor="let s of sorting" [value]="s.value">{{s.label | translate}}</ng-option>
+                        			<ng-option [disabled]="preventAbuse" *ngFor="let s of sorting" [value]="s.value">{{s.label | translate}}</ng-option>
                       				</ng-select>	
 					</div>	
 				</div>				  	
@@ -62,6 +62,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class SortHeaderComponent implements OnInit {
 	@Input() categoryName?: string;
+	@Input() preventAbuse: boolean;
 	@Output() sortBy = new EventEmitter<string>();
 	sorting = [{
 		label: 'popular_item',

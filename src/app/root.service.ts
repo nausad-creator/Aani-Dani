@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { shareReplay, retry, catchError, map, takeUntil } from 'rxjs/operators';
 import { Banner, Category, Labels, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload, Wishlist } from './interface';
@@ -48,12 +49,15 @@ export class RootService {
 	// Behavior-subjects
 	update_user_status$: Subject<string> = new BehaviorSubject<string>('201');
 	update$ = this.update_user_status$.asObservable();
-	update_user_language$: Subject<string> = new BehaviorSubject<string>('en');
+	update_user_language$: Subject<string> = new BehaviorSubject<string>(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
 	languages$ = this.update_user_language$.asObservable();
 	update_flip$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 	flip$ = this.update_flip$.asObservable();
 
-	constructor(private http: HttpClient) { }
+	constructor(
+		private http: HttpClient,
+		readonly router: Router,
+		public route: ActivatedRoute) { }
 
 	httpOptions = {
 		headers: new HttpHeaders({}),
@@ -65,6 +69,15 @@ export class RootService {
 	isAuthenticated(): boolean {
 		const token = this.getSession();
 		return typeof (token) === 'string' ? true : false;
+	}
+	isNewSearchQuery(query: string) {
+		if (JSON.parse(query)?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
+			const queryParams: Params = { page: '0', categoryID: JSON.parse(query)?.categoryID, categoryName: `${JSON.parse(query)?.categoryName}` };
+			this.router.navigate([], { relativeTo: this.route, queryParams: queryParams, queryParamsHandling: 'merge' });
+			return true;
+		} else {
+			return false
+		}
 	}
 	get language(): Observable<Language[]> {
 		if (!this.language$) {
@@ -85,7 +98,7 @@ export class RootService {
 		"cityName":"${JSON.parse(temp).cityName}",
 		"latitude":"${JSON.parse(temp).latitude}",
 		"longitude":"${JSON.parse(temp).longitude}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -104,7 +117,7 @@ export class RootService {
 		const json = `[{
 		"loginuserID":"0",
 		"languageID":"1",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"page":0,
 		"pagesize":10
@@ -123,7 +136,7 @@ export class RootService {
 		const json = `[{
 		"langLabelModule":"",
 		"languageID":"${languageID}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -148,7 +161,7 @@ export class RootService {
 		"loginuserID":"0",
 		"searchWord":"${searchWord}",
 		"languageID":"1",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -173,7 +186,7 @@ export class RootService {
 		"loginuserID":"0",
 		"searchWord":"${searchWord}",
 		"languageID":"1",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -197,7 +210,7 @@ export class RootService {
 		"currentLong":"${JSON.parse(temp).currentLong}",
 		"page":0,
 		"pagesize":"10",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -239,7 +252,7 @@ export class RootService {
 		"page":"${JSON.parse(temp).page}",
 		"pagesize":"${JSON.parse(temp).pagesize}",
 		"cityName":"${JSON.parse(temp).cityName}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"minPrice":"${JSON.parse(temp).minPrice}",
 		"maxPrice":"${JSON.parse(temp).maxPrice}",
@@ -268,7 +281,7 @@ export class RootService {
 		"page":"${JSON.parse(temp).page}",
 		"pagesize":"${JSON.parse(temp).pagesize}",
 		"cityName":"${JSON.parse(temp).cityName}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"minPrice":"${JSON.parse(temp).minPrice}",
 		"maxPrice":"${JSON.parse(temp).maxPrice}",
@@ -291,7 +304,7 @@ export class RootService {
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
 		"orderTab":"${JSON.parse(temp).orderTab}",
 		"page":"${JSON.parse(temp).page}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"pagesize":"${JSON.parse(temp).pagesize}",
 		"userType":"${JSON.parse(temp).userType}",
@@ -316,7 +329,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"page":"${JSON.parse(temp).page}",
 		"pagesize":"${JSON.parse(temp).pagesize}",
@@ -336,7 +349,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"productID":"${JSON.parse(temp).productID}",
 		"languageID":"${JSON.parse(temp).languageID}"
@@ -353,7 +366,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"productID":"${JSON.parse(temp).productID}",
 		"languageID":"${JSON.parse(temp).languageID}"
@@ -378,7 +391,7 @@ export class RootService {
 		"orderDiscount":"${JSON.parse(temp).orderDiscount}",
 		"orderWalletAmt":"${JSON.parse(temp).orderWalletAmt}",
 		"orderNotes":"${JSON.parse(temp).orderNotes}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"storeID":"${JSON.parse(temp).storeID}",
 		"orderVAT":"${JSON.parse(temp).orderVAT}",
@@ -408,7 +421,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"${JSON.parse(temp).languageID}",
 		"orderID":"${JSON.parse(temp).orderID}",
@@ -433,7 +446,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"${JSON.parse(temp).languageID}",
 		"orderID":"${JSON.parse(temp).orderID}",
@@ -458,7 +471,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"${JSON.parse(temp).languageID}",
 		"orderdetails":${JSON.stringify(JSON.parse(temp).orderdetails)}
@@ -479,7 +492,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"1",
 		"orderID":"${JSON.parse(temp).orderID}"
@@ -517,7 +530,7 @@ export class RootService {
 		const json = `[{
 		"orderID":"${JSON.parse(temp).orderID}",
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"${JSON.parse(temp).languageID}"
 		}]`;
@@ -539,7 +552,7 @@ export class RootService {
 		"loginuserID":"0",
 		"languageID":"1",
 		"cmspageConstantCode":"${code}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -584,7 +597,7 @@ export class RootService {
 		const form = new FormData();
 		const json = `[{
 		"loginuserID":"${fileData.loginuserID}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);

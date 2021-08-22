@@ -4,40 +4,63 @@ import { ActivatedRoute } from '@angular/router';
 import { shakeOnEnterAnimation } from 'angular-animations';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
 import { LocationSelectionComponent } from 'src/app/header/onboarding/location-selection.component';
-import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { ADDRESS, ProductList, ProductListDetails, TempCartItems, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
 @Component({
 	selector: 'app-details',
 	template: `
-<div class="prInfo row align-items-center" [@fadeIn]>
+<div class="prInfo row card-body" [@fadeIn]>
 	<div class="col-lg-5 col-md-5">
 		<div class="bigIng" *ngIf="product">
-			<a class="image-popup-no-margins" href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
-			<img offset="0" style="width: 552px; height: 343px"
-				defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
-				lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
-				[errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
-				[title]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme" (click)="openImage()">
+			<a class="image-popup-no-margins" id="magnific" target="_blank"
+				[title]="(root.languages$ | async) === 'en' ?  product?.productName : product?.productArabicNme"
+				href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
+				<img offset="0" style="width: 552px; height: 343px"
+					defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
+					lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
+					[errorImage]="'assets/images/error_not_found.png'"
+					[alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
+					[title]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
+					(click)="openG()">
 			</a>
-			</div>
+		</div>
+		<div class="productImg-content">
+			<owl-carousel-o [options]="caseOptions">
+				<ng-template carouselSlide *ngFor="let productImage of product.productImageArray">
+					<div class="productImg-carousel">
+						<span class="itemPrImg image-popup-no-margins-gallary cursr" [ngClass]="{'selected': product?.productImage === productImage?.src_img}" (click)="openGallary(productImage)"
+							[title]="(root.languages$ | async) === 'en' ? productImage?.src_name_eng : productImage?.src_name_arb">
+							<img defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
+								lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{productImage?.src_img}}"
+								[errorImage]="'assets/images/error_not_found.png'"
+								[alt]="(root.languages$ | async) === 'en' ? productImage?.src_name_eng : productImage?.src_name_arb"
+								[title]="(root.languages$ | async) === 'en' ? productImage?.src_name_eng : productImage?.src_name_arb">
+						</span>
+					</div>
+				</ng-template>
+			</owl-carousel-o>
+		</div>
 	</div>
 	<div class="col-lg-7 col-md-7">
 		<div class="detailInfo">
-			<h4 class="" *ngIf="product"><b>{{(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme}}</b></h4>
+			<h4 class="" *ngIf="product"><b>{{(root.languages$ | async) === 'en' ? product?.productName :
+					product?.productArabicNme}}</b></h4>
 			<div class="productInfo">
 				<div class="ratings">
 					<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 						*ngFor="let star of stars"></i>
 					<span>{{product?.productRatingCount | number}}</span>
 				</div>
-				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
+				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' ' +
+					('people_bought_this' | translate)}}</p>
 			</div>
 			<div class="d-flex align-items-center detailPrice">
 				<div class="price_text" *ngIf="product">{{(product?.productPrice | number) + ' SR'}}
@@ -67,11 +90,12 @@ import { SubSink } from 'subsink';
 				<div class="pr-4">
 					<a class="cursr"
 						(click)="add_favourite(product?.productID); product.isFavorite='Yes';"
-						*ngIf="product?.isFavorite === 'No'"><i class="far fa-heart"></i> {{'add_to_wishlist' | translate}}</a>
-					<a class="cursr"
-						(click)="remove(product?.productID); product.isFavorite='No';"
+						*ngIf="product?.isFavorite === 'No'"><i class="far fa-heart"></i>
+						{{'add_to_wishlist' | translate}}</a>
+					<a class="cursr" (click)="remove(product?.productID); product.isFavorite='No';"
 						*ngIf="product?.isFavorite === 'Yes'"><i class="fa fa-heart"
-						 [@shakeOnEnter] style="color:red;"></i> {{'added_to_wishlist' | translate}}</a>
+							[@shakeOnEnter] style="color:red;"></i> {{'added_to_wishlist' |
+						translate}}</a>
 				</div>
 				<div class="shareDetail">
 					<span class="pr-2">{{'share' | translate}}:</span>
@@ -84,7 +108,7 @@ import { SubSink } from 'subsink';
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
   `,
 	styles: [
 		`a img { cursor: -webkit-zoom-in;  cursor: zoom-in; }
@@ -96,12 +120,35 @@ import { SubSink } from 'subsink';
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-	@Input() product: ProductList;
+	@Input() product: ProductListDetails;
 	stars: number[] = [1, 2, 3, 4, 5];
 	logged_user: USER_RESPONSE = null;
 	tempOrderID: string;
 	subs = new SubSink();
 	bModalRef: BsModalRef;
+	caseOptions: OwlOptions = {
+		autoWidth: true,
+		autoHeight: true,
+		autoplay: true,
+		dots: false,
+		loop: false,
+		nav: true,
+		navText: ["<span>‹</span>", "<span >›</span>"],
+		responsive: {
+			0: {
+				items: 4
+			},
+			768: {
+				items: 4
+			},
+			900: {
+				items: 4
+			},
+			1000: {
+				items: 4
+			}
+		}
+	};
 	constructor(
 		public route: ActivatedRoute,
 		private auth: AuthenticationService,
@@ -118,19 +165,62 @@ export class DetailsComponent implements OnInit, OnDestroy {
 			}
 		}));
 	}
-	openImage = () => {
-		($('.image-popup-no-margins') as any).magnificPopup({
+	ngOnInit(): void {
+		this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
+		this.checkStatus();
+	}
+	openG = () => {
+		($('#magnific') as any).magnificPopup({
 			type: 'image',
 			closeOnContentClick: true,
-			closeBtnInside: true,
+			closeBtnInside: false,
 			fixedContentPos: true,
+			tLoading: 'Loading...', // Text that is displayed during loading. Can contain %curr% and %total% keys
 			mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-			image: {
-				verticalFit: true
+			items: this.product.productImageArrayCopy,
+			gallery: {
+				enabled: true
 			},
 			zoom: {
-				enabled: true,
-				duration: 300 // don't foget to change the duration also in CSS
+				enabled: false,
+				duration: 300, // don't foget to change the duration also in CSS,
+				mainClass: 'mfp-fade', //Adds magnific's fade effect
+			},
+			image: {
+				verticalFit: true,
+				tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+				titleSrc: function (item: { el: { attr: (arg0: string) => string; }; src: string; }) {
+					return '<a class="image-source-link" href="' + item.src + '" target="_blank">image source</a>';
+				}
+			}
+		})
+		$.extend(true, ($ as any).magnificPopup.defaults, {
+			tClose: 'Close (Esc)', // Alt text on close button
+			tLoading: 'Loading...', // Text that is displayed during loading. Can contain %curr% and %total% keys
+			gallery: {
+				tPrev: 'Previous (Left arrow key)', // Alt text on left arrow
+				tNext: 'Next (Right arrow key)', // Alt text on right arrow
+				tCounter: '%curr% of %total%' // Markup for "1 of 7" counter
+			},
+			image: {
+				tError: '<a href="%url%">The image</a> could not be loaded.' // Error message when image could not be loaded
+			},
+			ajax: {
+				tError: '<a href="%url%">The content</a> could not be loaded.' // Error message when ajax request failed
+			}
+		});
+	}
+	openGallary = (productImage: {
+		src_id: string;
+		src_img: string;
+		src_name_arb: string;
+		src_name_eng: string;
+	}) => {
+		this.product.productImage = productImage.src_img;
+		this.product.productImageArrayCopy.forEach((item, i) => {
+			if (item.src_img === productImage.src_img) {
+				this.product.productImageArrayCopy.splice(i, 1);
+				this.product.productImageArrayCopy.unshift(item);
 			}
 		});
 	}
@@ -213,10 +303,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
 			}]
 		};
 		this.bModalRef = this.modal.show(AddressListComponent, { id: 499, initialState });
-	}
-	ngOnInit(): void {
-		this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
-		this.checkStatus();
 	}
 	placeTempOrder = (pro: ProductList) => {
 		pro.addedCartCount++;

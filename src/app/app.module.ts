@@ -34,6 +34,7 @@ import { TooltipModule } from 'ng2-tooltip-directive';
 import { SeoService } from './seo.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { ProductsEffects } from './effects/products.effects';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -81,7 +82,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		GooglePlaceModule,
 		StoreModule.forRoot(reducers, { metaReducers }),
 		!environment.production ? StoreDevtoolsModule.instrument() : [],
-		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects])
+		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects, ProductsEffects])
 	],
 	providers: [RootService, AuthenticationService, LocationService, SeoService],
 	bootstrap: [AppComponent],

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { AddProducts, FailureProducts, FilterQuery, FilterStart, LoadInitial, ProductActionTypes, ResetProducts, SearchEndedSuccess, SearchNewQuery, SearchStart, SortingQuery, SortStart } from '../actions/products.action';
 import { State } from '../reducers';
 import { RootService } from '../root.service';
@@ -33,36 +33,27 @@ export class ProductsEffects {
 		return this.actions$.pipe(
 			ofType(ProductActionTypes.SEARCH_NEW_QUERY),
 			filter((action) => this.root.isNewSearchQuery(action.query)),
-			tap((r) => new ResetProducts(r.query)),
+			map((r) => new ResetProducts(r.query)),
 			map((a) => new SearchStart(a.query)));
 	});
 	fetchProduct$ = createEffect((): Observable<SearchEndedSuccess> => {
-		return this.actions$.pipe(ofType(ProductActionTypes.SEARCH_START),
+		return this.actions$.pipe(
+			ofType(
+				ProductActionTypes.SEARCH_START,
+				ProductActionTypes.FILTER_START,
+				ProductActionTypes.SORT_START
+			),
 			withLatestFrom(this.store.select(state => state.products)),
 			switchMap(action => this.root.productLists(action[0].query).pipe(
-				map(data => new SearchEndedSuccess(data),
+				map(data => new SearchEndedSuccess({
+					data: data?.data?.length > 0 ? data.data : [],
+					bestselling: data?.bestselling?.length > 0 ? data.bestselling : [],
+					message: data?.message,
+					status: data?.status,
+					itemscount: data?.itemscount
+				}),
 					catchError((err) => of(new FailureProducts(err)))
-				))
-			)
-		);
-	});
-	filter_fetch$ = createEffect((): Observable<SearchEndedSuccess> => {
-		return this.actions$.pipe(ofType(ProductActionTypes.FILTER_START),
-			withLatestFrom(this.store.select(state => state.products)),
-			switchMap(action => this.root.productLists(action[0].query).pipe(
-				map(data => new SearchEndedSuccess(data),
-					catchError((err) => of(new FailureProducts(err)))
-				))
-			)
-		);
-	});
-	sort_fetch$ = createEffect((): Observable<SearchEndedSuccess> => {
-		return this.actions$.pipe(ofType(ProductActionTypes.SORT_START),
-			withLatestFrom(this.store.select(state => state.products)),
-			switchMap(action => this.root.productLists(action[0].query).pipe(
-				map(data => new SearchEndedSuccess(data),
-					catchError((err) => of(new FailureProducts(err)))
-				))
+				), take(1))
 			)
 		);
 	});
@@ -80,6 +71,7 @@ export class ProductsEffects {
 			FilterQuery |
 			SortingQuery |
 			FilterStart |
+			ResetProducts |
 			SortStart>,
 		private root: RootService,
 		private store: Store<State>,) { }

@@ -6,7 +6,7 @@ export enum ProductActionTypes {
 	LOAD_INITIAL = '[Products] LOAD_INITIAL',
 	LOAD_FAILURE = '[Products] LOAD_FAILURE',
 	REMOVE = '[Products] REMOVE',
-	RESET = '[Products] RESET',
+	RESET = '[Products] RESET_PRODUCTS',
 	UPDATE_METADATA = '[Products] UPDATE_METADATA',
 	SEARCH_NEW_QUERY = '[Products] SEARCH_NEW_QUERY',
 	SEARCH_ENDED_SUCCESS = '[Products] SEARCH_ENDED_SUCCESS',

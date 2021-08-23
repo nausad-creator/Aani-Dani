@@ -8,7 +8,7 @@ export function fadeIn() {
 			// css styles at start of transition
 			style({ opacity: 0 }),
 			// animation and styles at end of transition
-			animate('600ms ease-in', style({ opacity: 1 }))
+			animate('400ms ease-in', style({ opacity: 1 }))
 		])
 	];
 }

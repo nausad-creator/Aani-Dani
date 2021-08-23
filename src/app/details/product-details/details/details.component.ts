@@ -17,13 +17,13 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-details',
 	template: `
-<div class="prInfo row card-body" [@fadeIn]>
+<div class="prInfo row align-items-center card-body" [@fadeIn]>
 	<div class="col-lg-5 col-md-5">
 		<div class="bigIng" *ngIf="product">
 			<a class="image-popup-no-margins" id="magnific" target="_blank"
 				[title]="(root.languages$ | async) === 'en' ?  product?.productName : product?.productArabicNme"
 				href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
-				<img offset="0" style="width: 552px; height: 343px"
+				<img offset="0"
 					defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
 					lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 					[errorImage]="'assets/images/error_not_found.png'"

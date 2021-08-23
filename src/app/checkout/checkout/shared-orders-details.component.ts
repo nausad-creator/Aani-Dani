@@ -74,7 +74,11 @@ import { RootService } from 'src/app/root.service';
 			<button routerLink='/' class="btn w-100 btn-outline-secondary">{{'continue_shopping' | translate}}</button>
 		</div>
 		<div class="col-6">
-			<button (click)="place.emit(orderNote.value)" type="button" class="btn btn-them w-100">
+			<button (click)="place.emit({
+				billingDetails: billingDetails,
+				orderdetails: products,
+				note: orderNote.value
+			})" type="button" class="btn btn-them w-100">
 				<span class="spinner-border spinner-border-sm" style="margin: 1px;" role="status"
 					aria-hidden="true" *ngIf="preventAbuse"></span>
 				{{preventAbuse ? ('please_wait...' | translate) : ('proceed_to_pay' | translate)}}</button>
@@ -95,7 +99,17 @@ export class SharedOrdersDetailsComponent {
 	};
 	@Input() products: ProductList[] = [];
 	@Input() preventAbuse: boolean;
-	@Output() place: EventEmitter<string> = new EventEmitter();
+	@Output() place: EventEmitter<{
+		billingDetails: {
+			delivery_Tip: string;
+			delivery_Fee: string;
+			item_Total: string;
+			vat: string;
+			net_Payable: string;
+		};
+		orderdetails: ProductList[];
+		note: string;
+	}> = new EventEmitter();
 	orderNote = new FormControl('');
 	constructor(public root: RootService) { }
 }

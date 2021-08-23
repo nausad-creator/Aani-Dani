@@ -15,18 +15,14 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { SeoService } from './seo.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
-import { shakeAnimation } from 'angular-animations';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
-	animations: [
-		shakeAnimation({ delay: 200 }),
-	]
+	animations: []
 })
 export class AppComponent implements OnInit, OnDestroy {
 	subs = new SubSink();
-	animationState = false;
 	constructor(
 		private store: Store<State>,
 		private auth: AuthenticationService,
@@ -52,12 +48,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
-	}
-	animate() {
-		this.animationState = false;
-		setTimeout(() => {
-			this.animationState = true;
-		});
 	}
 	onActivate = () => {
 		window.scroll(0, 0);
@@ -146,11 +136,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
-		this.subs.add(this.root.flip$.subscribe(flip => {
-			if (flip) {
-				this.animate();
-			}
-		}));
 	}
 	changeLangage(lang: string) {
 		let htmlTag = this.document.getElementsByTagName("html")[0] as HTMLHtmlElement;

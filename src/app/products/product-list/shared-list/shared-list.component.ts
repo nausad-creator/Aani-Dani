@@ -182,7 +182,20 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	state = () => {
 		return this.store.select(selectProductList).pipe(
-			map(r => {
+			map((r: {
+				isSearching: boolean;
+				isFilter: boolean;
+				isSorting: boolean;
+				preset: string;
+				query: string;
+				products$: {
+					data: ProductList[];
+					itemscount: string;
+					bestselling: ProductList[];
+					message: string;
+					status: string;
+				}
+			}) => {
 				return {
 					isSearching: r.isSearching,
 					isSorting: r.isSorting,

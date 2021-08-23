@@ -6,10 +6,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { merge, Observable, of, Subject, timer } from 'rxjs';
 import { catchError, map, mergeMap, take } from 'rxjs/operators';
+import { LoadInitial } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { tepmOrder } from 'src/app/global';
 import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE, ADDRESS } from 'src/app/interface';
-import { selectHomeCategoryList, selectHomeBestSellingList, State } from 'src/app/reducers';
+import { selectHomeCategoryList, selectHomeBestSellingList, State, selectTempOrdersList } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 import { PaymentAlertComponent } from './payment-alert.component';
@@ -100,10 +101,10 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 					<div class="col-lg-5">
 						<app-shared-orders-details (place)="placeOrder($event);"
 							[preventAbuse]="preventAbuse"
-							[billingDetails]="ordersList[0].billingDetails"
-							[products]="ordersList[0].orderdetails" *ngIf="!loader">
+							[billingDetails]="(orders$ | async)?.orders.data[0].billingDetails"
+							[products]="(orders$ | async)?.orders.data[0].orderdetails" *ngIf="!(orders$ | async)?.isSearching">
 						</app-shared-orders-details>
-						<app-shared-skeleton-orders-details *ngIf="loader">
+						<app-shared-skeleton-orders-details *ngIf="(orders$ | async)?.isSearching">
 						</app-shared-skeleton-orders-details>
 					</div>
 				</div>
@@ -164,105 +165,65 @@ export class CheckoutComponent implements OnInit {
 		private modal: BsModalService,
 		private toastr: ToastrService,
 		private cookie: CookieService) { }
-	loader = true;
-	ordersList: TempOrders[];
-	orders$: Observable<{
-		data: TempOrders[];
-		status: string
-		message: string
-	}[]> = of(null);
-	forceReload$ = new Subject<void>();
-	getOrders = (t: string) => {
-		return this.root.ordersTemp(t).pipe(map((res) => {
-			return [{
-				messsage: res[0].status,
-				status: res[0].status,
-				data: res[0].data.map(d => {
-					return {
-						orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
+	orders$: Observable<{ data: TempOrders[]; status: string, message: string }[]> = of(null);
+	state = () => {
+		return this.store.select(selectTempOrdersList).pipe(
+			map((res) => {
+				return {
+					isSearching: res.isSearching,
+					orders: {
+						messsage: res.orders$[0].message,
+						status: res.orders$[0].status,
+						data: res.orders$[0].data.map(d => {
 							return {
-								Price: (+a.Qty.split('.')[0] * +a.productPrice).toString(),
-								Qty: a.Qty.split('.')[0],
-								categoryID: a.categoryID,
-								categoryName: a.categoryName,
-								productArabicNme: a.productArabicNme,
-								productCreatedDate: a.productCreatedDate,
-								productDescription: a.productDescription,
-								productID: a.productID,
-								productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
-								productMOQ: a.productMOQ,
-								productName: a.productName,
-								productPackagesize: a.productPackagesize,
-								productPrice: a.productPrice,
-								productPriceVat: a.productPriceVat,
-								productRatingAvg: a.productRatingAvg,
-								productRatingCount: a.productRatingCount,
-								productReviewCount: a.productReviewCount,
-								productSKU: a.productSKU,
-								productSoldCount: a.productSoldCount,
-								productStatus: a.productStatus,
-								productTag: a.productTag,
-								subcatID: a.subcatID,
+								orderdetails: d.orderdetails.filter(f => +f.Qty > 0).map(a => {
+									return {
+										Price: (+a.Qty.split('.')[0] * +a.productPrice).toString(),
+										Qty: a.Qty.split('.')[0],
+										categoryID: a.categoryID,
+										categoryName: a.categoryName,
+										productArabicNme: a.productArabicNme,
+										productCreatedDate: a.productCreatedDate,
+										productDescription: a.productDescription,
+										productID: a.productID,
+										productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
+										productMOQ: a.productMOQ,
+										productName: a.productName,
+										productPackagesize: a.productPackagesize,
+										productPrice: a.productPrice,
+										productPriceVat: a.productPriceVat,
+										productRatingAvg: a.productRatingAvg.split('.')[0],
+										productRatingCount: a.productRatingCount,
+										productReviewCount: a.productReviewCount,
+										productSKU: a.productSKU,
+										productSoldCount: a.productSoldCount,
+										productStatus: a.productStatus,
+										productTag: a.productTag,
+										subcatID: a.subcatID,
+										addedCartCount: a.Qty.split('.')[0],
+									}
+								}),
+								billingDetails: {
+									delivery_Tip: 10,
+									delivery_Fee: 30,
+									item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0),
+									vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
+									net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0) + 30 + 10 + d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
+								},
+								temporderDate: d.temporderDate,
+								temporderID: d.temporderID,
+								userFullName: d.userFullName,
+								userID: d.userID,
+								userMobile: d.userMobile,
 							}
-						}),
-						billingDetails: {
-							delivery_Tip: 10,
-							delivery_Fee: 30,
-							item_Total: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0),
-							vat: d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
-							net_Payable: d.orderdetails.filter(f => +f.Qty > 0).map(p => +p.Qty.split('.')[0] * +p.productPrice).reduce((a, b) => a + b, 0) + 30 + 10 + d.orderdetails.filter(f => +f.Qty > 0).map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
-						},
-						temporderDate: d.temporderDate,
-						temporderID: d.temporderID,
-						userFullName: d.userFullName,
-						userID: d.userID,
-						userMobile: d.userMobile,
+						})
 					}
-				})
-			}]
-		}), take(1),
-			catchError(() => of([]))) as Observable<{
-				data: TempOrders[];
-				status: string
-				message: string
-			}[]>;
+				}
+			}),
+			catchError(() => of([]))) as Observable<{ data: TempOrders[]; status: string, message: string }[]>;
 	}
-	orders = (temp: string) => {
-		// products
-		const initial$ = this.getOrders(temp) as Observable<{
-			data: TempOrders[];
-			status: string
-			message: string
-		}[]>;
-		const updates$ = this.forceReload$.pipe(mergeMap(() => this.getOrders(temp) as Observable<{
-			data: TempOrders[];
-			status: string
-			message: string
-		}[]>));
-		this.orders$ = merge(initial$, updates$);
-		this.subs.add(this.orders$.subscribe((res: {
-			data: TempOrders[];
-			status: string
-			message: string
-		}[]) => {
-			if (res[0].status === 'true') {
-				timer(500).subscribe(() => {
-					this.ordersList = res[0].data;
-					this.loader = false;
-					this.cd.markForCheck();
-				});
-			}
-			if (res[0].status === 'false') {
-				timer(500).subscribe(() => {
-					this.ordersList = [];
-					this.loader = false;
-					this.cd.markForCheck();
-				});
-			}
-		}, (err) => {
-			this.loader = false;
-			console.error(err);
-		}));
+	orders = () => {
+		this.orders$ = this.state() as Observable<{ data: TempOrders[]; status: string, message: string }[]>;
 	}
 	checkStatus = () => {
 		// getting auth user data
@@ -353,9 +314,20 @@ export class CheckoutComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.checkStatus();
-		this.orders(JSON.stringify(tepmOrder));
+		this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
+		this.orders();
 	}
-	placeOrder = (note: string) => {
+	placeOrder = (ordersList: {
+		billingDetails: {
+			delivery_Tip: string;
+			delivery_Fee: string;
+			item_Total: string;
+			vat: string;
+			net_Payable: string;
+		};
+		orderdetails: OrderDetailsTemp[];
+		note: string;
+	}) => {
 		if (!this.orderPaymentMode) {
 			this.modal.show(PaymentAlertComponent, { id: 73, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
 		}
@@ -367,9 +339,9 @@ export class CheckoutComponent implements OnInit {
 				storeID: this.user.storeID,
 				orderDiscount: '0',
 				orderWalletAmt: '0',
-				orderNotes: note ? note.trim() : '',
-				orderVAT: this.ordersList[0].billingDetails.vat,
-				orderGrossAmt: this.ordersList[0].billingDetails.net_Payable,
+				orderNotes: ordersList.note ? ordersList.note.trim() : '',
+				orderVAT: ordersList.billingDetails.vat,
+				orderGrossAmt: ordersList.billingDetails.net_Payable,
 				orderDeliveryAddress: Object.keys(this.user.address.find(a => a.addressIsDefault === 'Yes')).filter((key: string) => {
 					if (key === 'addressBlockNo' && this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo) {
 						return `${this.user.address.find(a => a.addressIsDefault === 'Yes').addressBlockNo}`;
@@ -388,8 +360,8 @@ export class CheckoutComponent implements OnInit {
 				orderDeliveryLong: this.user.address.find(a => a.addressIsDefault === 'Yes').addressLongi,
 				languageID: '1',
 				orderPaymentMode: this.orderPaymentMode,
-				orderNetAmount: this.ordersList[0].billingDetails.item_Total,
-				orderdetails: this.ordersList[0].orderdetails.map((p: OrderDetailsTemp) => ({
+				orderNetAmount: ordersList.billingDetails.item_Total,
+				orderdetails: ordersList.orderdetails.map((p: OrderDetailsTemp) => ({
 					productID: p.productID,
 					orderdetailsQty: p.Qty,
 					orderdetailsPrice: p.productPrice,

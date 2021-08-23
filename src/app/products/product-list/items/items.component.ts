@@ -48,7 +48,7 @@ import { SubSink } from 'subsink';
 	</div>
   </div>
   <div class="card mt-3" style="overflow:hidden;" style="margin-bottom: 1rem; min-height: 320px;"
-	*ngIf="products === undefined">
+	*ngIf="products.length === 0 || products === null || products === undefined">
 	<div class="row">
 		<div class="col">
 			<div class="nodata_content text-center pt-lg-5">

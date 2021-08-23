@@ -1,11 +1,9 @@
-import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { fadeIn } from 'src/app/animation';
 
 @Component({
 	selector: 'app-shared-billing',
 	template: `
-<div class="paymentDetails" *ngIf="billingDetails.item_Total !== null && billingDetails.item_Total !== 0" [@fadeIn]>
+<div class="paymentDetails" *ngIf="billingDetails.item_Total !== null && billingDetails.item_Total !== 0">
 	<h5>{{'bill_details' | translate}}</h5>
 	<div class="coponCode d-flex">
 		<div class="form-group mb-0">
@@ -48,7 +46,6 @@ import { fadeIn } from 'src/app/animation';
 	styles: [
 	],
 	animations: [
-		trigger('fadeIn', fadeIn())
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedBillingComponent implements OnInit {

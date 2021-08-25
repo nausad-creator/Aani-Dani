@@ -16,6 +16,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { HeaderModule } from 'src/app/header/header.module';
 import { SkeletonCategoryComponent } from './most-popular-best-seller/skeleton-category.component';
+import { AboutAaniDaniComponent } from './shared-about-aani-dani/shared-aani-dani-about.component';
+import { ProductSummaryComponent } from './shared-product-summary/shared-product-summary.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +27,9 @@ import { SkeletonCategoryComponent } from './most-popular-best-seller/skeleton-c
 		MostPopularBestSellerComponent,
 		OurPartnersComponent,
 		SharedComponent,
-		SkeletonCategoryComponent
+		SkeletonCategoryComponent,
+		AboutAaniDaniComponent,
+		ProductSummaryComponent
 	],
 	imports: [
 		CommonModule,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SubSink } from 'subsink';
 import { LoginComponent } from './onboarding/login.component';
@@ -6,91 +6,144 @@ import { data, tepmOrder } from 'src/app/global';
 import { AuthenticationService } from '../authentication.service';
 import { RootService } from '../root.service';
 import { Observable, of, Subject, merge } from 'rxjs';
-import { take, catchError, mergeMap, map } from 'rxjs/operators';
+import { take, catchError, mergeMap, map, debounceTime, distinctUntilChanged, delay } from 'rxjs/operators';
 import { ADDRESS, Language, ProductList } from '../interface';
 import { CookieService } from 'ngx-cookie-service';
 import { AddressListComponent } from './onboarding/address-list.component';
 import { TitleCasePipe } from '@angular/common';
 import { selectLanguage, State } from '../reducers';
 import { Store } from '@ngrx/store';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-header',
 	template: `
   	<!-- Top Bar -->
-  <section id="topbar" class="">
-    <div class="container">
-      <div class="row align-items-center">
-		<div [ngClass]="isLoggedID && defaultAddress ? 'left-siteinfo col-md-8 mr-auto d-flex align-items-center' : 'left-siteinfo col-md-6 mr-auto d-flex align-items-center'" class="">
-		  	<div class="logo"> <a routerLink='/'><img src="assets/images/logo.png" alt="AaniDani" class="img-fluid"></a>
-		  	</div> 
-			  <div class="selectedAddress d-none d-md-block" *ngIf="isLoggedID && defaultAddress">
-				<div class="callUs">
-					<a class="d-flex cursr" (click)="openAddress(address_list, {}, 'false')">
-						<div class="callicon align-self-center pt-2"><i class="icofont-google-map"></i></div>
-						<div class="callnumber"><small>{{'deliver_to' | translate}}</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
+	  <section id="topbar" class="">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="left-siteinfo col-md-5 col-6 order-2 order-md-1 mr-auto d-flex align-items-center">
+				<div>
+					<form class="navbar-form searchloacation" [formGroup]="searchForm">
+						<div class="searproduct">
+							<div class="form-group d-flex align-items-center mb-0">
+								<span class="search_addons"><i
+										class="fas fa-search"></i></span>
+								<input type="text" class="form-control"
+									formControlName="preset" name="preset"
+									id="preset"
+									[placeholder]="'search_products' | translate">
+								<a (click)="on_search_button()"
+									[ngClass]="{'disable-anchor-tag': isSearch}"
+									[title]="'search' | translate"
+									class="search_btn cursr"><span>{{'search' |
+										translate}}</span> <i
+										class="fas fa-search"></i></a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="dropdown_language pt-1">
+					<select class="form-control custom-select cursr" [(ngModel)]="selected"
+						(change)="onChangeLang($event.target.value === '1' ? 'en' : 'ar')">
+						<option class="cursr" [value]="language.languageID"
+							*ngFor="let language of language$ | async">
+							{{language.languageName}}</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="left-siteinfo col-md-2 order-1 order-md-2">
+				<div class="logo text-center"> <a routerLink='/'><img src="assets/images/logo.png" alt="AaniDani"
+							class="img-fluid"></a>
+				</div>
+			</div>
+
+			<div
+				class="right-links col-md-5 col-6 order-3 order-md-3 d-flex spcial_lins_top justify-content-end">
+				<div class="selectedAddress d-none d-md-block" *ngIf="isLoggedID && defaultAddress">
+					<div class="callUs">
+						<a class="d-flex cursr"
+							(click)="openAddress(address_list, {}, 'false')">
+							<div class="callicon align-self-center pt-2"><i
+									class="icofont-google-map"></i></div>
+							<div class="callnumber"><small>{{'deliver_to' |
+									translate}}</small>
+								<h6 class="mb-0">{{defaultAddress}}</h6>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="selectedAddress d-md-none" *ngIf="isLoggedID && defaultAddress">
+					<div class="callUs">
+						<a class="d-flex cursr">
+							<div class="callicon align-self-center pt-2"><i
+									class="icofont-google-map"></i></div>
+							<div class="callnumber"><small>{{'deliver_to' |
+									translate}}</small>
+								<h6 class="mb-0">{{defaultAddress}}</h6>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="callUs"
+					*ngIf="(!isLoggedID && !defaultAddress) || (isLoggedID && !defaultAddress)">
+					<a href="tel:920007709" class="d-flex">
+						<div class="callicon align-self-center pt-2"><i
+								class="icofont-headphone-alt"></i></div>
+						<div class="callnumber"><small>{{'call_us' | translate}}</small>
+							<h6 class="mb-0">920007709</h6>
+						</div>
 					</a>
 				</div>
-			</div>
-			<div>
-				<form class="navbar-form searchloacation">
-				  	<div class="searproduct">
-				  		<div class="form-group d-flex align-items-center mb-0">
-				  			<span class="search_addons"><i class="fas fa-search"></i></span>
-				  			<input type="text" class="form-control" name="searchTop" id="searchTop" [placeholder]="'search_products' | translate">	
-				  			<a href="#" class="search_btn"><span>{{'search' | translate}}</span> <i class="fas fa-search"></i></a>  
-				  		</div>	
-				  	</div>	
-				</form>
-			</div>		      
-	      </div>
-	      <div [ngClass]="isLoggedID && defaultAddress ? 'right-links col-md-4 d-flex spcial_lins_top justify-content-end' : 'right-links col-md-6 d-flex spcial_lins_top justify-content-end'" class="">	
-		  <div class="selectedAddress d-md-none" *ngIf="isLoggedID && defaultAddress">
-				<div class="callUs">
-					<a class="d-flex cursr">
-						<div class="callicon align-self-center pt-2"><i class="icofont-google-map"></i></div>
-						<div class="callnumber"><small>{{'deliver_to' | translate}}</small> <h6 class="mb-0">{{defaultAddress}}</h6></div>
-					</a>
+
+				<div class="signbtn" *ngIf="!isLoggedID"><a (click)="openLogin()" data-toggle="modal"
+						class="btn user-cart-btrn"><i class="icofont-ui-user"></i></a></div>
+				<div class="signbtn" *ngIf="isLoggedID">
+					<div class="dropdown userDropDwn">
+						<a href="#" class="btn user-cart-btrn dropdown-toggle"
+							data-toggle="dropdown"> <i class="icofont-ui-user"></i></a>
+						<div class="dropdown-menu customUserMenu">
+							<a routerLink="/user" routerLinkActive="active" class="btn"><i
+									class="icofont-ui-user"></i> {{'my_account' |
+								translate}}</a>
+							<a routerLink="/user/my-review" routerLinkActive="active"
+								class="btn"><i class="icofont-star"></i> {{'my_reviews'
+								| translate}}</a>
+							<a routerLink="/user/my-wishlist" routerLinkActive="active"
+								class="btn"><i class="icofont-heart"></i>
+								{{'my_wishlist' | translate}}</a>
+							<a routerLink="/user/my-orders" routerLinkActive="active"
+								class="btn"><i class="fa fa-list"></i> {{'my_orders' |
+								translate}}</a>
+							<a routerLink="/user/notifications" routerLinkActive="active"
+								class="btn"><i class="icofont-notification"></i>
+								{{'notifications' | translate}}</a>
+							<a (click)="logout();" class="btn"><i
+									class="icofont-logout"></i> {{'logout' |
+								translate}}</a>
+						</div>
+					</div>
 				</div>
-			</div>  	
-			<div class="dropdown_language pt-1">
-				<select class="form-control custom-select cursr" [(ngModel)]="selected" (change)="onChangeLang($event.target.value === '1' ? 'en' : 'ar')">
-					<option [value]="language.languageID" *ngFor="let language of language$ | async">{{language.languageName}}</option>				
-				</select>
-			</div>
-			<div class="callUs" *ngIf="(!isLoggedID && !defaultAddress) || (isLoggedID && !defaultAddress)">
-				<a href="tel:920007709" class="d-flex">
-					<div class="callicon align-self-center pt-2"><i class="icofont-headphone-alt"></i></div>
-					<div class="callnumber"><small>{{'call_us' | translate}}</small> <h6 class="mb-0">920007709</h6></div>
-				</a>
-			</div>
-			<div class="signbtn" *ngIf="!isLoggedID"><a (click)="openLogin()" data-toggle="modal" class="btn user-cart-btrn"><i class="icofont-ui-user"></i></a></div>
-			<div class="signbtn" *ngIf="isLoggedID">
-				<div class="dropdown userDropDwn">
-					<a href="#" class="btn user-cart-btrn dropdown-toggle" data-toggle="dropdown">  <i class="icofont-ui-user"></i></a>
-					<div class="dropdown-menu customUserMenu">
-						<a routerLink="/user" routerLinkActive="active" class="btn"><i class="icofont-ui-user"></i> {{'my_account' | translate}}</a>
-						<a routerLink="/user/my-review" routerLinkActive="active" class="btn"><i class="icofont-star"></i> {{'my_reviews' | translate}}</a>
-						<a routerLink="/user/my-wishlist" routerLinkActive="active" class="btn"><i class="icofont-heart"></i> {{'my_wishlist' | translate}}</a>
-						<a routerLink="/user/my-orders" routerLinkActive="active" class="btn"><i class="fa fa-list"></i> {{'my_orders' | translate}}</a>
-						<a routerLink="/user/notifications" routerLinkActive="active" class="btn"><i class="icofont-notification"></i> {{'notifications' | translate}}</a>
-						<a (click)="logout();" class="btn"><i class="icofont-logout"></i> {{'logout' | translate}}</a>
-					</div>	
+				<div class="cart-topbtn d-flex">
+					<a routerLink="/cart" class="btn user-cart-btrn">
+						<i class="fas fa-shopping-basket"></i><span class="counter-addon"
+							*ngIf="cartCount > 0">{{cartCount}}</span></a>
+					<span class="cartamount align-self-center" *ngIf="cartTotal > 0">{{(cartTotal |
+						number) + ' SR'}}</span>
 				</div>
 			</div>
-			<div class="cart-topbtn d-flex">
-				<a routerLink="/cart" class="btn user-cart-btrn">
-				<i class="fas fa-shopping-basket"></i><span class="counter-addon" *ngIf="cartCount > 0">{{cartCount}}</span></a>
-				<span class="cartamount align-self-center" *ngIf="cartTotal > 0">{{(cartTotal | number) + ' SR'}}</span>
-			</div>	
-	      </div>
-      </div>
-    </div>
-  </section>
+
+		</div>
+	</div>
+</section>
   <!-- add-address sidebar -->
   <app-shared-add-address></app-shared-add-address>
   `,
 	styles: [
+		`.disable-anchor-tag { 
+			pointer-events: none; 
+		}`
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -103,7 +156,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	selected: string;
 	defaultAddress: string;
 	address_list: ADDRESS[];
+	searchForm: FormGroup;
 	language$: Observable<Language[]> = this.store.select(selectLanguage);
+	@Output() search: EventEmitter<string> = new EventEmitter<string>();
+	@Input() isSearch: boolean
 	constructor(
 		private modal: BsModalService,
 		private auth: AuthenticationService,
@@ -111,6 +167,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private root: RootService,
 		private cookie: CookieService,
 		private titlecasePipe: TitleCasePipe,
+		private fb: FormBuilder,
 		private store: Store<State>) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
@@ -119,7 +176,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				this.root.update_user_status$.next('not_found');
 			}
 		}));
+		// global search form
+		this.setupForm();
+		// language default
 		this.root.languages$.subscribe(lang => lang === 'ar' ? this.selected = '2' : this.selected = '1');
+	}
+	setupForm() {
+		this.searchForm = this.fb.group({ preset: '' });
+		this.searchForm.valueChanges.pipe(map((event) => event), debounceTime(500), distinctUntilChanged(),
+			mergeMap((search) => of(search).pipe(delay(100)))).subscribe((input: { preset: string }) => {
+				this.search.emit(input.preset.trim());
+			});
 	}
 	orders$: Observable<{
 		status: string;
@@ -189,9 +256,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				}]
 			}[]>;
 	}
+	on_search_button = () => {
+		if (this.searchForm.get('preset').value) {
+			this.search.emit(this.searchForm.get('preset').value.trim());
+		}
+	}
 	onChangeLang = (lang: string) => {
 		this.root.update_user_language$.next(lang);
-		this.root.update_flip$.next(true);
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();

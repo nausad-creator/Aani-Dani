@@ -25,7 +25,7 @@ import { SubSink } from 'subsink';
 						  <li><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}" *ngFor="let category of categories">{{category?.categoryName | titlecase}}</a></li>
 		          		</ul>	
 		          </li>
-		          <li *ngFor="let category of categories"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{category?.categoryName | titlecase}}</a></li>		  
+		          <li *ngFor="let category of categories | slice:0:5"><a routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{category?.categoryName | titlecase}}</a></li>		  
 		        </ul>
 		      </nav><!-- .nav-menu -->			
 			</div> 			

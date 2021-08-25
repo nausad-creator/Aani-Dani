@@ -22,104 +22,156 @@ export const MY_CUSTOM_FORMATS = {
 	selector: 'app-my-account',
 	template: `
     <div class="tab-pane fade show active" id="ProfileInfo" role="tabpanel" aria-labelledby="home-tab">
-						  		<div class="titleAccount d-flex">
-						  			<h5>{{'profile_info' | translate}}</h5>
-						  			<div class="iconEdit ml-auto"><a (click)="toggleDisable()" class="cursr" id="EditProfi"><i class="icofont-pencil-alt-2"></i> {{'edit' | translate}}</a></div>
-						  		</div>
-						  		<div class="profileContent pt-3">
-						  			<form (ngSubmit)="onClickUpdate(profileForm.getRawValue())" [formGroup]="profileForm" method="post" role="form" class="ProfileForm NotEditable">
-						                <div class="form-row">
-						                  <div class="col-md-4 form-group">
-						                    <label for="fname">{{'full_name' | translate}}<span class="required-field"></span></label>
-						                    <input type="text" name="fname" #userFullNameInput (keyup)="onInputName(userFullNameInput.value)" formControlName="userFullName" class="form-control" id="fname" [placeholder]="'full_name' | translate">
-											<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('required')">{{'please_enter_name' | translate}}</small>
-						 					<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('minlength')">{{'input_fields_will_not_be_less_than_3_characters' | translate}}</small>
-                      	 					<small class="text-danger small" *ngIf="profileForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters' | translate}}</small>
-						                  </div>
-						                  <!-- <div class="col-md-4 form-group">
-						                    <label for="lname">Last Name<span class="required-field"></span></label>
-						                    <input type="text" name="fname" class="form-control" id="lname" placeholder="Enter Last Name">
-						                  </div> -->
-						                </div>
+	<div class="titleAccount d-flex">
+		<h5>{{'profile_info' | translate}}</h5>
+		<div class="iconEdit ml-auto"><a (click)="toggleDisable()" class="cursr" id="EditProfi"><i
+					class="icofont-pencil-alt-2"></i> {{'edit' | translate}}</a></div>
+	</div>
+	<div class="profileContent pt-3">
+		<form (ngSubmit)="onClickUpdate(profileForm.getRawValue())" [formGroup]="profileForm" method="post"
+			role="form" class="ProfileForm NotEditable">
+			<div class="form-row">
+				<div class="col-md-4 form-group">
+					<label for="fname">{{'full_name' | translate}}<span
+							class="required-field"></span></label>
+					<input type="text" name="fname" #userFullNameInput
+						(keyup)="onInputName(userFullNameInput.value)"
+						formControlName="userFullName" class="form-control" id="fname"
+						[placeholder]="'full_name' | translate">
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userFullName'].hasError('required')">{{'please_enter_name'
+						| translate}}</small>
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userFullName'].hasError('minlength')">{{'input_fields_will_not_be_less_than_3_characters'
+						| translate}}</small>
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters'
+						| translate}}</small>
+				</div>
+			</div>
 
-						                <div class="form-row">
-						                	<div class="col-md-4 form-group">
-							                    <label for="email">{{'email_address' | translate}}<span class="required-field"></span></label>
-							                    <input type="email" class="form-control" #userEmailInput (keyup)="onInputEmail(userEmailInput.value)" formControlName="userEmail" name="email" id="email" [placeholder]="'email_address' | translate">
-												<small class="text-danger small" *ngIf="profileForm.controls['userEmail'].hasError('required')">{{'please_enter_email' | translate}}</small>
-												<small class="text-danger" *ngIf="profileForm.controls['userEmail'].hasError('emailAlreadyExist')">email already exist.</small>
-												<small class="text-danger small" *ngIf="profileForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email' | translate}}</small>
-							                </div>
-							                <div class="col-md-4 form-group">
-							                    <label for="nationlity">{{'nationality' | translate}}<span class="required-field"></span></label>
-												<ng-select [closeOnSelect]="true" [searchable]="true" bindLabel="nationalityName" bindValue="nationalityID" labelById="nationlity"
-                  								appearance="outline" #userNationInput formControlName="nationalityID" [items]="nationalities$ | async"
-                  								[clearable]="true" class="custom" [placeholder]="'select_nationality' | translate">
-               									 </ng-select>
-												<small class="text-danger small" *ngIf="profileForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality' | translate}}</small>
-							                </div>
-							                <div class="col-md-4 form-group">
-							                    <label for="date">{{'date_of_birth' | translate}}<span class="required-field"></span></label>
-							                    <input #userDOBInput (keydown)="$event.preventDefault()" class="form-control DateNobor" placeholder="dd/mm/yyyy" [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
-												<owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
-												<a [ngClass]="{'noPointer': profileForm.controls.userDOB.disabled}" [owlDateTimeTrigger]="dt5" class="pasword-hideshowLogin cursr"><i class="fa fa-calendar"></i></a>
-												<small class="text-danger small" *ngIf="profileForm.controls['userDOB'].hasError('required')">{{'please_select_dob' | translate}}</small>
-							                </div>
-						                </div>
+			<div class="form-row">
+				<div class="col-md-4 form-group">
+					<label for="email">{{'email_address' | translate}}<span
+							class="required-field"></span></label>
+					<input type="email" class="form-control" #userEmailInput
+						(keyup)="onInputEmail(userEmailInput.value)" formControlName="userEmail"
+						name="email" id="email" [placeholder]="'email_address' | translate">
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userEmail'].hasError('required')">{{'please_enter_email'
+						| translate}}</small>
+					<small class="text-danger"
+						*ngIf="profileForm.controls['userEmail'].hasError('emailAlreadyExist')">email
+						already exist.</small>
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email'
+						| translate}}</small>
+				</div>
+				<div class="col-md-4 form-group">
+					<label for="nationlity">{{'nationality' | translate}}<span
+							class="required-field"></span></label>
+					<ng-select [closeOnSelect]="true" [searchable]="true"
+						bindLabel="nationalityName" bindValue="nationalityID"
+						labelById="nationlity" appearance="outline" #userNationInput
+						formControlName="nationalityID" [items]="nationalities$ | async"
+						[clearable]="true" class="custom"
+						[placeholder]="'select_nationality' | translate">
+					</ng-select>
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality'
+						| translate}}</small>
+				</div>
+				<div class="col-md-4 form-group">
+					<label for="date">{{'date_of_birth' | translate}}<span
+							class="required-field"></span></label>
+					<input #userDOBInput (keydown)="$event.preventDefault()"
+						class="form-control DateNobor" placeholder="dd/mm/yyyy" [max]="maxDate"
+						placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob"
+						name="userDOB" [owlDateTime]="dt5">
+					<owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+					<a [ngClass]="{'noPointer': profileForm.controls.userDOB.disabled}"
+						[owlDateTimeTrigger]="dt5" class="pasword-hideshowLogin cursr"><i
+							class="fa fa-calendar"></i></a>
+					<small class="text-danger small"
+						*ngIf="profileForm.controls['userDOB'].hasError('required')">{{'please_select_dob'
+						| translate}}</small>
+				</div>
+			</div>
 
-						                <div class="form-row">
-						                	<div class="col-md-4">
-						                		<label for="phone">{{'mobile_number' | translate}}<span class="required-field"></span></label>
-						                		<div class="form-row">
-						                			<div class="col-md-4 form-group"><input type="text" formControlName="countryCode" class="form-control w-100" name="cCode" id="phone" placeholder="Code" readonly></div>
-						                			<div class="col-md-8 form-group">
-														<input type="text"  maxlength="10" formControlName="userMobile" class="form-control w-100" name="phone" id="phonecode" [placeholder]="'mobile_number' | translate">
-														<small class="text-danger small" *ngIf="profileForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile' | translate}}</small>
-														<small class="text-danger" *ngIf="profileForm.controls['userMobile'].hasError('mobileExist')">mobile already exist.</small>
-														<small class="text-danger" *ngIf="profileForm.controls['userMobile'].hasError('pattern') && (profileForm.controls['userMobile'].dirty || profileForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number' | translate}}</small>
-													</div>
-						                		</div>	
-						                	</div>	
-						                </div>	
+			<div class="form-row">
+				<div class="col-md-4">
+					<label for="phone">{{'mobile_number' | translate}}<span
+							class="required-field"></span></label>
+					<div class="form-row">
+						<div class="col-md-4 form-group"><input type="text"
+								formControlName="countryCode" class="form-control w-100"
+								name="cCode" id="phone" placeholder="Code" readonly>
+						</div>
+						<div class="col-md-8 form-group">
+							<input type="text" maxlength="10" formControlName="userMobile"
+								class="form-control w-100" name="phone" id="phonecode"
+								[placeholder]="'mobile_number' | translate">
+							<small class="text-danger small"
+								*ngIf="profileForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile'
+								| translate}}</small>
+							<small class="text-danger"
+								*ngIf="profileForm.controls['userMobile'].hasError('mobileExist')">mobile
+								already exist.</small>
+							<small class="text-danger"
+								*ngIf="profileForm.controls['userMobile'].hasError('pattern') && (profileForm.controls['userMobile'].dirty || profileForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number'
+								| translate}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
 
-						                <div class=""><button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md" id="SaveDetail">{{ preventAbuse ? ('wait' | translate) : 'Save' }}</button></div>
-						            </form>
-						  		</div>	
-						  	</div>
+			<div class=""><button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md"
+					id="SaveDetail">{{ preventAbuse ? ('wait' | translate) : 'Save' }}</button>
+			</div>
+		</form>
+	</div>
+</div>
   `,
 	styles: [
 		`.ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
-        height: 37.5px;
-        font-size: 1rem;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-		background-color: #ECECEC;
-		background-color: #e9ecef;
-    	opacity: 1;
-    	border-color: #E6E6E6;
-    	height: calc(1.8em + .75rem + 2px);
-      }
-	  .ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
-    	color:#C2C2C2;
-  	   }
-	  .ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
-    	padding-right: 5px;
-	   }
-	   .ng-select.custom ::ng-deep .ng-arrow-wrapper {
-   		display:none
-		}
-		.ng-select.custom ::ng-deep .ng-clear-wrapper {
-    	color: #999;
-    	top: 1px;
-		}
-	   .noPointer{
-		pointer-events:none;
-		}
-	  .required-field::before {
-        content: '*';
-        color: rgb(247, 83, 83);
-      }`
+			height: 37.5px;
+			font-size: 1rem;
+			background-clip: padding-box;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			background-color: #ECECEC;
+			background-color: #e9ecef;
+			opacity: 1;
+			border-color: #E6E6E6;
+			height: calc(1.8em + .75rem + 2px);
+		      }
+		      
+		      .ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
+			color: #C2C2C2;
+		      }
+		      
+		      .ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
+			padding-right: 5px;
+		      }
+		      
+		      .ng-select.custom ::ng-deep .ng-arrow-wrapper {
+			display: none
+		      }
+		      
+		      .ng-select.custom ::ng-deep .ng-clear-wrapper {
+			color: #999;
+			top: 1px;
+		      }
+		      
+		      .noPointer {
+			pointer-events: none;
+		      }
+		      
+		      .required-field::before {
+			content: '*';
+			color: rgb(247, 83, 83);
+		      }
+		      `
 	],
 	providers: [
 		{ provide: DateTimeAdapter, useClass: MomentDateTimeAdapter, deps: [OWL_DATE_TIME_LOCALE] },

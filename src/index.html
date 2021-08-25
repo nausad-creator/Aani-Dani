@@ -6,17 +6,156 @@
 	<title>AANI &amp; DANI</title>
 	<base href="/">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="keywords" content="Luxury Chocolate, Cake, Macaron">
+	<meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+	<meta name="title" content="AANI &amp; DANI">
+	<meta name="metatitle" content="AANI &amp; DANI">
+	<meta name="twitter:title" content="AANI &amp; DANI">
+	<meta name="twitter:description" content="Luxury Chocolate, Cake, Macaron">
+	<meta property="og:title" content="AANI &amp; DANI">
+	<meta property="og:description" content="Luxury Chocolate, Cake, Macaron">
+	<meta property="og:url" content="https://www.aani-dani.com/">
+	<meta name="description" content="Luxury Chocolate, Cake, Macaron">
+
 	<!-- Favicons -->
 	<link href="assets/images/favicon.png" rel="icon">
 	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,700&display=swap" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap"
+		rel="stylesheet">
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAV0j-imLFwoEcRaCTHDVl0o9Tj6Mj7fZM&libraries=places&language=en"></script>
+	<style>
+		@keyframes dancing-dots-jump {
+			0% {
+				top: 0;
+			}
+
+			55% {
+				top: 0;
+				text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5);
+			}
+
+			60% {
+				top: -20px;
+				text-shadow: 5px 20px 5px rgba(0, 0, 0, 0.5);
+			}
+
+			80% {
+				top: 4px;
+				text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5);
+			}
+
+			90% {
+				top: -3px;
+				text-shadow: 0px 3px 1px rgba(0, 0, 0, 0.5);
+			}
+
+			95% {
+				top: 1px;
+				text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5);
+			}
+
+			100% {
+				top: 0;
+				text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5);
+			}
+		}
+
+
+		#dancing-dots-text {
+			width: 200px;
+			padding: 30px 50px;
+			text-align: center;
+		}
+
+		#dancing-dots-text:hover {
+			-webkit-animation-duration: 300ms;
+			animation-duration: 300ms;
+			-webkit-animation-iteration-count: infinite;
+			animation-iteration-count: infinite;
+			-webkit-animation-name: shake-me;
+			animation-name: shake-me;
+			-moz-animation-duration: 300ms;
+			-moz-animation-iteration-count: infinite;
+			-moz-animation-name: shake-me;
+		}
+
+		#dancing-dots-text span {
+			text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.5);
+		}
+
+		#dancing-dots-text span span {
+			-webkit-animation-duration: 1000ms;
+			animation-duration: 1000ms;
+			-webkit-animation-iteration-count: infinite;
+			animation-iteration-count: infinite;
+			-webkit-animation-name: dancing-dots-jump;
+			animation-name: dancing-dots-jump;
+			-moz-animation-duration: 1000ms;
+			-moz-animation-iteration-count: infinite;
+			-moz-animation-name: dancing-dots-jump;
+			padding: 1px;
+			position: relative;
+		}
+
+		#dancing-dots-text span span:nth-child(1) {
+			-webkit-animation-delay: 50ms;
+			animation-delay: 50ms;
+			-moz-animation-delay: 50ms;
+		}
+
+		#dancing-dots-text span span:nth-child(2) {
+			-webkit-animation-delay: 250ms;
+			animation-delay: 250ms;
+			-moz-animation-delay: 250ms;
+		}
+
+		#dancing-dots-text span span:nth-child(3) {
+			-webkit-animation-delay: 450ms;
+			animation-delay: 450ms;
+			-moz-animation-delay: 450ms;
+		}
+
+		#dancing-dots-text span span:nth-child(4) {
+			-webkit-animation-delay: 650ms;
+			animation-delay: 650ms;
+			-moz-animation-delay: 650ms;
+		}
+
+		#dancing-dots-text span span:nth-child(5) {
+			-webkit-animation-delay: 850ms;
+			animation-delay: 850ms;
+			-moz-animation-delay: 850ms;
+		}
+
+		.loader-wrapper {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			font-weight: bold;
+			font-family: monospace;
+		}
+	</style>
 </head>
 
 <body>
-	<app-root></app-root>
+	<app-root>
+		<div class="loader-wrapper">
+			<img width="100px" height="100px" src="assets/images/xloading.gif" alt="logo">
+			<div id="dancing-dots-text">
+				Loading<span><span>.</span><span>.</span><span>.</span><span>.</span><span>.</span></span>
+			</div>
+		</div>
+	</app-root>
 </body>
 
 </html>

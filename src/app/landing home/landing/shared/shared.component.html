@@ -22,7 +22,7 @@
 									</li>
 								</ul>
 							</li>
-							<li *ngFor="let category of categories"><a
+							<li *ngFor="let category of categories | slice:0:5"><a
 									routerLink="/products"
 									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 									| async) === 'en' ? category?.categoryName :
@@ -42,6 +42,8 @@
 	<app-most-popular-best-seller [categories]="categories" *ngIf="categories$ | async as categories">
 	</app-most-popular-best-seller>
 	<app-skeleton-category *ngIf="(categories$ | async)?.length === 0"></app-skeleton-category>
+	<app-shared-about-aani-dani></app-shared-about-aani-dani>
+	<app-shared-product-summary></app-shared-product-summary>
 	<app-our-partners></app-our-partners>
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->

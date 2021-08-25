@@ -51,8 +51,6 @@ export class RootService {
 	update$ = this.update_user_status$.asObservable();
 	update_user_language$: Subject<string> = new BehaviorSubject<string>(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
 	languages$ = this.update_user_language$.asObservable();
-	update_flip$: Subject<boolean> = new BehaviorSubject<boolean>(false);
-	flip$ = this.update_flip$.asObservable();
 
 	constructor(
 		private http: HttpClient,

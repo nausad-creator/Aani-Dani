@@ -24,7 +24,6 @@ import { SubSink } from 'subsink';
 				[title]="(root.languages$ | async) === 'en' ?  product?.productName : product?.productArabicNme"
 				href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
 				<img offset="0"
-					defaultImage="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAUFBQUFBQYGBgYICQgJCAwLCgoLDBINDg0ODRIbERQRERQRGxgdGBYYHRgrIh4eIisyKigqMjw2NjxMSExkZIYBCgoKCgoKCwwMCw8RDxEPFxUTExUXIhkaGRoZIjQhJiEhJiE0LjguKy44LlNBOjpBU2BRTFFgdGhodJOLk8DA///AABEIAAUABQMBEQACEQEDEQH/xABcAAEAAAAAAAAAAAAAAAAAAAAHEAEAAgEFAAAAAAAAAAAAAAACAQMRAAQFB0EBAQEAAAAAAAAAAAAAAAAAAAMEEQAABQUAAAAAAAAAAAAAAAAAAQIDQRITISKR/9oADAMBAAIRAxEAPwAZjt2+oGm3hNumMwmLmIUx7ic6mtPQ/iNSC1plsuj/2Q=="
 					lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 					[errorImage]="'assets/images/error_not_found.png'"
 					[alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
@@ -99,11 +98,11 @@ import { SubSink } from 'subsink';
 				</div>
 				<div class="shareDetail">
 					<span class="pr-2">{{'share' | translate}}:</span>
-					<a href="#"><i class="fab fa-facebook-f"></i></a>
-					<a href="#"><i class="fab fa-twitter"></i></a>
-					<a href="#"><i class="fab fa-pinterest"></i></a>
-					<a href="#"><i class="fab fa-google-plus-g"></i></a>
-					<a href="#"><i class="fab fa-linkedin-in"></i></a>
+					<a title="facebook" shareButton="facebook" #fbBtn="shareButton" class="cursr"><i *ngIf="fbBtn" [icon]="fbBtn.icon" size="lg" class="fab fa-facebook-f"></i></a>
+					<a title="twitter" shareButton="twitter" #twiBtn="shareButton" class="cursr"><i *ngIf="twiBtn" [icon]="twiBtn.icon" size="lg" class="fab fa-twitter"></i></a>
+					<a title="pinterest" shareButton="pinterest" #pntBtn="shareButton" class="cursr"><i *ngIf="pntBtn" [icon]="pntBtn.icon" size="lg" class="fab fa-pinterest"></i></a>
+					<a title="whatsapp" shareButton="whatsapp" #gleBtn="shareButton" class="cursr"><i *ngIf="gleBtn" [icon]="gleBtn.icon" size="lg" class="fab fa-whatsapp"></i></a>
+					<a title="linkedin" shareButton="linkedin" #likinBtn="shareButton" class="cursr"><i *ngIf="likinBtn" [icon]="likinBtn.icon" size="lg" class="fab fa-linkedin-in"></i></a>
 				</div>
 			</div>
 		</div>
@@ -127,8 +126,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
 	subs = new SubSink();
 	bModalRef: BsModalRef;
 	caseOptions: OwlOptions = {
-		autoWidth: true,
-		autoHeight: true,
 		autoplay: true,
 		dots: false,
 		loop: false,

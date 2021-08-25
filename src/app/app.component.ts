@@ -113,6 +113,7 @@ export class AppComponent implements OnInit, OnDestroy {
 					data.minPrice = '';
 					data.maxPrice = '';
 					data.sortBy = '';
+					data.searchkeyword = '';
 				}
 				while (route.activatedRoute.firstChild) {
 					route.activatedRoute = route.activatedRoute.firstChild;

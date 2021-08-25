@@ -4223,3 +4223,151 @@ html {
 .productImg-content .owl-item {
   max-width: 107px !important;
 }
+
+#heroCarousel .owl-dots {
+  position: absolute;
+  z-index: 9;
+  width: 100%;
+  left: 0;
+  bottom: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+#heroCarousel .owl-dots .owl-dot span {
+  background: #ffffff;
+  opacity: .2;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin: 2px;
+  position: inherit;
+  display: block;
+}
+
+#heroCarousel .owl-dots .owl-dot.active span {
+  opacity: 1;
+}
+
+/*250821*/
+.menu-content .main-menu {
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.menu-content .main-menu li a {
+  padding: 10px 20px 10px 20px;
+}
+
+.menu-content .main-menu li a.active {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 40px;
+}
+
+.nav-menu .drop-down ul li a.active {
+  background-color: #010101;
+  color: #fff;
+  border-radius: 0;
+}
+
+.listcategory a.selected {
+  background-color: #353535;
+  color: #fff;
+}
+
+.aboutaanidani-section {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  text-align: center;
+}
+
+.aboutaanidani-section:before {
+  content: '';
+  position: absolute;
+  background-color: #000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+.aboutaanidani-section .contentAbout h2 {
+  color: #fff;
+}
+
+.aboutaanidani-section .contentAbout p {
+  color: #fff;
+}
+
+.btn-white {
+  background-color: #fff;
+  color: #212529;
+}
+
+.uniqueItems {
+  text-align: center;
+  box-shadow: 0px 1px 12px -9px #bbb;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  min-height: 460px;
+  margin-bottom: 15px;
+}
+
+.uniqueItems .imgBox img {
+  height: 250px;
+}
+
+.dropdown_language select {
+  min-width: 90px;
+}
+
+@media (max-width:767px) {
+  .callUs .callnumber {
+    display: none;
+  }
+
+  .searchloacation input {
+    display: none;
+  }
+
+  .searchloacation input.showSR {
+    display: block;
+    position: absolute;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    top: 35px;
+    z-index: 9;
+    width: 100%;
+  }
+
+  .search_btn span,
+  .search_addons {
+    display: none;
+  }
+
+  .search_btn i {
+    display: block;
+  }
+
+  .searchloacation .searproduct {
+    background-color: transparent;
+    margin-right: 0;
+  }
+
+  .searchloacation .searproduct .search_btn {
+    padding-right: 0;
+  }
+
+  .searchloacation .searproduct .showSR+.search_btn i::before {
+    content: "\f00d";
+  }
+}
+
+@media (max-width:574px) {
+  .logo a img {
+    max-height: 50px;
+  }
+}

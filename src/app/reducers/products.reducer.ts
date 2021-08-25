@@ -11,7 +11,8 @@ export interface ProductsState {
 	};
 	query: string;
 	preset: string;
-	isSearching: boolean;
+	isChange: boolean;
+	isSearch: boolean;
 	isFilter: boolean;
 	isSorting: boolean;
 }
@@ -25,7 +26,8 @@ export const initialState: ProductsState = {
 	},
 	query: '',
 	preset: '',
-	isSearching: false,
+	isChange: false,
+	isSearch: false,
 	isFilter: false,
 	isSorting: false
 };
@@ -41,7 +43,7 @@ export function productReducer(state = initialState, action: ProductActions): Pr
 				query: action.query
 			});
 		case ProductActionTypes.SEARCH_START:
-			return { ...state, isSearching: true }
+			return { ...state, isChange: true }
 		case ProductActionTypes.FILTER_START:
 			return Object.assign({}, state, {
 				isFilter: true
@@ -50,8 +52,12 @@ export function productReducer(state = initialState, action: ProductActions): Pr
 			return Object.assign({}, state, {
 				isSorting: true
 			});
+		case ProductActionTypes.GLOBAL_SEARCH_START:
+			return Object.assign({}, state, {
+				isSearch: true
+			});
 		case ProductActionTypes.SEARCH_ENDED_SUCCESS:
-			return { ...state, isSearching: false, isFilter: false, isSorting: false }
+			return { ...state, isChange: false, isFilter: false, isSorting: false, isSearch: false }
 		case ProductActionTypes.LOAD_INITIAL:
 			return Object.assign({}, state, {
 				query: action.query
@@ -73,6 +79,10 @@ export function productReducer(state = initialState, action: ProductActions): Pr
 		case ProductActionTypes.SORT_PRESET:
 			return Object.assign({}, state, {
 				preset: action.preset
+			});
+		case ProductActionTypes.SEARCH_GLOBAL:
+			return Object.assign({}, state, {
+				query: action.query
 			});
 		case ProductActionTypes.REMOVE:
 			return state;

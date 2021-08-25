@@ -35,7 +35,7 @@ import { SubSink } from 'subsink';
 											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
-							<li *ngFor="let category of categories"><a
+							<li *ngFor="let category of categories | slice:0:5"><a
 									routerLink="/products"
 									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?
@@ -233,7 +233,7 @@ export class SharedComponent implements OnInit, OnDestroy {
 		const updatesProducts$ = this.forceReload$.pipe(mergeMap(() => this.getProducts() as Observable<ProductList[]>));
 		this.products$ = merge(initialProducts$, updatesProducts$);
 		this.subs.add(this.products$.subscribe((res: ProductList[]) => {
-			timer(500).subscribe(() => {
+			timer(100).subscribe(() => {
 				this.loader = false;
 				this.product = res[0];
 				this.cd.markForCheck();

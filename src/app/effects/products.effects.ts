@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { AddProducts, FailureProducts, FilterQuery, FilterStart, LoadInitial, ProductActionTypes, ResetProducts, SearchEndedSuccess, SearchNewQuery, SearchStart, SortingQuery, SortStart } from '../actions/products.action';
+import { AddProducts, FailureProducts, FilterQuery, FilterStart, GlobalSearchStart, LoadInitial, ProductActionTypes, ResetProducts, SearchEndedSuccess, SearchGlobal, SearchNewQuery, SearchStart, SortingQuery, SortStart } from '../actions/products.action';
 import { State } from '../reducers';
 import { RootService } from '../root.service';
 
@@ -29,7 +29,14 @@ export class ProductsEffects {
 			withLatestFrom(this.store.select(state => state.products.preset)),
 			map((state) => new SortStart(state[1])));
 	});
-	newSearch$ = createEffect(() => {
+	search$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(ProductActionTypes.SEARCH_GLOBAL),
+			map((r) => new ResetProducts(r.query)),
+			withLatestFrom(this.store.select(state => state.products.query)),
+			map((state) => new GlobalSearchStart(state[1])));
+	});
+	change$ = createEffect(() => {
 		return this.actions$.pipe(
 			ofType(ProductActionTypes.SEARCH_NEW_QUERY),
 			filter((action) => this.root.isNewSearchQuery(action.query)),
@@ -39,6 +46,7 @@ export class ProductsEffects {
 	fetchProduct$ = createEffect((): Observable<SearchEndedSuccess> => {
 		return this.actions$.pipe(
 			ofType(
+				ProductActionTypes.GLOBAL_SEARCH_START,
 				ProductActionTypes.SEARCH_START,
 				ProductActionTypes.FILTER_START,
 				ProductActionTypes.SORT_START
@@ -71,7 +79,9 @@ export class ProductsEffects {
 			FilterQuery |
 			SortingQuery |
 			FilterStart |
+			SearchGlobal |
 			ResetProducts |
+			GlobalSearchStart |
 			SortStart>,
 		private root: RootService,
 		private store: Store<State>,) { }

@@ -9,8 +9,10 @@ export enum ProductActionTypes {
 	RESET = '[Products] RESET_PRODUCTS',
 	UPDATE_METADATA = '[Products] UPDATE_METADATA',
 	SEARCH_NEW_QUERY = '[Products] SEARCH_NEW_QUERY',
+	SEARCH_GLOBAL = '[Products] SEARCH_GLOBAL',
 	SEARCH_ENDED_SUCCESS = '[Products] SEARCH_ENDED_SUCCESS',
 	SEARCH_START = '[Products] SEARCH_START',
+	GLOBAL_SEARCH_START = '[Products] GLOBAL_SEARCH_START',
 	FILTER_START = '[Products] FILTER_START',
 	SORT_START = '[Products] SORT_START',
 	SEARCH_MORE = '[Products] SEARCH_MORE',
@@ -49,6 +51,11 @@ export class SortStart implements Action {
 	constructor(public query: string) { }
 }
 
+export class GlobalSearchStart implements Action {
+	readonly type = ProductActionTypes.GLOBAL_SEARCH_START;
+	constructor(public query: string) { }
+}
+
 export class LoadInitial implements Action {
 	readonly type = ProductActionTypes.LOAD_INITIAL;
 	constructor(public query: string) { }
@@ -67,6 +74,11 @@ export class SearchEndedSuccess implements Action {
 
 export class SearchNewQuery implements Action {
 	readonly type = ProductActionTypes.SEARCH_NEW_QUERY;
+	constructor(public query: string) { }
+}
+
+export class SearchGlobal implements Action {
+	readonly type = ProductActionTypes.SEARCH_GLOBAL;
 	constructor(public query: string) { }
 }
 
@@ -96,10 +108,12 @@ export type ProductActions =
 	| FailureProducts
 	| SearchStart
 	| FilterStart
+	| GlobalSearchStart
 	| SortStart
 	| LoadInitial
 	| SearchEndedSuccess
 	| SearchNewQuery
+	| SearchGlobal
 	| FilterQuery
 	| SortingQuery
 	| ResetProducts;

@@ -2,8 +2,20 @@
   .ng-bar-placeholder {
     background-color: lightgray;
   }
+
   .ng-bar {
     background: #00F260;
     background: linear-gradient(to right, #0575E6, #00F260);
+  }
+}
+
+::ng-deep .root-progress-bar-left {
+  .ng-bar-placeholder {
+    background-color: lightgray;
+  }
+
+  .ng-bar {
+    background: #00F260;
+    background: linear-gradient(to left, #0575E6, #00F260);
   }
 }

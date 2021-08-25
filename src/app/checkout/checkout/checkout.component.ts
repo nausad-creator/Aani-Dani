@@ -42,7 +42,7 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 											category?.categoryArabicName}}</a></li>
 								</ul>
 							</li>
-							<li *ngFor="let category of categories"><a
+							<li *ngFor="let category of categories | slice:0:5"><a
 									routerLink="/products"
 									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?

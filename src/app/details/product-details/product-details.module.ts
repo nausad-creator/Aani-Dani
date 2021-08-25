@@ -14,6 +14,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { SkeletonComponent } from './skeleton/skeleton.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { HeaderModule } from 'src/app/header/header.module';
+import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
 
 @NgModule({
 	declarations: [
@@ -34,6 +35,7 @@ import { HeaderModule } from 'src/app/header/header.module';
 		NgxPaginationModule,
 		LazyLoadImageModule,
 		NgxSkeletonLoaderModule,
+		ShareButtonsModule,
 		RouterModule.forChild([
 			{
 				path: '', component: SharedComponent
@@ -41,4 +43,5 @@ import { HeaderModule } from 'src/app/header/header.module';
 		]),
 	]
 })
-export class ProductDetailsModule { }
+export class ProductDetailsModule {
+}

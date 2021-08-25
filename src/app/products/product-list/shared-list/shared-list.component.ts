@@ -11,12 +11,12 @@ import { data } from 'src/app/global';
 import { dataChange } from 'src/app/global';
 import { Store } from '@ngrx/store';
 import { Pipe, PipeTransform } from '@angular/core';
-import { FilterQuery, LoadInitial, SearchNewQuery, SortingQuery } from 'src/app/actions/products.action';
+import { FilterQuery, LoadInitial, SearchGlobal, SearchNewQuery, SortingQuery } from 'src/app/actions/products.action';
 
 @Component({
 	selector: 'app-shared-list',
 	template: `
-<app-header></app-header>
+<app-header [isSearch]="(product_state$ | async)?.isSearch" (search)="search($event)"></app-header>
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -40,7 +40,7 @@ import { FilterQuery, LoadInitial, SearchNewQuery, SortingQuery } from 'src/app/
 									</li>
 								</ul>
 							</li>
-							<li *ngFor="let category of categories"><a class="cursr"
+							<li *ngFor="let category of categories | slice:0:5"><a [ngClass]="{'active': category.categoryID===route.snapshot.queryParams?.categoryID}" class="cursr"
 									(click)="onChange(category);">{{(root.languages$
 									| async) === 'en' ?
 									category?.categoryName :
@@ -59,18 +59,18 @@ import { FilterQuery, LoadInitial, SearchNewQuery, SortingQuery } from 'src/app/
 			<div class="row">
 				<div class="col-lg-3 col-md-4">
 					<div class="Mobilefilter">
-						<a href="#" class="FilterHandale"><i class="icofont-filter"></i>
+						<a class="FilterHandale cursr"><i class="icofont-filter"></i>
 							{{'filter' | translate}} </a>
 					</div>
 					<div class="filterSection">
-						<app-shop-by-category (change)="onChange($event);"
+						<app-shop-by-category [selected]="route.snapshot.queryParams?.categoryID" (change)="onChange($event);"
 							[categories]="categories$ | async"></app-shop-by-category>
 						<app-filter-by-price [preventAbuse]="(product_state$ | async)?.isFilter"
 							(filterByPrice)="onFilter($event);">
 						</app-filter-by-price>
-						<app-top-selling [products]="(product_state$ | async)?.products$?.bestselling" *ngIf="!(product_state$ | async)?.isSearching">
+						<app-top-selling [products]="(product_state$ | async)?.products$?.bestselling" *ngIf="!(product_state$ | async)?.isChange">
 						</app-top-selling>
-						<app-skeleton-top-selling *ngIf="(product_state$ | async)?.isSearching"></app-skeleton-top-selling>
+						<app-skeleton-top-selling *ngIf="(product_state$ | async)?.isChange"></app-skeleton-top-selling>
 					</div>
 					<br>
 				</div>
@@ -86,8 +86,8 @@ import { FilterQuery, LoadInitial, SearchNewQuery, SortingQuery } from 'src/app/
 						<div class="sparetor_title">
 							<h5 class="mb-0">{{(product_state$ | async)?.products$?.itemscount ? ('item' | translate) + ' ' + '('+ (+(product_state$ | async)?.products$?.itemscount<10?'0'+(product_state$ | async)?.products$?.itemscount:(product_state$ | async)?.products$?.itemscount) +')' : ('item' | translate) + ' ' + '(' + '00' + ')'}}</h5>
 						</div>
-						<app-items [products]="(product_state$ | async)?.products$?.data" *ngIf="!(product_state$ | async)?.isSearching"></app-items>
-						<app-skeleton *ngIf="(product_state$ | async)?.isSearching"></app-skeleton>
+						<app-items [products]="(product_state$ | async)?.products$?.data" *ngIf="!(product_state$ | async)?.isChange"></app-items>
+						<app-skeleton *ngIf="(product_state$ | async)?.isChange"></app-skeleton>
 					</div>
 				</div>
 			</div>
@@ -106,7 +106,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	product_state$: Observable<{
-		isSearching: boolean;
+		isChange: boolean;
+		isSearch: boolean;
 		isFilter: boolean;
 		isSorting: boolean;
 		preset: string;
@@ -151,7 +152,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	state_product = () => {
 		// products
 		const initial$ = this.state() as Observable<{
-			isSearching: boolean;
+			isChange: boolean;
+			isSearch: boolean;
 			isFilter: boolean;
 			isSorting: boolean;
 			preset: string;
@@ -165,7 +167,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 			}
 		}>;
 		const updates$ = this.forceReload$.pipe(mergeMap(() => this.state() as Observable<{
-			isSearching: boolean;
+			isChange: boolean;
+			isSearch: boolean;
 			isFilter: boolean;
 			isSorting: boolean;
 			preset: string;
@@ -183,7 +186,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	state = () => {
 		return this.store.select(selectProductList).pipe(
 			map((r: {
-				isSearching: boolean;
+				isChange: boolean;
+				isSearch: boolean;
 				isFilter: boolean;
 				isSorting: boolean;
 				preset: string;
@@ -197,7 +201,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 				}
 			}) => {
 				return {
-					isSearching: r.isSearching,
+					isChange: r.isChange,
+					isSearch: r.isSearch,
 					isSorting: r.isSorting,
 					isFilter: r.isFilter,
 					preset: r.preset,
@@ -264,7 +269,8 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 				}
 			}),
 			catchError(() => of([]))) as Observable<{
-				isSearching: boolean;
+				isChange: boolean;
+				isSearch: boolean;
 				isFilter: boolean;
 				isSorting: boolean;
 				preset: string;
@@ -294,6 +300,11 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		data.sortBy = $temp ? $temp : '';
 		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
 		this.store.dispatch(new SortingQuery(JSON.stringify(data)));
+	}
+	search = (s: string) => {
+		data.searchkeyword = s;
+		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new SearchGlobal(JSON.stringify(data)));
 	}
 	ngAfterViewInit(): void {
 		this.jquery();

@@ -7,11 +7,10 @@ import { Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeCategoryList, selectProductList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
-import { data } from 'src/app/global';
-import { dataChange } from 'src/app/global';
 import { Store } from '@ngrx/store';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FilterQuery, LoadInitial, SearchGlobal, SearchNewQuery, SortingQuery } from 'src/app/actions/products.action';
+import { change, filter_sort, initial, search_global } from 'src/app/global';
 
 @Component({
 	selector: 'app-shared-list',
@@ -65,8 +64,9 @@ import { FilterQuery, LoadInitial, SearchGlobal, SearchNewQuery, SortingQuery } 
 					<div class="filterSection">
 						<app-shop-by-category [selected]="route.snapshot.queryParams?.categoryID" (change)="onChange($event);"
 							[categories]="categories$ | async"></app-shop-by-category>
-						<app-filter-by-price [preventAbuse]="(product_state$ | async)?.isFilter"
-							(filterByPrice)="onFilter($event);">
+						<app-filter-by-price [filtered]="filtered" [preventAbuse]="(product_state$ | async)?.isFilter"
+							(filterByPrice)="onFilter($event);filtered=$event"
+							(clearFilter)="onClear();filtered=''">
 						</app-filter-by-price>
 						<app-top-selling [products]="(product_state$ | async)?.products$?.bestselling" *ngIf="!(product_state$ | async)?.isChange">
 						</app-top-selling>
@@ -102,6 +102,7 @@ import { FilterQuery, LoadInitial, SearchGlobal, SearchNewQuery, SortingQuery } 
 })
 export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	subs = new SubSink();
+	filtered: string;
 	forceReload$ = new Subject<void>();
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
@@ -128,7 +129,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 		public route: ActivatedRoute) {
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
-				data.loginuserID = '1';
+				initial.loginuserID = '1';
 			}
 		}));
 		this.subs.add(this.root.update$.subscribe(status => {
@@ -143,10 +144,10 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 	ngOnInit(): void {
 		// query changes
-		data.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		data.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'undefined';
-		data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
-		this.store.dispatch(new LoadInitial(JSON.stringify(data)));
+		initial.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		initial.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'undefined';
+		initial.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
+		this.store.dispatch(new LoadInitial(JSON.stringify(initial)));
 		this.state_product();
 	}
 	state_product = () => {
@@ -285,26 +286,32 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 			}>;
 	}
 	onChange = async (category: Category) => {
-		dataChange.page = '0';
-		dataChange.categoryID = category?.categoryID ? category?.categoryID : '0';
-		dataChange.categoryName = category?.categoryName ? `${category?.categoryName}_${category?.categoryArabicName}` : 'undefined';
-		this.store.dispatch(new SearchNewQuery(JSON.stringify(dataChange)));
+		change.page = '0';
+		change.categoryID = category?.categoryID ? category?.categoryID : '0';
+		change.categoryName = category?.categoryName ? `${category?.categoryName}_${category?.categoryArabicName}` : 'undefined';
+		this.store.dispatch(new SearchNewQuery(JSON.stringify(change)));
 	}
 	onFilter = ($temp: string) => {
-		data.minPrice = $temp.split(';')[0];
-		data.maxPrice = $temp.split(';')[1];
-		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		this.store.dispatch(new FilterQuery(JSON.stringify(data)));
+		filter_sort.minPrice = $temp.split(';')[0];
+		filter_sort.maxPrice = $temp.split(';')[1];
+		filter_sort.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new FilterQuery(JSON.stringify(filter_sort)));
+	}
+	onClear = () => {
+		filter_sort.minPrice = '';
+		filter_sort.maxPrice = '';
+		filter_sort.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new FilterQuery(JSON.stringify(filter_sort)));
 	}
 	onSort = ($temp: string) => {
-		data.sortBy = $temp ? $temp : '';
-		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		this.store.dispatch(new SortingQuery(JSON.stringify(data)));
+		filter_sort.sortBy = $temp ? $temp : '';
+		filter_sort.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
+		this.store.dispatch(new SortingQuery(JSON.stringify(filter_sort)));
 	}
 	search = (s: string) => {
-		data.searchkeyword = s;
-		data.categoryID = dataChange.categoryID && dataChange.categoryID !== '0' ? dataChange.categoryID : this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		this.store.dispatch(new SearchGlobal(JSON.stringify(data)));
+		search_global.searchkeyword = s;
+		search_global.categoryID = s ? '0' : this.route.snapshot.queryParams?.categoryID;
+		this.store.dispatch(new SearchGlobal(JSON.stringify(search_global)));
 	}
 	ngAfterViewInit(): void {
 		this.jquery();

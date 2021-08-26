@@ -7,14 +7,9 @@ import { fadeIn } from 'src/app/animation';
 	template: `
 <section class="aboutaanidani-section" style="background-image:url('assets/images/about_aanidani.jpg');">
 	<div class="container position-relative contentAbout">
-		<h2>AANI &amp; DANI</h2>
-		<p class="pb-2">AANI &amp; DANI began as a vision in the 1998s of Mr. Khaled Al-Othaim. Khaled knew that
-			many European countries, particularly Belgium and Switzerland, produced the best chocolates,
-			cakes, and sweets the world had to offer. Hundreds of flavors, along with various colors and
-			textures, were painstakingly blended to create luxurious sweets, and presented in ways that
-			appealed to all five senses. They were amazingly fresh, incredibly elegant and beautifully
-			formed.</p>
-		<a routerLink="/content/about-us" class="btn-md btn btn-white">Read More</a>
+		<h2>{{'aani_dani_title' | translate}}</h2>
+		<p class="pb-2">{{'aani_dani_about' | translate}}</p>
+		<a routerLink="/content/about-us" class="btn-md btn btn-white">{{'read_more' | translate}}</a>
 	</div>
 </section>	
   `,

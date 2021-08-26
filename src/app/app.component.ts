@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { LoadHome } from './actions/home.action';
 import { State } from './reducers';
-import { about_us, data, home, privacy_policy, search, terms_conditions } from 'src/app/global';
+import { about_us, filter_sort, home, privacy_policy, search, search_global, terms_conditions } from 'src/app/global';
 import { LoadAboutUs, LoadFaqs, LoadPrivacyPolicy, LoadTermsCondition } from './actions/cms.action';
 import { LoadLabels, LoadLanguage, LoadNationality } from './actions/others.action';
 import { AuthenticationService } from './authentication.service';
@@ -110,10 +110,10 @@ export class AppComponent implements OnInit, OnDestroy {
 				};
 			}), map((route) => {
 				if (!route.route.startsWith('/products')) {
-					data.minPrice = '';
-					data.maxPrice = '';
-					data.sortBy = '';
-					data.searchkeyword = '';
+					filter_sort.minPrice = '';
+					filter_sort.maxPrice = '';
+					filter_sort.sortBy = '';
+					search_global.searchkeyword = '';
 				}
 				while (route.activatedRoute.firstChild) {
 					route.activatedRoute = route.activatedRoute.firstChild;

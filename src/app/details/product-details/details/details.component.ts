@@ -170,7 +170,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		($('#magnific') as any).magnificPopup({
 			type: 'image',
 			closeOnContentClick: true,
-			closeBtnInside: false,
+			closeBtnInside: true,
 			fixedContentPos: true,
 			tLoading: 'Loading...', // Text that is displayed during loading. Can contain %curr% and %total% keys
 			mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side

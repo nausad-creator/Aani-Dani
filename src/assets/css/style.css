@@ -4270,11 +4270,6 @@ html {
   border-radius: 0;
 }
 
-.listcategory a.selected {
-  background-color: #353535;
-  color: #fff;
-}
-
 .aboutaanidani-section {
   background-size: cover;
   background-position: center;
@@ -4370,4 +4365,18 @@ html {
   .logo a img {
     max-height: 50px;
   }
+}
+
+.listcategory a.selected,
+.listcategory a:hover {
+  background-color: #e0dede;
+  color: #000;
+}
+
+.logo a img {
+  max-height: 90px !important;
+}
+
+#topbar .left-siteinfo+.left-siteinfo {
+  padding: 0;
 }

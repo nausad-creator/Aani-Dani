@@ -31,7 +31,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 										class="fas fa-search"></i></span>
 								<input type="text" class="form-control"
 									formControlName="preset" name="preset"
-									id="preset"
+									id="searchTop"
 									[placeholder]="'search_products' | translate">
 								<a (click)="on_search_button()"
 									[ngClass]="{'disable-anchor-tag': isSearch}"

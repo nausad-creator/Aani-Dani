@@ -11,6 +11,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 							<input type="text" #price id="example_id" name="example_name" value="" />
 						</div>
 							<a (click)="filterByPrice.emit(price.value); preventAbuse=true" class="addcart-btn shopingcart-tbtn btn" [ngClass]="{'disabled' : preventAbuse}"> {{ preventAbuse ? ('wait' | translate) : ('filter' | translate) }}</a>
+							<a [title]="'clear' | translate" style="color: #dc3545 !important;" (click)="clearFilter.emit();" class="addcart-btn btn" *ngIf="filtered"> {{'clear' | translate}}</a>
 					</form>
 				</div>
    </div>
@@ -24,7 +25,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class FilterByPriceComponent implements OnInit {
 	@Output() filterByPrice = new EventEmitter<string>();
+	@Output() clearFilter = new EventEmitter<string>();
 	@Input() preventAbuse: boolean;
+	@Input() filtered: string;
 	constructor() { }
 	ngOnInit(): void {
 		jQuery(() => {
@@ -32,7 +35,7 @@ export class FilterByPriceComponent implements OnInit {
 				type: "double",
 				min: 0,
 				max: 1000,
-				from: 200,
+				from: 50,
 				to: 500,
 				prefix: "SR "
 			});

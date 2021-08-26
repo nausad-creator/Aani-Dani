@@ -15,7 +15,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-top-selling',
 	template: `
-    <div class="filterLeftContent mt-3 card text-center topSallinFilter" *ngIf="products" [@fadeIn]>
+    <div class="filterLeftContent mt-3 card text-center topSallinFilter" *ngIf="products.length>0" [@fadeIn]>
 	<h5 class="mb-0">{{'top_selling_items' | translate}}</h5>
 	<div class="slider_itemBox cursr"
 		(click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})"

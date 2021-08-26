@@ -31,8 +31,8 @@ import { RootService } from 'src/app/root.service';
             			[errorImage]="'assets/images/error_not_found.png'" [alt]="category?.categoryName" [title]="category?.categoryName"> </div>
                         </div>
                         <div class="content_textContent col-8">
-                            <h5 class="text-dark mb-0">{{(root.languages$ | async) === 'en' ? (category?.categoryName | titlecase) : (category?.categoryName | titlecase)}}</h5>
-                            <div class="pb-2">About Cake</div>
+                            <h5 class="text-dark mb-0">{{(root.languages$ | async) === 'en' ? (category?.categoryName | titlecase) : (category?.categoryArabicName | titlecase)}}</h5>
+                            <!-- <div class="pb-2">About Cake</div> -->
                             <div class="productInfo">
                             </div>
                             <div class="explorBTN pt-2">

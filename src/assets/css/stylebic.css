@@ -4587,11 +4587,11 @@ html {
   right: auto;
 }
 
-.Sidebar-content {
+/* .Sidebar-content {
   left: 0;
   right: auto;
   transform: translateX(-150%);
-}
+} */
 
 .owl-carousel,
 .bx-wrapper {
@@ -4685,11 +4685,6 @@ html {
   background-color: #010101;
   color: #fff;
   border-radius: 0;
-}
-
-.listcategory a.selected {
-  background-color: #353535;
-  color: #fff;
 }
 
 .aboutaanidani-section {
@@ -4787,4 +4782,18 @@ html {
   .logo a img {
     max-height: 50px;
   }
+}
+
+.listcategory a.selected,
+.listcategory a:hover {
+  background-color: #e0dede;
+  color: #000;
+}
+
+.logo a img {
+  max-height: 90px !important;
+}
+
+#topbar .left-siteinfo+.left-siteinfo {
+  padding: 0;
 }

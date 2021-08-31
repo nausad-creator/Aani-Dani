@@ -1,16 +1,20 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { shakeOnEnterAnimation } from 'angular-animations';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { SEARCH_NEW_QUERY } from 'src/app/actions/wishlist.action';
 import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { wishlist } from 'src/app/global';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
 import { LocationSelectionComponent } from 'src/app/header/onboarding/location-selection.component';
 import { ADDRESS, ProductList, ProductListDetails, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -116,7 +120,7 @@ import { SubSink } from 'subsink';
 	animations: [
 		trigger('fadeIn', fadeIn()),
 		shakeOnEnterAnimation()
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class DetailsComponent implements OnInit, OnDestroy {
 	@Input() product: ProductListDetails;
@@ -147,10 +151,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		}
 	};
 	constructor(
+		private store: Store<State>,
 		public route: ActivatedRoute,
 		private auth: AuthenticationService,
 		private root: RootService,
-		private cd: ChangeDetectorRef,
 		private cookie: CookieService,
 		private modal: BsModalService
 	) {
@@ -158,7 +162,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === '200') {
 				this.checkStatus();
-				this.cd.markForCheck();
 			}
 		}));
 	}
@@ -226,14 +229,14 @@ export class DetailsComponent implements OnInit, OnDestroy {
 			loginuserID: this.logged_user.userID,
 			languageID: this.logged_user.languageID,
 			productID
-		})).subscribe()
+		})).subscribe(() => this.store.dispatch(new SEARCH_NEW_QUERY(JSON.stringify(wishlist))))
 	}
 	remove = (productID: string) => {
 		this.root.remove_wishlist(JSON.stringify({
 			loginuserID: this.logged_user.userID,
 			languageID: this.logged_user.languageID,
 			productID
-		})).subscribe()
+		})).subscribe(() => this.store.dispatch(new SEARCH_NEW_QUERY(JSON.stringify(wishlist))))
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
@@ -244,11 +247,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 			if (user) {
 				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
-				this.cd.markForCheck();
+				wishlist.loginuserID = user.userID;
 			}
 			if (user === null) {
 				this.logged_user = null;
-				this.cd.markForCheck();
 			}
 		}));
 	}

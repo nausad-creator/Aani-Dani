@@ -57,7 +57,13 @@ export function productReducer(state = initialState, action: ProductActions): Pr
 				isSearch: true
 			});
 		case ProductActionTypes.SEARCH_ENDED_SUCCESS:
-			return { ...state, isChange: false, isFilter: false, isSorting: false, isSearch: false }
+			return {
+				...state,
+				isChange: false,
+				isFilter: false,
+				isSorting: false,
+				isSearch: false
+			}
 		case ProductActionTypes.LOAD_INITIAL:
 			return Object.assign({}, state, {
 				query: action.query

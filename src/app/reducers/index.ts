@@ -6,6 +6,7 @@ import { homeReducer, HomeState } from './home.reducer';
 import { LabelsReducer, LabelsState, LanguageReducer, LanguageState, NationalityReducer, NationalityState, TempCartReducer, TempCartState } from './others.reducer';
 import { productReducer, ProductsState } from './products.reducer';
 import { OrdersReducer, OrdersState } from './temp-orders.reducer';
+import { wishlistReducer, WISHLIST_STATE } from './wishlists.reducers';
 
 export interface State {
 	categories: CategoryState,
@@ -19,7 +20,8 @@ export interface State {
 	language: LanguageState,
 	labels: LabelsState,
 	products: ProductsState,
-	tempOrders: OrdersState
+	tempOrders: OrdersState,
+	wishlists: WISHLIST_STATE
 }
 
 export const reducers: ActionReducerMap<State> = {
@@ -34,7 +36,8 @@ export const reducers: ActionReducerMap<State> = {
 	language: LanguageReducer,
 	labels: LabelsReducer,
 	products: productReducer,
-	tempOrders: OrdersReducer
+	tempOrders: OrdersReducer,
+	wishlists: wishlistReducer
 };
 
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
@@ -51,6 +54,7 @@ const selectLanguageState = (state: State) => state.language;
 const selectLabelsState = (state: State) => state.labels;
 const selectProductState = (state: State) => state.products;
 const selectOrdersState = (state: State) => state.tempOrders;
+const selectWishlistState = (state: State) => state.wishlists;
 
 export const selectLanguage = createSelector(selectLanguageState, (state: LanguageState) => state.Language);
 export const selectLabels = createSelector(selectLabelsState, (state: LabelsState) => state.Labels);
@@ -66,3 +70,4 @@ export const selectCategoryList = createSelector(selectCategoriesState, (state: 
 export const selectNationalyList = createSelector(selectNationalityState, (state: NationalityState) => state.Nationality);
 export const selectProductList = createSelector(selectProductState, (state: ProductsState) => state);
 export const selectTempOrdersList = createSelector(selectOrdersState, (state: OrdersState) => state);
+export const selectWishList = createSelector(selectWishlistState, (state: WISHLIST_STATE) => state.wishLists$);

@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { data } from 'src/app/global';
@@ -107,7 +107,7 @@ import { SubSink } from 'subsink';
 	],
 	animations: [
 		trigger('fadeIn', fadeIn())
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class DescriptionsAndReviewComponent implements OnInit {
 	@Input() product: ProductList;

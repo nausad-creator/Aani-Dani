@@ -656,13 +656,6 @@ h6 {
 }
 
 @media (max-width:767px) {
-  #hero {
-    height: 70vh !important;
-  }
-
-  #hero .carousel-item {
-    /*height:100vh;*/
-  }
 
   #hero h2 {
     font-size: 36px;
@@ -4652,7 +4645,7 @@ html {
 }
 
 #heroCarousel .owl-dots .owl-dot span {
-  background: #ffffff;
+  background: #a1a0a0;
   opacity: .2;
   height: 12px;
   width: 12px;
@@ -4796,4 +4789,33 @@ html {
 
 #topbar .left-siteinfo+.left-siteinfo {
   padding: 0;
+}
+
+#hero .carousel-item {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+@media (max-width:767px) {
+  #hero .carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: 125px;
+  }
+
+  #hero {
+    height: auto !important;
+  }
+
+  #hero .carousel-item {
+    background-size: contain;
+    height: auto !important;
+  }
 }

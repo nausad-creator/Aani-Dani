@@ -1,9 +1,7 @@
-import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
-import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
@@ -16,7 +14,7 @@ import { SubSink } from 'subsink';
 	selector: 'app-shared-wishlist',
 	template: `
 <div class="orderDetailList cursr" *ngFor="let product of wishList; let i=index;"
-	(click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})" [@fadeIn]>
+	(click)="clickOnNavigate({categoryID: product?.categoryID, productID: product?.productID})">
 	<div class="bodyOrder form-row m-0 align-items-center">
 		<div class="col-md-2 col-4">
 			<div class="smImg">
@@ -66,8 +64,7 @@ import { SubSink } from 'subsink';
 		`
 	],
 	animations: [
-		trigger('fadeIn', fadeIn())
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class SharedWishlistComponent implements OnInit {
 	subs = new SubSink();
@@ -82,7 +79,6 @@ export class SharedWishlistComponent implements OnInit {
 		public route: ActivatedRoute,
 		private auth: AuthenticationService,
 		private root: RootService,
-		private cd: ChangeDetectorRef,
 		private cookie: CookieService,
 		private modal: BsModalService
 	) {
@@ -90,7 +86,6 @@ export class SharedWishlistComponent implements OnInit {
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === '200') {
 				this.checkStatus();
-				this.cd.markForCheck();
 			}
 		}));
 	}
@@ -149,11 +144,9 @@ export class SharedWishlistComponent implements OnInit {
 			if (user) {
 				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
-				this.cd.markForCheck();
 			}
 			if (user === null) {
 				this.logged_user = null;
-				this.cd.markForCheck();
 			}
 		}));
 	}

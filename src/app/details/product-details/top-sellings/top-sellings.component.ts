@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -67,7 +67,7 @@ import { SubSink } from 'subsink';
 	],
 	animations: [
 		trigger('fadeIn', fadeIn())
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
 export class TopSellingsComponent implements OnInit {
 	@Input() similarproduct: SimilarProducts[] = [];
@@ -105,7 +105,6 @@ export class TopSellingsComponent implements OnInit {
 		public route: ActivatedRoute,
 		private auth: AuthenticationService,
 		private root: RootService,
-		private cd: ChangeDetectorRef,
 		private cookie: CookieService,
 		private modal: BsModalService
 	) {
@@ -113,7 +112,6 @@ export class TopSellingsComponent implements OnInit {
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === '200') {
 				this.checkStatus();
-				this.cd.markForCheck();
 			}
 		}));
 	}
@@ -123,11 +121,9 @@ export class TopSellingsComponent implements OnInit {
 			if (user) {
 				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
-				this.cd.markForCheck();
 			}
 			if (user === null) {
 				this.logged_user = null;
-				this.cd.markForCheck();
 			}
 		}));
 	}

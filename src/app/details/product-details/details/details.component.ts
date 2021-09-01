@@ -87,6 +87,9 @@ import { SubSink } from 'subsink';
 						</div>
 					</div>
 				</div>
+				<div class="cartbox cartbox-lftrht" *ngIf="product?.addedCartCount>0">
+					<a routerLink="/checkout" class="addcart-btn shopingcart-tbtn btn" id="addcart-2">{{'proceed_to_checkout' | translate}}</a>
+				</div>
 			</div>
 
 			<div class="wishlistConten d-flex align-items-center">

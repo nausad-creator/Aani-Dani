@@ -2727,6 +2727,10 @@ ul.links_offers li a.active {
   padding-top: 10px;
 }
 
+.cartbox-lftrht {
+  padding-left: 10px;
+}
+
 .shopingcart-tbtn {
   background-color: #0f0e0e;
   color: #ffffff;

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Store } from '@ngrx/store';
+import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
@@ -14,7 +15,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 	selector: 'app-registration',
 	template: `
     <!--Modal Signup -->
-		<div class="modal-contents">
+		<div class="modal-contents" [loader]="preventAbuse">
 		  <div class="modal-header">
 		   <h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'sign_up' | translate}}</h5>
 		   <button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
@@ -55,9 +56,10 @@ import { OtpRegisterComponent } from './otp.register.component';
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
 					    <a class="pasword-hideshow cursr"><i [owlDateTimeTrigger]="dt5" class="fa fa-calendar"></i></a>
-					    <input class="form-control" #userDOBInput [owlDateTimeTrigger]="dt5" (keydown)="$event.preventDefault();" maxlength=14 [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
+					    <input type="text" class="form-control" #userDOBInput (keyup)="onKeyDate(userDOBInput.value)" (blur)="onBlur(userDOBInput.value)" maxlength=14 [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
                          		    <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
 					    <small class="text-danger small" *ngIf="registerForm.controls['userDOB'].hasError('required')">{{'please_select_dob' | translate}}</small>
+					    <small class="text-danger small" *ngIf="registerForm.controls.userDOB.errors">{{registerForm.controls.userDOB.errors.message}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
 					  <ng-select [closeOnSelect]="true" [searchable]="true" bindLabel="nationalityName" bindValue="nationalityID"
@@ -118,7 +120,10 @@ import { OtpRegisterComponent } from './otp.register.component';
 	}
 	::ng-deep .cdk-overlay-container {
     		z-index: 1200 !important;
-  	}`
+  	}
+	input[name="userDOB"] {
+  		word-spacing: -3px;
+	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrationComponent implements OnInit {
@@ -154,11 +159,31 @@ export class RegistrationComponent implements OnInit {
 			userMobile: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
 			userPassword: ['', Validators.compose([Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)])],
 			userRePassword: [''],
-			userDOB: [''],
+			userDOB: ['', Validators.compose([this.dateMaximum])],
 			nationalityID: [null],
 			languageID: ['1'],
 			loginuserID: ['0']
 		}, { validators: this.checkPasswords });
+	}
+	dateMaximum(control: AbstractControl): ValidationErrors {
+		const error = {
+			name: '',
+			message: ''
+		};
+		if (control.value == null) {
+			return null;
+		}
+		const controlDate = moment(control.value, 'YYYY-MM-DD');
+		if (!controlDate.isValid()) {
+			return null;
+		}
+		const validationDate = moment(new Date());
+		if (controlDate.isAfter(validationDate)) {
+			error.name = 'invalidDOB';
+			error.message = `Date should not after ${moment(new Date(), 'MM-DD-YYYY').format('MM-DD-YYYY')}.`;
+			return error;
+		}
+		return null;
 	}
 	checkPasswords = (group: FormGroup) => {
 		const password = group.get('userPassword').value;
@@ -316,7 +341,7 @@ export class RegistrationComponent implements OnInit {
 				return invalid = true;
 			}
 			if (key === 'userDOB' && !this.registerForm.get(`${key}`).value) {
-				this.registerForm.get(`${key}`).setValidators([Validators.required]);
+				this.registerForm.get(`${key}`).setValidators([Validators.required, this.dateMaximum]);
 				this.registerForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
 				return invalid = true;
 			}
@@ -384,5 +409,53 @@ export class RegistrationComponent implements OnInit {
 			}]
 		};
 		this.bsModal = this.modal.show(LoginComponent, { id: 99, initialState });
+	}
+	onKeyDate = (value: string) => {
+		let input = value;
+		if (/\D\/$/.test(input)) { input = input.substr(0, input.length - 3); }
+		const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+		if (values[0]) { values[0] = this.checkValue(values[0], 12); }
+		if (values[1]) { values[1] = this.checkValue(values[1], 31); }
+		const output = values.map((v, i) => v.length === 2 && i < 2 ? v + ' / ' : v);
+		this.userDOBInput.nativeElement.value = output.join('').substr(0, 14);
+	}
+	checkValue = (str: string, max: number) => {
+		if (str.charAt(0) !== '0' || str === '00') {
+			let num = +str;
+			if (isNaN(num) || num <= 0 || num > max) { num = 1; }
+			str = num > +(max.toString().charAt(0)) && num.toString().length === 1 ? '0' + num : num.toString();
+		}
+		return str;
+	}
+	onBlur = (value: string) => {
+		const input = value;
+		const values = input.split('/').map((v) => v.replace(/\D/g, ''));
+		let output = '';
+		if (values.length === 3) {
+			const year = values[2].length !== 4 ? +(values[2]) + 2000 : +(values[2]);
+			const month = +(values[0]) - 1;
+			const day = +(values[1]);
+			const d = new Date(year, month, day);
+			if (!isNaN(+d)) {
+				document.getElementById('dob').innerText = d.toString();
+				const dates = [d.getMonth() + 1, d.getDate(), d.getFullYear()];
+				output = dates.map((v) => {
+					v = v;
+					return v.toString().length === 1 ? '0' + v : v;
+				}).join(' / ');
+			}
+		}
+		if (output) {
+			this.userDOBInput.nativeElement.value = output.replace(/\s/g, '');
+			this.registerForm.get('userDOB').setValue(new Date(+output.split('/')[2], +output.split('/')[0] - 1, +output.split('/')[1]), { emitEvent: false });
+			this.registerForm.get('userDOB').updateValueAndValidity({ emitEvent: false });
+			this.cd.markForCheck();
+		}
+		if (!output) {
+			this.userDOBInput.nativeElement.value = '';
+			this.registerForm.get('userDOB').patchValue('', { emitEvent: false });
+			this.registerForm.get('userDOB').updateValueAndValidity({ emitEvent: false });
+			this.cd.markForCheck();
+		}
 	}
 }

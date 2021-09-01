@@ -24,7 +24,7 @@ interface Otp {
 	selector: 'app-otp',
 	template: `
     <!--Modal OTP Verification-->
-	    <div class="modal-contents">
+	    <div class="modal-contents" [loader]="preventAbuse">
 	      <div class="modal-header text-center d-block position-relative" style="border: none;">
 	         <a (click)="!preventAbuse ? openForgot() : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
 	         <h5 class="modal-title" id="exampleModalLabel">{{'verification' | translate}}</h5>

@@ -21,6 +21,7 @@ import { AlertComponent } from './onboarding/alert.component';
 import { SharedAddAddressComponent } from './onboarding/shared-add-address.component';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxLoaderIndicatorModule } from 'ngx-loader-indicator';
 
 @NgModule({
 	declarations: [
@@ -49,7 +50,12 @@ import { TranslateModule } from '@ngx-translate/core';
 		GooglePlaceModule,
 		NgSelectModule,
 		TooltipModule,
-		TranslateModule
+		TranslateModule,
+		NgxLoaderIndicatorModule.forRoot({
+			loaderStyles: {
+				background: 'rgba(253 252 246 / 2%)',
+			},
+		})
 	],
 	exports: [
 		HeaderComponent,

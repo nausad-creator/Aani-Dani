@@ -11,7 +11,7 @@ import { SubSink } from 'subsink';
 	selector: 'app-address-list',
 	template: `
      <!-- The Modal -->
-     <div class="modal-contents">
+     <div class="modal-contents" [loader]="preventAbuse">
       <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">{{'select_address' | translate}}</h4>

@@ -19,6 +19,7 @@ import { NetBankingSharedComponent } from './checkout/netbanking-shared.componen
 import { UpiSharedComponent } from './checkout/upi-shared.component';
 import { CashOnDelivarySharedComponent } from './checkout/cash-on-delivary-shared.component';
 import { PaymentAlertComponent } from './checkout/payment-alert.component';
+import { NgxLoaderIndicatorModule } from 'ngx-loader-indicator';
 
 @NgModule({
 	declarations: [
@@ -44,6 +45,11 @@ import { PaymentAlertComponent } from './checkout/payment-alert.component';
 		NgxPaginationModule,
 		LazyLoadImageModule,
 		NgxSkeletonLoaderModule,
+		NgxLoaderIndicatorModule.forRoot({
+			loaderStyles: {
+				background: 'rgba(253 252 246 / 2%)',
+			},
+		}),
 		RouterModule.forChild([
 			{
 				path: '', component: CheckoutComponent

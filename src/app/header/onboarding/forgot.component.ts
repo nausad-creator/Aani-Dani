@@ -11,7 +11,7 @@ import { FORGOT } from 'src/app/interface';
 	selector: 'app-forgot',
 	template: `
     <!--Modal Forgot Password-->
-    <div class="modal-contents">
+    <div class="modal-contents" [loader]="preventAbuse">
       <div class="modal-header text-center d-block position-relative" style="border: none;">
          <a (click)="!preventAbuse ? openforgetForm() : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
          <h5 class="modal-title" id="exampleModalLabel">{{'forgot_password' | translate}}?</h5>

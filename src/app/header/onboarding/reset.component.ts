@@ -19,7 +19,7 @@ interface Reset {
 	selector: 'app-reset',
 	template: `
     <!--Modal Reset Password-->
-    <div class="modal-contents">
+    <div class="modal-contents" [loader]="preventAbuse">
       <div class="modal-header text-center d-block position-relative" style="border: none;">
          <a (click)="!preventAbuse ? openOTP({
           userMobile: list[0].userMobile,

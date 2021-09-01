@@ -4,12 +4,12 @@ import { Store } from '@ngrx/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
-import { merge, Observable, of, Subject, timer } from 'rxjs';
-import { catchError, map, mergeMap, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { LoadInitial } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { tepmOrder } from 'src/app/global';
-import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE, ADDRESS } from 'src/app/interface';
+import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE } from 'src/app/interface';
 import { selectHomeCategoryList, selectHomeBestSellingList, State, selectTempOrdersList } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
@@ -58,7 +58,7 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 <!-- End Header -->
 <main id="main">
 	<section id="cart-section" class="pb-3 pt-4">
-		<div class="container">
+		<div class="container" [loader]="preventAbuse">
 			<div class="brandcamp"><a routerLink='/'>{{'home' | translate}} &gt;</a> <span> {{'checkout' | translate}}</span> </div>
 			<div class="card mt-3">
 				<div class="row m-0 pt-3 pb-3">

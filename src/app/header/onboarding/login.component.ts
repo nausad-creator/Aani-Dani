@@ -15,7 +15,7 @@ import { RegistrationComponent } from './registration.component';
 	selector: 'app-login',
 	template: `
     <!--Modal Login-->
-<div class="modal-contents">
+<div class="modal-contents" [loader]="preventAbuse">
 	<div class="modal-header">
 		<h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'login' | translate}}</h5>
 		<button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal"

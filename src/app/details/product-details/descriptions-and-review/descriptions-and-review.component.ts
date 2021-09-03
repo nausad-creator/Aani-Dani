@@ -16,6 +16,9 @@ import { SubSink } from 'subsink';
 							  </li>
 							  <li class="nav-item">
 							    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{{'reviews' | translate}}(6)</a>
+							  </li>
+							  <li class="nav-item">
+							    <a class="nav-link" id="calori-tab" data-toggle="tab" href="#calori" role="tab" aria-controls="calori" aria-selected="false">{{'Calories'}}</a>
 							  </li>							  
 							</ul>
 							<div class="tab-content" id="myTabContent">
@@ -99,6 +102,14 @@ import { SubSink } from 'subsink';
 										</div>
 							  		</form>	
 							  	</div>	
+							  </div>
+							  <div class="tab-pane fade" id="calori" role="tabpanel" aria-labelledby="calori-tab">
+							  	<div class="p-3" *ngIf="product.productDescription">
+							  		<p>{{product.productDescription}}</p>
+							  	</div>
+								  <div class="p-3" *ngIf="!product.productDescription">
+							  		<p class="text-center">{{'no_descriptions' | translate}}</p>
+							  	</div>
 							  </div>
 					</div>
 		      	</div>

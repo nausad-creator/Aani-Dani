@@ -15,7 +15,7 @@ import { change, filter_sort, initial, search_global } from 'src/app/global';
 @Component({
 	selector: 'app-shared-list',
 	template: `
-<app-header [isSearch]="(product_state$ | async)?.isSearch" (search)="search($event)"></app-header>
+<app-header [isSearch]="(product_state$ | async)?.isSearch" (key_up)="search($event)" (search)="search($event)"></app-header>
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -145,8 +145,9 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngOnInit(): void {
 		// query changes
 		initial.categoryID = this.route.snapshot.queryParams?.categoryID ? this.route.snapshot.queryParams?.categoryID : '0';
-		initial.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : 'undefined';
+		initial.categoryName = this.route.snapshot.queryParams?.categoryName ? this.route.snapshot.queryParams?.categoryName : '';
 		initial.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
+		initial.searchkeyword = this.route.snapshot.queryParams?.q ? this.route.snapshot.queryParams?.q : '';
 		this.store.dispatch(new LoadInitial(JSON.stringify(initial)));
 		this.state_product();
 	}
@@ -288,7 +289,7 @@ export class SharedListComponent implements OnInit, AfterViewInit, OnDestroy {
 	onChange = async (category: Category) => {
 		change.page = '0';
 		change.categoryID = category?.categoryID ? category?.categoryID : '0';
-		change.categoryName = category?.categoryName ? `${category?.categoryName}_${category?.categoryArabicName}` : 'undefined';
+		change.categoryName = category?.categoryName ? `${category?.categoryName}_${category?.categoryArabicName}` : '';
 		this.store.dispatch(new SearchNewQuery(JSON.stringify(change)));
 	}
 	onFilter = ($temp: string) => {

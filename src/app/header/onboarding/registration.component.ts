@@ -31,13 +31,13 @@ import { OtpRegisterComponent } from './otp.register.component';
                       	 			 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters' | translate}}</small>
 					  </div> 
 					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" id="Email" #userEmailInput (keydown.space)="$event.preventDefault();" formControlName="userEmail" class="form-control" [placeholder]="'email_address' | translate">
+						<input type="text" (blur)="check_email()" id="Email" #userEmailInput (keydown.space)="$event.preventDefault();" formControlName="userEmail" class="form-control" [placeholder]="'email_address' | translate">
 						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('required')">{{'please_enter_email' | translate}}</small>
 						<small class="text-danger" *ngIf="registerForm.controls['userEmail'].hasError('emailAlreadyExist')">email already exist.</small>
 						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email' | translate}}</small>
 					  </div>
 					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" maxlength="10" id="phone" #userMobileInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" class="form-control" [placeholder]="'mobile_number' | translate">
+						<input type="text" (blur)="check_phone()" maxlength="10" id="phone" #userMobileInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" class="form-control" [placeholder]="'mobile_number' | translate">
 						<small class="text-danger small" *ngIf="registerForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile' | translate}}</small>
 						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('mobileExist')">mobile already exist.</small>
 						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('pattern') && (registerForm.controls['userMobile'].dirty || registerForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number' | translate}}</small>
@@ -192,6 +192,50 @@ export class RegistrationComponent implements OnInit {
 			return password === confirmPassword ? null : { confirmedValidator: true };
 		}
 	}
+	check_email = async () => {
+		// checking for duplicate user!!!!
+		if (this.registerForm.get('userEmail').value && this.registerForm.get('userEmail').valid) {
+			await this.duplicate(JSON.stringify({
+				loginuserID: "0",
+				languageID: "1",
+				userEmail: this.registerForm.get('userEmail').value,
+				userMobile: "",
+			})).then(async (r: {
+				status: string;
+				message: string;
+			}) => {
+				if (r.status === 'false') {
+					this.registerForm.controls.userEmail.setErrors({ emailAlreadyExist: true });
+					this.cd.markForCheck();
+				}
+			}).catch(() => {
+				this.error = 'Oops! Something went wrong!';
+				this.cd.markForCheck();
+			});
+		}
+	}
+	check_phone = async () => {
+		// checking for duplicate user!!!!
+		if (this.registerForm.get('userMobile').value && this.registerForm.get('userMobile').valid) {
+			await this.duplicate(JSON.stringify({
+				loginuserID: "0",
+				languageID: "1",
+				userEmail: "",
+				userMobile: this.registerForm.get('userMobile').value,
+			})).then(async (r: {
+				status: string;
+				message: string;
+			}) => {
+				if (r.status === 'false') {
+					this.registerForm.controls.userMobile.setErrors({ mobileExist: true });
+					this.cd.markForCheck();
+				}
+			}).catch(() => {
+				this.error = 'Oops! Something went wrong!';
+				this.cd.markForCheck();
+			});
+		}
+	}
 	onClickregister = async (post: {
 		userFullName: string;
 		userEmail: string;
@@ -207,36 +251,18 @@ export class RegistrationComponent implements OnInit {
 			if (this.registerForm.valid && this.findInvalidControlsregister().length === 0) {
 				this.error = '';
 				this.preventAbuse = true;
-				// checking for duplicate user!!!!
-				await this.duplicate(JSON.stringify(post)).then(async (r: {
-					status: string;
-					message: string;
-				}) => {
-					if (r.status === 'true') {
-						this.register(JSON.stringify(post)).then((success: USER_RESPONSE) => {
-							this.preventAbuse = false;
-							setTimeout(() => {
-								this.onClose()
-								this.registerForm.reset();
-								this.triggerEvent('Confirmed');
-								this.openOTP(success);
-							}, 100);
-						}).catch((error: string) => {
-							this.error = error;
-							this.preventAbuse = false;
-							this.triggerEvent('Error');
-							this.cd.markForCheck();
-						});
-					}
-					if (r.status === 'false') {
-						this.preventAbuse = false;
-						this.registerForm.controls.doctorEmail.setErrors({ emailAlreadyExist: true });
-						this.registerForm.controls.doctorMobile.setErrors({ mobileExist: true });
-						this.cd.markForCheck();
-					}
-				}).catch(() => {
+				this.register(JSON.stringify(post)).then((success: USER_RESPONSE) => {
 					this.preventAbuse = false;
-					this.error = 'Oops! Something went wrong!';
+					setTimeout(() => {
+						this.onClose()
+						this.registerForm.reset();
+						this.triggerEvent('Confirmed');
+						this.openOTP(success);
+					}, 100);
+				}).catch((error: string) => {
+					this.error = error;
+					this.preventAbuse = false;
+					this.triggerEvent('Error');
 					this.cd.markForCheck();
 				});
 			}

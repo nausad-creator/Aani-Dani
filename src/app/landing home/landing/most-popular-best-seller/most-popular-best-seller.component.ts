@@ -32,7 +32,6 @@ import { RootService } from 'src/app/root.service';
                         </div>
                         <div class="content_textContent col-8">
                             <h5 class="text-dark mb-0">{{(root.languages$ | async) === 'en' ? (category?.categoryName | titlecase) : (category?.categoryArabicName | titlecase)}}</h5>
-                            <!-- <div class="pb-2">About Cake</div> -->
                             <div class="productInfo">
                             </div>
                             <div class="explorBTN pt-2">

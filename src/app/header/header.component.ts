@@ -14,6 +14,7 @@ import { TitleCasePipe } from '@angular/common';
 import { selectLanguage, State } from '../reducers';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-header',
@@ -158,9 +159,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	address_list: ADDRESS[];
 	searchForm: FormGroup;
 	language$: Observable<Language[]> = this.store.select(selectLanguage);
-	@Output() search: EventEmitter<string> = new EventEmitter<string>();
-	@Input() isSearch: boolean
+	@Output() search = new EventEmitter<string>();
+	@Output() key_up = new EventEmitter<string>();
+	@Input() isSearch: boolean;
 	constructor(
+		public route: ActivatedRoute,
 		private modal: BsModalService,
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
@@ -182,10 +185,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.root.languages$.subscribe(lang => lang === 'ar' ? this.selected = '2' : this.selected = '1');
 	}
 	setupForm() {
-		this.searchForm = this.fb.group({ preset: '' });
+		this.searchForm = this.fb.group({ preset: this.route.snapshot.queryParams?.q ? this.route.snapshot.queryParams?.q : '' });
 		this.searchForm.valueChanges.pipe(map((event) => event), debounceTime(500), distinctUntilChanged(),
 			mergeMap((search) => of(search).pipe(delay(100)))).subscribe((input: { preset: string }) => {
-				this.search.emit(input.preset.trim());
+				this.key_up.emit(input.preset.trim());
 			});
 	}
 	orders$: Observable<{

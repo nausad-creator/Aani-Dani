@@ -89,6 +89,9 @@ export class SharedComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.jquery();
 	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
+	}
 	ngOnDestroy(): void {
 	}
 	jquery = () => {

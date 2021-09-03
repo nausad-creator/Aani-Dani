@@ -73,9 +73,9 @@ import { SubSink } from 'subsink';
 			</div>
 			<div class="form-group select_unit mb-2 mt-2">
 			</div>
-			<div class="d-flex align-items-center detailBtn pt-1">
-				<div class="cartbox" [ngClass]="{'show-counter': product?.addedCartCount>0}">
-					<a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(product);"
+			<div class="row m-0 align-items-center detailBtn pt-1">
+				<div class="cartbox pb-2" [ngClass]="{'show-counter': product?.addedCartCount>0}">
+					<a [title]="'add_to_cart' | translate" class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(product);"
 						id="addcart-1"> {{'add_to_cart' | translate}}</a>
 					<div class="contercontern">
 						<div class="handle-counter d-flex" id="handleCounter">
@@ -87,8 +87,11 @@ import { SubSink } from 'subsink';
 						</div>
 					</div>
 				</div>
-				<div class="cartbox cartbox-lftrht" *ngIf="product?.addedCartCount>0">
-					<a routerLink="/checkout" class="addcart-btn shopingcart-tbtn btn" id="addcart-2">{{'proceed_to_checkout' | translate}}</a>
+				<div class="cartbox prl pb-2" *ngIf="product?.addedCartCount>0">
+					<a [title]="'checkout' | translate" routerLink="/checkout" class="btn-secondary btn btn-md" id="addcart-2">{{'checkout' | translate}}</a>
+				</div>
+				<div class="cartbox prl pb-2 col-12 p-0" *ngIf="product?.addedCartCount>0">
+					<a [title]="'continue_shopping' | translate" routerLink='/' class="btn-outline-secondary btn btn-md">{{'continue_shopping' | translate}}</a>
 				</div>
 			</div>
 

@@ -70,7 +70,7 @@ export class RootService {
 	}
 	isNewSearchQuery(query: string) {
 		if (JSON.parse(query)?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
-			const queryParams: Params = { page: '0', categoryID: JSON.parse(query)?.categoryID, categoryName: `${JSON.parse(query)?.categoryName}` };
+			const queryParams: Params = { page: '0', categoryID: JSON.parse(query)?.categoryID, categoryName: `${JSON.parse(query)?.categoryName}`, q: '' };
 			this.router.navigate([], { relativeTo: this.route, queryParams: queryParams, queryParamsHandling: 'merge' });
 			return true;
 		} else {

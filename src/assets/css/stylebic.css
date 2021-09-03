@@ -2729,7 +2729,7 @@ ul.links_offers li a.active {
   padding-top: 10px;
 }
 
-.cartbox-lftrht {
+.prl {
   padding-right: 10px;
 }
 
@@ -4822,4 +4822,9 @@ html {
     background-size: contain;
     height: auto !important;
   }
+}
+
+.detailBtn .btn-md {
+  padding: 8px 36px;
+  border-radius: 8px;
 }

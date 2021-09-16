@@ -37,6 +37,9 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { ProductsEffects } from './effects/products.effects';
 import { OrdersEffects } from './effects/temp-order.effects';
 import { WishlistEffects } from './effects/wishlist.effect';
+import { UserGuard } from './user.guard';
+import { CheckoutGuard } from './check-out.guard';
+import { My_OrdersEffects } from './effects/my-orders.effects';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -84,9 +87,9 @@ export function HttpLoaderFactory(http: HttpClient) {
 		GooglePlaceModule,
 		StoreModule.forRoot(reducers, { metaReducers }),
 		!environment.production ? StoreDevtoolsModule.instrument() : [],
-		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects, ProductsEffects, OrdersEffects, WishlistEffects])
+		EffectsModule.forRoot([CategoriesEffects, HomeEffects, CmsEffects, OthersEffects, ProductsEffects, OrdersEffects, WishlistEffects, My_OrdersEffects])
 	],
-	providers: [RootService, AuthenticationService, LocationService, SeoService],
+	providers: [RootService, AuthenticationService, LocationService, SeoService, UserGuard, CheckoutGuard],
 	bootstrap: [AppComponent],
 	exports: [TranslateModule],
 })

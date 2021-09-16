@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Subject, Observable, of, merge, timer } from 'rxjs';
 import { take, catchError, mergeMap, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { details } from 'src/app/global';
 import { Category, ProductList, TempCartItems } from 'src/app/interface';
 import { selectHomeCategoryList, State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
@@ -12,7 +13,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-shared',
 	template: `
-<app-header></app-header> <!-- Top Bar -->
+<app-header (search)="search($event)"></app-header> <!-- Top Bar -->
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -78,21 +79,6 @@ import { SubSink } from 'subsink';
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SharedComponent implements OnInit, OnDestroy {
-	data = {
-		loginuserID: '1',
-		languageID: '1',
-		searchWord: '',
-		productID: '0',
-		subcatID: '0',
-		categoryID: '0',
-		searchkeyword: '',
-		cityName: '',
-		minPrice: '',
-		maxPrice: '',
-		sortBy: '',
-		page: '0',
-		pagesize: '1',
-	};
 	loader = true;
 	forceReload$ = new Subject<void>();
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
@@ -101,7 +87,7 @@ export class SharedComponent implements OnInit, OnDestroy {
 	product: ProductList;
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	getProducts = () => {
-		return this.root.product(JSON.stringify(this.data)).pipe(map(list => list.map(a => {
+		return this.root.product(JSON.stringify(details)).pipe(map(list => list.map(a => {
 			return {
 				productID: a.productID,
 				categoryID: a.categoryID,
@@ -191,7 +177,7 @@ export class SharedComponent implements OnInit, OnDestroy {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(x => {
 			if (x) {
-				this.data.loginuserID = '1';
+				details.loginuserID = '1';
 			}
 		}));
 		this.subs.add(this.root.update$.subscribe(status => {
@@ -201,6 +187,9 @@ export class SharedComponent implements OnInit, OnDestroy {
 			}
 		}));
 	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
+	}
 	updateCart = () => {
 		this.cart = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	}
@@ -209,8 +198,8 @@ export class SharedComponent implements OnInit, OnDestroy {
 	}
 	ngOnInit(): void {
 		// query changes
-		this.data.productID = this.route.snapshot.queryParams?.productID ? this.route.snapshot.queryParams?.productID : '0';
-		this.data.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
+		details.productID = this.route.snapshot.queryParams?.productID ? this.route.snapshot.queryParams?.productID : '0';
+		details.page = this.route.snapshot.queryParams?.page ? this.route.snapshot.queryParams?.page : '0';
 		this.products();
 	}
 	onChange = async (ids: { categoryID: string, productID: string }) => {
@@ -222,9 +211,9 @@ export class SharedComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge', // remove to replace all query params by provided
 			});
 		// query changes
-		this.data.page = '0';
-		this.data.categoryID = ids.categoryID ? ids.categoryID : '0';
-		this.data.productID = ids.productID ? ids.productID : '0';
+		details.page = '0';
+		details.categoryID = ids.categoryID ? ids.categoryID : '0';
+		details.productID = ids.productID ? ids.productID : '0';
 		this.products();
 	}
 	products = () => {

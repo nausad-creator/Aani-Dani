@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { CookieService } from 'ngx-cookie-service';
-import { delay, map, take } from 'rxjs/operators';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { delay } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { ADDRESS, ProductList, Store, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { ADDRESS, ProductList, Store, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
+import { StoreListComponent } from './store-list.component';
 
 @Component({
 	selector: 'app-address-list',
@@ -32,8 +32,8 @@ import { SubSink } from 'subsink';
   	</div>
              <div class="message-center" *ngFor="let address of list[0].address | myfilterAddress">
                   <div class="radeio-list">					  	
-                      <input name="Supervisor" (change)="onChange($event.target.value)" [value]="address.addressID" [checked]="address.addressID === checked_address" type="radio" [id]="address.addressID" class="with-gap radio-col-black cursr">
-                      <label class="cursr" [for]="address.addressID">{{address.fullAddress | lowercase}} <br>{{(address.cityName | lowercase) + ', ' + (address.countryName | titlecase) + ' ' + address.addressPincode}} </label>
+                      <input name="Supervisor" (change)="onChange($event.target.value)" [value]="address?.addressID" [checked]="address?.addressID === checked_address" type="radio" [id]="address?.addressID" class="with-gap radio-col-black cursr">
+                      <label class="cursr" [for]="address?.addressID">{{address?.fullAddress | lowercase}} <br>{{(address?.cityName | lowercase) + ', ' + (address?.countryName | titlecase) + ' ' + address?.addressPincode}} </label>
                   </div>				  
               </div>
           </div>
@@ -47,22 +47,22 @@ import { SubSink } from 'subsink';
   `,
 	styles: [
 		`.modal-contents {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		pointer-events: auto;
-		background-color: #fff;
-		background-clip: padding-box;
-		border-radius: .3rem;
-		outline: 0;
-	}
-	.alerts{
-		position: relative;
-    		padding: .75rem 0.25rem;
-    		margin-bottom: 2rem;
-    		border-radius: .25rem;
-	}`
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			pointer-events: auto;
+			background-color: #fff;
+			background-clip: padding-box;
+			border-radius: .3rem;
+			outline: 0;
+		}
+		.alerts{
+			position: relative;
+			padding: .75rem 0.25rem;
+			margin-bottom: 2rem;
+			border-radius: .25rem;
+		}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddressListComponent implements OnInit, OnDestroy {
@@ -72,13 +72,12 @@ export class AddressListComponent implements OnInit, OnDestroy {
 	logged_user: USER_RESPONSE = null;
 	checked_address: string;
 	subs = new SubSink();
-	event_address_list: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	constructor(
 		private bsModal: BsModalRef,
 		private root: RootService,
 		private cd: ChangeDetectorRef,
-		private auth: AuthenticationService,
-		private cookie: CookieService) {
+		private modal: BsModalService,
+		private auth: AuthenticationService) {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
@@ -108,7 +107,7 @@ export class AddressListComponent implements OnInit, OnDestroy {
 				$('.AddressSidebar').removeClass('opensidebar');
 			});
 		});
-		this.checked_address = this.list[0].address.filter(a => a.addressIsDefault === 'Yes').length > 0 ? this.list[0].address.filter(a => a.addressIsDefault === 'Yes')[0].addressID : '';
+		this.checked_address = this.list[0].address?.filter(a => a.addressIsDefault === 'Yes').length > 0 ? this.list[0].address?.filter(a => a.addressIsDefault === 'Yes')[0].addressID : '';
 	}
 	onClose = () => {
 		this.bsModal.hide();
@@ -118,57 +117,45 @@ export class AddressListComponent implements OnInit, OnDestroy {
 	}
 	submit_address = () => {
 		if (!this.checked_address) {
-			this.error = 'Please select delivery address.'
+			this.error = 'Please select delivery address?.'
 		}
 		if (this.checked_address) {
 			this.preventAbuse = true;
 			this.get_store(JSON.stringify(
 				{
-					currentLat: this.list[0].address.filter(a => a.addressID === this.checked_address)[0].addressLati,
-					currentLong: this.list[0].address.filter(a => a.addressID === this.checked_address)[0].addressLongi,
+					currentLat: this.list[0].address?.filter(a => a.addressID === this.checked_address)[0].addressLati,
+					currentLong: this.list[0].address?.filter(a => a.addressID === this.checked_address)[0].addressLongi,
 				}
 			));
 		}
 	}
+	openStore = (stores: Store[]) => {
+		this.onClose();
+		const initialState = {
+			list: [{
+				status: this.list[0].status,
+				product: this.list[0].product,
+				address: this.list[0].address,
+				stores: stores
+			}]
+		};
+		this.modal.show(StoreListComponent, { id: 939, initialState });
+	}
 	get_store = (cordinate: string) => {
-		this.subs.add(this.root.store(cordinate).pipe(delay(1000)).subscribe((res: { status: string; data: Store[]; message: string; }) => {
+		this.subs.add(this.root.store(cordinate).pipe(delay(500)).subscribe((res: { status: string; data: Store[]; message: string; }) => {
 			if (res.status === 'true') {
-				this.list[0].address.map(a => {
+				this.list[0].address?.map(a => {
 					if (a.addressID === this.checked_address) {
 						a.addressIsDefault = 'Yes';
 					} else {
 						a.addressIsDefault = 'No';
 					}
 				});
-				if (localStorage.getItem('USER_LOGGED')) {
-					const tempUser = JSON.parse(localStorage.getItem('USER_LOGGED')) as USER_RESPONSE;
-					tempUser.storeID = res.data[0].storeID;
-					tempUser.address = this.list[0].address;
-					this.auth.updateUser(tempUser);
-					this.root.update_user_status$.next('200');
-					localStorage.setItem('USER_LOGGED', JSON.stringify(tempUser));
-				}
-				if (sessionStorage.getItem('USER_LOGGED')) {
-					const tempUser = JSON.parse(sessionStorage.getItem('USER_LOGGED')) as USER_RESPONSE;
-					tempUser.storeID = res.data[0].storeID;
-					tempUser.address = this.list[0].address;
-					this.auth.updateUser(tempUser);
-					this.root.update_user_status$.next('200');
-					sessionStorage.setItem('USER_LOGGED', JSON.stringify(tempUser));
-				}
-				if (this.list[0].status === 'true' || this.list[0].status === 'Location') {
-					this.add_to_cart();
-				}
-				if (this.list[0].status === 'false') {
-					this.preventAbuse = false;
-					this.cd.markForCheck();
-					setTimeout(() => {
-						this.onClose();
-					}, 300);
-				}
+				this.preventAbuse = false;
+				this.openStore(res.data);
 			}
 			if (res.status === 'false') {
-				this.error = 'No store is found on selected address.';
+				this.error = 'No store is found on selected address?.';
 				this.preventAbuse = false;
 				this.cd.markForCheck();
 				if (localStorage.getItem('USER_LOGGED')) {
@@ -188,131 +175,5 @@ export class AddressListComponent implements OnInit, OnDestroy {
 			this.preventAbuse = false;
 			throw new Error(`Oops! Something went wrong while fetching store: ${err}`);
 		}));
-	}
-	add_to_cart = () => {
-		this.subs.add(this.root.ordersTemp(JSON.stringify({
-			orderID: '0',
-			loginuserID: this.logged_user.userID,
-			languageID: '1'
-		})).pipe(map((res) => res), take(1)).subscribe(async r => {
-			if (r[0].status === 'true') {
-				if (localStorage.getItem('tempCart')) {
-					localStorage.removeItem('tempCart');
-				}
-				localStorage.setItem('tempCart', JSON.stringify(r[0].data[0].orderdetails.length > 0 ? r[0].data[0].orderdetails.map(c => {
-					return {
-						productID: c.productID,
-						qty: +c.Qty.split('.')[0]
-					}
-				}) : []));
-				this.cookie.set('Temp_Order_ID', r[0].data.length > 0 ? r[0].data[0].temporderID : '0');
-				if (this.list[0].product) {
-					const res = await this.addItemToCart({ userID: this.logged_user.userID, tempID: r[0].data[0].temporderID, product: this.list[0].product }) as string;
-					if (res === 'Added_sucessfully') {
-						this.root.update_user_status$.next('refresh_or_reload');
-					}
-				}
-				if (!this.list[0].product) {
-					this.root.update_user_status$.next('refresh_or_reload');
-				}
-				this.preventAbuse = false;
-			}
-			if (r[0].status === 'false') {
-				this.cookie.set('Temp_Order_ID', '0')
-				if (this.list[0].product) {
-					const res = await this.placeTempOrder({ userID: this.logged_user.userID, tempID: '0', product: this.list[0].product }) as { message: string, temporderID: string };
-					this.cookie.set('Temp_Order_ID', res.temporderID);
-					if (res.message === 'Added_sucessfully') {
-						this.root.update_user_status$.next('refresh_or_reload');
-					}
-				}
-				if (!this.list[0].product) {
-					this.root.update_user_status$.next('refresh_or_reload');
-				}
-				this.preventAbuse = false;
-			}
-			setTimeout(() => {
-				this.root.forceReload();
-				if (this.list[0].status === 'Location') {
-					this.root.update_user_status$.next('update_header');
-				}
-				if (this.list[0].status === 'Header') {
-					this.root.update_user_status$.next('update_header');
-				}
-				this.onClose()
-			}, 100);
-		}, err => console.error(err)));
-	}
-	placeTempOrder = (temp: { userID: string, tempID: string, product: ProductList }) => {
-		return new Promise((resolve, reject) => {
-			this.subs.add(this.root.placeNewOrderTemp(JSON.stringify({
-				loginuserID: temp.userID,
-				languageID: '1',
-				orderdetails: [{
-					productID: temp.product.productID,
-					orderdetailsQty: 1,
-					orderdetailsPrice: temp.product.productPrice
-				}]
-			})).subscribe(r => {
-				if (r[0].status === 'true') {
-					this.addToLocal({
-						productID: temp.product.productID,
-						qty: 1
-					});
-					resolve({
-						message: 'Added_sucessfully',
-						temporderID: r[0].data[0].temporderID
-					});
-				}
-			}, () => {
-				reject('Oops! Something went wrong while placing first temp item to cart!');
-				console.error('Oops! Something went wrong while placing first temp item to cart!');
-			}));
-		});
-	}
-	addItemToCart = (temp: { userID: string, tempID: string, product: ProductList }) => {
-		return new Promise((resolve, reject) => {
-			this.subs.add(this.root.addItemToCartTemp(JSON.stringify({
-				loginuserID: temp.userID,
-				languageID: '1',
-				orderID: temp.tempID,
-				productID: temp.product.productID,
-				orderdetailsQty: '1',
-				orderdetailsPrice: temp.product.productPrice
-			})).subscribe(r => {
-				if (r.status === 'true') {
-					this.addToLocal({
-						productID: temp.product.productID,
-						qty: 1
-					});
-					resolve('Added_sucessfully');
-				}
-			}, () => {
-				reject('Oops! Something went wrong while adding item to cart!');
-				console.error('Oops! Something went wrong while adding item to cart!');
-			}));
-		});
-	}
-	addToLocal = (pro: {
-		productID: string;
-		qty: number;
-	}) => {
-		if (localStorage.getItem('tempCart')) {
-			const cart = JSON.parse(localStorage.getItem('tempCart')) as TempCartItems[];
-			const index = cart.map(c => c.productID).indexOf(pro.productID);
-			if (index === -1) {
-				cart.push(pro);
-				localStorage.setItem('tempCart', JSON.stringify(cart));
-			} else {
-				for (let i = 0; i < cart.length; i++) {
-					if (cart[i].productID === pro.productID) {
-						cart[i].qty += pro.qty;
-					}
-				};
-				localStorage.setItem('tempCart', JSON.stringify(cart));
-			}
-		} else {
-			localStorage.setItem('tempCart', JSON.stringify([pro]));
-		}
 	}
 }

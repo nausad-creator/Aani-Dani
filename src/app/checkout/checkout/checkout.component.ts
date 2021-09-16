@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -19,7 +19,7 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 @Component({
 	selector: 'app-checkout',
 	template: `
-<app-header></app-header> <!-- Top Bar -->
+<app-header (search)="search($event)"></app-header> <!-- Top Bar -->
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -120,9 +120,11 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 	]
 })
 export class CheckoutComponent implements OnInit {
+	subs = new SubSink();
 	user: USER_RESPONSE;
 	preventAbuse = false;
 	orderPaymentMode: string;
+	orders$: Observable<{ data: TempOrders[]; status: string, message: string }[]> = of(null);
 	selectedAddress: { address: string; city: string; country: string; zip_code: string; } = { address: '', city: '', country: '', zip_code: '' };
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
@@ -155,17 +157,14 @@ export class CheckoutComponent implements OnInit {
 			}
 		}))
 	);
-	subs = new SubSink();
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
 		private root: RootService,
 		private auth: AuthenticationService,
-		private cd: ChangeDetectorRef,
 		private modal: BsModalService,
 		private toastr: ToastrService,
 		private cookie: CookieService) { }
-	orders$: Observable<{ data: TempOrders[]; status: string, message: string }[]> = of(null);
 	state = () => {
 		return this.store.select(selectTempOrdersList).pipe(
 			map((res) => {
@@ -248,7 +247,6 @@ export class CheckoutComponent implements OnInit {
 				this.selectedAddress.country = `${user.address.find(a => a.addressIsDefault === 'Yes').countryName}`;
 				this.selectedAddress.zip_code = `${user.address.find(a => a.addressIsDefault === 'Yes').addressPincode}`
 				tepmOrder.loginuserID = user.userID;
-				this.cd.markForCheck();
 			}
 			if (user === null) {
 				this.user = null;
@@ -256,7 +254,6 @@ export class CheckoutComponent implements OnInit {
 					delete this.selectedAddress[key];
 				});
 				tepmOrder.loginuserID = '0';
-				this.cd.markForCheck();
 			}
 		}));
 	}
@@ -316,6 +313,9 @@ export class CheckoutComponent implements OnInit {
 		this.checkStatus();
 		this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
 		this.orders();
+	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
 	}
 	placeOrder = (ordersList: {
 		billingDetails: {
@@ -377,17 +377,14 @@ export class CheckoutComponent implements OnInit {
 						}]
 					};
 					this.modal.show(SuccessPlacedOrderComponent, { id: 200, initialState, ignoreBackdropClick: true, keyboard: false });
-					this.cd.markForCheck();
 				}
 				if (r.status === 'false') {
 					this.preventAbuse = false;
 					this.toastr.error('Oops! Something went wrong.');
-					this.cd.markForCheck();
 				}
 			}, (err) => {
 				this.preventAbuse = false;
 				console.error(err);
-				this.cd.markForCheck();
 			});
 		}
 	}
@@ -398,7 +395,6 @@ export class CheckoutComponent implements OnInit {
 		})).subscribe(r => {
 			if (r.status === 'true') {
 				this.root.forceReload();
-				this.cd.markForCheck();
 				this.root.update_user_status$.next('update_header');
 			}
 		}, err => console.error(err));

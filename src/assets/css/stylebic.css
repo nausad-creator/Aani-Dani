@@ -1,6 +1,7 @@
 /**arabic stylesheet**/
 /*--------------------------------------------------------------# General--------------------------------------------------------------*/
 body {
+  direction: rtl;
   font-family: 'Cairo', sans-serif !important;
   color: #444444;
 }
@@ -3111,6 +3112,18 @@ body {
 
 .Mobilefilter {
   display: none;
+}
+
+.selectedAddres a {
+  color: #030303;
+}
+
+.selectedAddres .callUs .callicon i {
+  font-size: 22px;
+}
+
+.selectedAddres .callnumber h6 {
+  font-size: 15px;
 }
 
 .selectedAddress {

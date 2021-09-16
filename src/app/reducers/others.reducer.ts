@@ -1,6 +1,6 @@
 
-import { LabelsActions, LabelsActionTypes, LanguageActions, LanguageActionTypes, NationalityActions, NationalityActionTypes, TempCartActions, TempCartActionTypes } from '../actions/others.action';
-import { Labels, Language, Nationality, TempOrders } from '../interface';
+import { CountryActions, CountryActionTypes, LabelsActions, LabelsActionTypes, LanguageActions, LanguageActionTypes, NationalityActions, NationalityActionTypes, TempCartActions, TempCartActionTypes } from '../actions/others.action';
+import { Country, Labels, Language, Nationality, TempOrders } from '../interface';
 
 export interface NationalityState {
 	Nationality: Nationality[];
@@ -15,6 +15,23 @@ export function NationalityReducer(state = initialState, action: NationalityActi
 			return { ...state, Nationality: action.data }
 		case NationalityActionTypes.LoadNationalityFailure:
 			return { ...state, Nationality: [] }
+		default:
+			return state;
+	}
+}
+export interface CountryState {
+	CountryList: Country[];
+}
+export const initialStateCountry: CountryState = {
+	CountryList: []
+};
+
+export function CountryReducer(state = initialStateCountry, action: CountryActions): CountryState {
+	switch (action.type) {
+		case CountryActionTypes.LoadCountrySuccess:
+			return { ...state, CountryList: action.data }
+		case CountryActionTypes.LoadCountryFailure:
+			return { ...state, CountryList: [] }
 		default:
 			return state;
 	}

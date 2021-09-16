@@ -16,43 +16,43 @@ import { Store } from '@ngrx/store';
  * Top Level Component
  */
 @Component({
-  selector: 'app',
-  encapsulation: ViewEncapsulation.None,
-  template: require('./app.html')
+	selector: 'app',
+	encapsulation: ViewEncapsulation.None,
+	template: require('./app.html')
 })
 export class App {
 
-  constructor(
-    public youtubeSearch: YoutubeSearch,
-    public playerService: PlayerService,
-    public nowPlaylistService: NowPlaylistService,
-    public store: Store<EchoesState>
-  ) {
+	constructor(
+		public youtubeSearch: YoutubeSearch,
+		public playerService: PlayerService,
+		public nowPlaylistService: NowPlaylistService,
+		public store: Store<EchoesState>
+	) {
 
-  }
+	}
 
-  selectVideo (media: GoogleApiYouTubeVideoResource) {
+	selectVideo(media: GoogleApiYouTubeVideoResource) {
 
 
-    this.nowPlaylistService.updateIndexByMedia(media.id);
-  }
+		this.nowPlaylistService.updateIndexByMedia(media.id);
+	}
 
-  handleVideoEnded (state) {
-    if (!this.isLastIndex()) {
-      this.playNextVideo(state);
-    }
-  }
+	handleVideoEnded(state) {
+		if (!this.isLastIndex()) {
+			this.playNextVideo(state);
+		}
+	}
 
-  playNextVideo (player) {
-    this.nowPlaylistService.selectNextIndex();
-    // this.playerService.playVideo(this.nowPlaylistService.getCurrent());
-  }
+	playNextVideo(player) {
+		this.nowPlaylistService.selectNextIndex();
+		// this.playerService.playVideo(this.nowPlaylistService.getCurrent());
+	}
 
-  sortVideo (media: GoogleApiYouTubeSearchResource) {
+	sortVideo(media: GoogleApiYouTubeSearchResource) {
 
-  }
+	}
 
-  isLastIndex() {
+	isLastIndex() {
 
-  }
+	}
 }

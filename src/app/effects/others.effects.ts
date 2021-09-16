@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, take } from 'rxjs/operators';
-import { LoadNationalitySuccess, NationalityActionTypes, LoadNationalityFailure, LoadNationality, LoadTempCartSuccess, TempCartActionTypes, LoadTempCartFailure, LoadTempCart, LanguageActionTypes, LoadLanguageSuccess, LoadLanguage, LoadLanguageFailure, LoadLabelsSuccess, LabelsActionTypes, LoadLabels, LoadLabelsFailure } from '../actions/others.action';
+import { LoadNationalitySuccess, NationalityActionTypes, LoadNationalityFailure, LoadNationality, LoadTempCartSuccess, TempCartActionTypes, LoadTempCartFailure, LoadTempCart, LanguageActionTypes, LoadLanguageSuccess, LoadLanguage, LoadLanguageFailure, LoadLabelsSuccess, LabelsActionTypes, LoadLabels, LoadLabelsFailure, LoadCountrySuccess, CountryActionTypes, LoadCountryFailure, LoadCountry } from '../actions/others.action';
 import { RootService } from '../root.service';
 
 @Injectable()
@@ -13,6 +13,14 @@ export class OthersEffects {
 			mergeMap(action => this.root.getNationality(action.temp).pipe(
 				map(data => new LoadNationalitySuccess(data),
 					catchError((err) => of(new LoadNationalityFailure(action.temp, err)))
+				), take(1))));
+	});
+	loadCountry$ = createEffect((): Observable<LoadCountrySuccess> => {
+		return this.actions$.pipe(
+			ofType(CountryActionTypes.LoadCountry),
+			mergeMap(action => this.root.getCountryList().pipe(
+				map(data => new LoadCountrySuccess(data),
+					catchError((err) => of(new LoadCountryFailure(action.temp, err)))
 				), take(1))));
 	});
 	// temp orders
@@ -43,7 +51,7 @@ export class OthersEffects {
 				), take(1))));
 	});
 	constructor(
-		private actions$: Actions<LoadNationality | LoadTempCart | LoadLanguage | LoadLabels>,
+		private actions$: Actions<LoadNationality | LoadTempCart | LoadLanguage | LoadLabels | LoadCountry>,
 		private root: RootService
 	) { }
 

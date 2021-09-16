@@ -15,7 +15,7 @@ import { change, filter_sort, initial, search_global } from 'src/app/global';
 @Component({
 	selector: 'app-shared-list',
 	template: `
-<app-header [isSearch]="(product_state$ | async)?.isSearch" (key_up)="search($event)" (search)="search($event)"></app-header>
+<app-header [isSearch]="(product_state$ | async)?.isSearch" (search)="search($event)"></app-header>
 <!-- Header -->
 <header id="header">
 	<div class="container">

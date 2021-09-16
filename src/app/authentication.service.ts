@@ -34,8 +34,7 @@ export class AuthenticationService {
 
 	constructor(
 		private router: Router,
-		private http: HttpClient
-	) {
+		private http: HttpClient) {
 		this.userSubject = new BehaviorSubject<USER_RESPONSE>(JSON.parse(sessionStorage.getItem('USER_LOGGED')));
 		this.user = this.userSubject.asObservable();
 	}
@@ -58,7 +57,7 @@ export class AuthenticationService {
 		"languageID":"${JSON.parse(item).languageID}",
 		"userMobile":"${JSON.parse(item).userMobile}",
 		"userPassword":"${JSON.parse(item).userPassword}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -78,7 +77,7 @@ export class AuthenticationService {
 		"userCountryCode":"${JSON.parse(item).userCountryCode}",
 		"languageID":"${JSON.parse(item).languageID}",
 		"userMobile":"${JSON.parse(item).userMobile}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -94,7 +93,7 @@ export class AuthenticationService {
 		"loginuserID":"${JSON.parse(item).loginuserID}",
 		"userOTP":"${JSON.parse(item).userOTP}",
 		"userDeviceID": "xczxcxzczxczxcxcxc",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -113,7 +112,7 @@ export class AuthenticationService {
 		"languageID":"${JSON.parse(item).languageID}",
 		"loginuserID":"${JSON.parse(item).loginuserID}",
 		"userMobile":"${JSON.parse(item).userMobile}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -131,7 +130,7 @@ export class AuthenticationService {
 		"loginuserID":"${JSON.parse(item).loginuserID}",
 		"languageID":"${JSON.parse(item).languageID}",
 		"userNewPassword":"${JSON.parse(item).userNewPassword}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -154,7 +153,7 @@ export class AuthenticationService {
 		"languageID":"${JSON.parse(item).languageID}",
 		"userCurrentPassword":"${JSON.parse(item).userCurrentPassword}",
 		"userNewPassword":"${JSON.parse(item).userNewPassword}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -179,9 +178,9 @@ export class AuthenticationService {
 		"nationalityID":"${JSON.parse(item).nationalityID}",
 		"userDOB":"${moment(moment(`${JSON.parse(item).userDOB}`).toDate(), 'YYYY-MM-DD').format('YYYY-MM-DD')}",
 		"userMobile":"${JSON.parse(item).userMobile}",
-		"userDeviceType":"Android",
+		"userDeviceType":"web",
 		"userDeviceID":"xczxcxzczxczxcxcxc",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"userSignedRefKey":"",
 		"userPassword":"${JSON.parse(item).userPassword}"
@@ -206,7 +205,7 @@ export class AuthenticationService {
 		"languageID":"${JSON.parse(item).languageID}",
 		"userEmail":"${JSON.parse(item).userEmail}",
 		"userMobile":"${JSON.parse(item).userMobile}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -232,9 +231,9 @@ export class AuthenticationService {
 		"nationalityID":"${JSON.parse(item).nationalityID}",
 		"userDOB":"${moment(moment(`${JSON.parse(item).userDOB}`).toDate(), 'YYYY-MM-DD').format('YYYY-MM-DD')}",
 		"userMobile":"${JSON.parse(item).userMobile}",
-		"userDeviceType":"Android",
+		"userDeviceType":"web",
 		"userDeviceID":"xczxcxzczxczxcxcxc",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"userProfilePicture":"${JSON.parse(item).userProfilePicture}"
 		}]`;
@@ -259,7 +258,7 @@ export class AuthenticationService {
 		"userEmailNotification":"${JSON.parse(temp).userEmailNotification}",
 		"userSMSNotification":"${JSON.parse(temp).userSMSNotification}",
 		"userPushNotification":"${JSON.parse(temp).userPushNotification}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0",
 		"languageID":"1"
 		}]`;
@@ -296,7 +295,7 @@ export class AuthenticationService {
 		"addressLati":"${JSON.parse(temp).addressLati}",
 		"addressLongi":"${JSON.parse(temp).addressLongi}",
 		"addressMobile":"${JSON.parse(temp).addressMobile}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -333,7 +332,7 @@ export class AuthenticationService {
 		"addressLati":"${JSON.parse(temp).addressLati}",
 		"addressLongi":"${JSON.parse(temp).addressLongi}",
 		"addressMobile":"${JSON.parse(temp).addressMobile}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -355,7 +354,7 @@ export class AuthenticationService {
 		"addressID":"${JSON.parse(temp).addressID}",
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
 		"languageID":"${JSON.parse(temp).languageID}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);
@@ -376,7 +375,7 @@ export class AuthenticationService {
 		"addressID":"${JSON.parse(temp).addressID}",
 		"loginuserID":"${JSON.parse(temp).loginuserID}",
 		"languageID":"${JSON.parse(temp).languageID}",
-		"apiType":"Android",
+		"apiType":"web",
 		"apiVersion":"1.0"
 		}]`;
 		form.append('json', json);

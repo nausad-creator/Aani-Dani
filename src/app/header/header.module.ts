@@ -22,6 +22,9 @@ import { SharedAddAddressComponent } from './onboarding/shared-add-address.compo
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxLoaderIndicatorModule } from 'ngx-loader-indicator';
+import { StoreListComponent } from './onboarding/store-list.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
 	declarations: [
@@ -38,7 +41,8 @@ import { NgxLoaderIndicatorModule } from 'ngx-loader-indicator';
 		AddressListComponent,
 		MyFilterAdressPipe,
 		AlertComponent,
-		SharedAddAddressComponent
+		SharedAddAddressComponent,
+		StoreListComponent
 	],
 	imports: [
 		CommonModule,
@@ -51,6 +55,8 @@ import { NgxLoaderIndicatorModule } from 'ngx-loader-indicator';
 		NgSelectModule,
 		TooltipModule,
 		TranslateModule,
+		ModalModule.forRoot(),
+		PopoverModule.forRoot(),
 		NgxLoaderIndicatorModule.forRoot({
 			loaderStyles: {
 				background: 'rgba(253 252 246 / 2%)',

@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { fadeIn } from 'src/app/animation';
 import { Orders } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
@@ -76,12 +76,9 @@ import { RootService } from 'src/app/root.service';
 	],
 	animations: [
 		trigger('fadeIn', fadeIn())
-	], changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
-export class SharedOrderComponent implements OnInit {
+export class SharedOrderComponent {
 	@Input() orders: Orders[];
 	constructor(public root: RootService) { }
-	ngOnInit(): void {
-	}
-
 }

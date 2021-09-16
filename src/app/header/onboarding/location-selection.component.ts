@@ -23,16 +23,16 @@ import { LoginComponent } from './login.component';
   `,
 	styles: [
 		`.modal-contents {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		pointer-events: auto;
-		background-color: #fff;
-		background-clip: padding-box;
-		border-radius: .3rem;
-		outline: 0;
-	}`
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			pointer-events: auto;
+			background-color: #fff;
+			background-clip: padding-box;
+			border-radius: .3rem;
+			outline: 0;
+		}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocationSelectionComponent implements OnInit {

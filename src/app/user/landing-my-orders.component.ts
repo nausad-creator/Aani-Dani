@@ -11,7 +11,7 @@ import { RootService } from '../root.service';
 @Component({
 	selector: 'app-landing-my-order',
 	template: `
-<app-header></app-header> <!-- Top Bar -->
+<app-header (search)="search($event)"></app-header> <!-- Top Bar -->
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -124,6 +124,9 @@ export class LandingMyOrderComponent implements OnInit, OnDestroy, AfterViewInit
 		this.subs.unsubscribe();
 	}
 	ngOnInit(): void {
+	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
 	}
 }
 

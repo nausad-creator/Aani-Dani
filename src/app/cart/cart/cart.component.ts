@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
+import { SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { tepmOrder } from 'src/app/global';
 import { Category, ProductList, TempCartItems, TempOrders } from 'src/app/interface';
@@ -14,7 +14,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-cart',
 	template: `
-<app-header></app-header> <!-- Top Bar -->
+<app-header (search)="search($event)"></app-header> <!-- Top Bar -->
 <!-- Header -->
 <header id="header">
 	<div class="container">
@@ -92,7 +92,6 @@ import { SubSink } from 'subsink';
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
-	loginuserID: string;
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
 	products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
@@ -220,7 +219,7 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 										subcatID: a.subcatID,
 										addedCartCount: a.Qty.split('.')[0],
 									}
-								}),
+								}).sort((a, b) => +a.productID - +b.productID),
 								billingDetails: {
 									delivery_Tip: 10,
 									delivery_Fee: 30,
@@ -289,12 +288,14 @@ export class CartComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
+	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
 	}
 	ngOnInit(): void {
 		this.checkStatus();
-		this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
 		this.orders();
 	}
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-export const data = {
+export let data = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -17,7 +17,7 @@ export const data = {
 	page: '0',
 	pagesize: '50',
 };
-export const dataChange = {
+export let dataChange = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -34,7 +34,7 @@ export const dataChange = {
 	page: '0',
 	pagesize: '50',
 };
-export const initial = {
+export let initial = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -51,7 +51,7 @@ export const initial = {
 	page: '0',
 	pagesize: '50',
 };
-export const change = {
+export let change = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -68,7 +68,7 @@ export const change = {
 	page: '0',
 	pagesize: '50',
 };
-export const filter_sort = {
+export let filter_sort = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -85,7 +85,7 @@ export const filter_sort = {
 	page: '0',
 	pagesize: '50',
 };
-export const search_global = {
+export let search_global = {
 	loginuserID: '1',
 	languageID: '1',
 	searchWord: '',
@@ -102,26 +102,26 @@ export const search_global = {
 	page: '0',
 	pagesize: '50',
 };
-export const home = {
+export let home = {
 	loginuserID: "1",
 	languageID: "1",
 	cityName: "",
 	latitude: ":23.0350844",
 	longitude: "72.5018903",
 };
-export const about_us = {
+export let about_us = {
 	code: 'aboutus'
 };
-export const privacy_policy = {
+export let privacy_policy = {
 	code: 'privacy'
 };
-export const terms_conditions = {
+export let terms_conditions = {
 	code: 'terms'
 };
-export const search = {
+export let search = {
 	code: ''
 };
-export const order = {
+export let order = {
 	orderID: "0",
 	restaurantID: "0",
 	loginuserID: "",
@@ -132,14 +132,29 @@ export const order = {
 	languageID: "1",
 	searchkeyword: ""
 }
-export const tepmOrder = {
+export let tepmOrder = {
 	orderID: "0",
 	loginuserID: "",
 	languageID: "1"
 }
-export const wishlist = {
+export let wishlist = {
 	page: "0",
 	pagesize: '10',
 	loginuserID: "",
 	languageID: "1"
 }
+export let details = {
+	loginuserID: '1',
+	languageID: '1',
+	searchWord: '',
+	productID: '0',
+	subcatID: '0',
+	categoryID: '0',
+	searchkeyword: '',
+	cityName: '',
+	minPrice: '',
+	maxPrice: '',
+	sortBy: '',
+	page: '0',
+	pagesize: '1',
+};

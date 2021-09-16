@@ -136,7 +136,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 	subs = new SubSink();
 	bModalRef: BsModalRef;
 	caseOptions: OwlOptions = {
-		autoplay: true,
+		autoplay: false,
 		dots: false,
 		loop: false,
 		nav: true,

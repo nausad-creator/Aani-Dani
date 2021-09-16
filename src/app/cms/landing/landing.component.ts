@@ -10,7 +10,7 @@ import { SubSink } from 'subsink';
 @Component({
 	selector: 'app-landing',
 	template: `
-  <app-header></app-header> <!-- Top Bar -->
+  <app-header (search)="search($event)"></app-header> <!-- Top Bar -->
   <!-- Header -->
   <header id="header">
     <div class="container">
@@ -113,5 +113,8 @@ export class LandingComponent implements OnInit {
 		this.subs.unsubscribe();
 	}
 	ngOnInit(): void {
+	}
+	search = (s: string) => {
+		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
 	}
 }

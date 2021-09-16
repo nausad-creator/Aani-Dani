@@ -6,21 +6,21 @@ import { PlayerService } from '../services/player.service';
 
 @Injectable()
 export class NowPlaylistEffects {
-  constructor(
-    private actions$: Actions,
-    private nowPlaylistActions: NowPlaylistActions,
-    private playerService: PlayerService,
-  ) {}
+	constructor(
+		private actions$: Actions,
+		private nowPlaylistActions: NowPlaylistActions,
+		private playerService: PlayerService,
+	) { }
 
-  @Effect()
-  queueVideo$ = this.actions$
-    .ofType(NowPlaylistActions.SELECT)
-    .map(toPayload)
-    .map((media) => this.nowPlaylistActions.queueVideo(media));
+	@Effect()
+	queueVideo$ = this.actions$
+		.ofType(NowPlaylistActions.SELECT)
+		.map(toPayload)
+		.map((media) => this.nowPlaylistActions.queueVideo(media));
 
-  @Effect({ dispatch: false })
-  playVideo$ = this.actions$
-    .ofType(NowPlaylistActions.SELECT)
-    .map(toPayload)
-    .do((media) => this.playerService.playVideo(media));
+	@Effect({ dispatch: false })
+	playVideo$ = this.actions$
+		.ofType(NowPlaylistActions.SELECT)
+		.map(toPayload)
+		.do((media) => this.playerService.playVideo(media));
 }

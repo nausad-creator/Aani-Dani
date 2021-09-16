@@ -4,7 +4,7 @@ import { LoadHome } from './actions/home.action';
 import { State } from './reducers';
 import { about_us, filter_sort, home, privacy_policy, search, search_global, terms_conditions } from 'src/app/global';
 import { LoadAboutUs, LoadFaqs, LoadPrivacyPolicy, LoadTermsCondition } from './actions/cms.action';
-import { LoadLabels, LoadLanguage, LoadNationality } from './actions/others.action';
+import { LoadCountry, LoadLabels, LoadLanguage, LoadNationality } from './actions/others.action';
 import { AuthenticationService } from './authentication.service';
 import { SubSink } from 'subsink';
 import { USER_RESPONSE } from './interface';
@@ -40,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			if (language) {
 				this.translate.setDefaultLang(language);
 				this.translate.use(language);
-				this.changeLangage(language);
+				this.changeCssFile(language);
 				localStorage.setItem('lang', language);
 			}
 		}));
@@ -98,6 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.store.dispatch(new LoadFaqs());
 		this.store.dispatch(new LoadPrivacyPolicy(privacy_policy.code));
 		this.store.dispatch(new LoadNationality(search.code));
+		this.store.dispatch(new LoadCountry());
 		// detect route changing
 		this.subs.add(this.router.events.pipe(filter(e => e instanceof NavigationEnd),
 			map((r: {
@@ -139,16 +140,13 @@ export class AppComponent implements OnInit, OnDestroy {
 			});
 		});
 	}
-	changeLangage(lang: string) {
-		let htmlTag = this.document.getElementsByTagName("html")[0] as HTMLHtmlElement;
-		htmlTag.dir = lang === "ar" ? "rtl" : "ltr";
-		htmlTag.lang = lang === "ar" ? "ar" : "en";
-		this.changeCssFile(lang);
-	}
 	changeCssFile(lang: string) {
+		let htmlTag = this.document.getElementsByTagName("html")[0] as HTMLHtmlElement;
 		let headTag = this.document.getElementsByTagName("head")[0] as HTMLHeadElement;
 		let existingLink = this.document.getElementById("langCss") as HTMLLinkElement;
 		let bundleName = lang === "ar" ? "arabicStyle.css" : "englishStyle.css";
+		htmlTag.dir = lang === "ar" ? "rtl" : "ltr";
+		htmlTag.lang = lang === "ar" ? "ar" : "en";
 		if (existingLink) {
 			existingLink.href = bundleName;
 		} else {

@@ -108,7 +108,7 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 			loginuserID: [this.user ? this.user.userID : '0'],
 			languageID: [this.user ? this.user.languageID : '1'],
 			addressID: [''],
-			addressTitle: [''],
+			addressTitle: ['home'],
 			addressBuildingName: [''],
 			addressBlockNo: [''],
 			addressIsDefault: [this.user ? this.user.address.length === 0 ? 'Yes' : 'No' : 'No'],
@@ -121,7 +121,7 @@ export class SharedAddAddressComponent implements OnInit, OnDestroy {
 			addressPincode: [''],
 			state: [''],
 			cityName: [''],
-			addressType: [''],
+			addressType: ['home'],
 			countryName: [''],
 			countryID: ['1']
 		});

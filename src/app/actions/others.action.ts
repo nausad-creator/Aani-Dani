@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Labels, Language, Nationality, TempOrders } from '../interface';
+import { Country, Labels, Language, Nationality, TempOrders } from '../interface';
 
 export enum NationalityActionTypes {
 	LoadNationality = '[Nationality] Load Nationality',
@@ -23,6 +23,29 @@ export class LoadNationalityFailure implements Action {
 }
 
 export type NationalityActions = LoadNationality | LoadNationalitySuccess | LoadNationalityFailure;
+
+export enum CountryActionTypes {
+	LoadCountry = '[Country] LoadCountry',
+	LoadCountrySuccess = '[Country] LoadCountrySuccess',
+	LoadCountryFailure = '[Country] LoadCountryFailure',
+}
+
+export class LoadCountry implements Action {
+	readonly type = CountryActionTypes.LoadCountry;
+	constructor(public temp?: string) { }
+}
+
+export class LoadCountrySuccess implements Action {
+	readonly type = CountryActionTypes.LoadCountrySuccess;
+	constructor(public data: Country[]) { }
+}
+
+export class LoadCountryFailure implements Action {
+	readonly type = CountryActionTypes.LoadCountryFailure;
+	constructor(public temp: string, public payload: any) { }
+}
+
+export type CountryActions = LoadCountry | LoadCountrySuccess | LoadCountryFailure;
 
 // temporary cart actions
 export enum TempCartActionTypes {

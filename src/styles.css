@@ -2,14 +2,6 @@
 @import '~@angular/cdk/overlay-prebuilt.css';
 
 /** Add this only for non-material project */
-body {
-  direction: ltr;
-}
-
-[lang="ar"] body {
-  direction: rtl;
-}
-
 ::ng-deep .cdk-overlay-container {
   z-index: 1200 !important;
 }

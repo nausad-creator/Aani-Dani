@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
 import { shareReplay, retry, catchError, map, takeUntil } from 'rxjs/operators';
-import { Banner, Category, Labels, Language, Nationality, Orders, ProductList, Store, TempOrders, Upload, Wishlist } from './interface';
+import { Banner, Category, Country, Labels, Language, Nationality, Orders, ProductList, Store, TempCartItems, TempOrders, Upload, Wishlist } from './interface';
 const CACHE_SIZE = 1;
 @Injectable({
 	providedIn: 'root',
@@ -40,6 +40,7 @@ export class RootService {
 	cmsUrl = '/cmspage/get-cmspage';
 	faqUrl = '/faq/faq-list';
 	nationalityUrl = '/nationality/get-nationality-list';
+	countryListUrl = '/country/get-country-list';
 	addItemToCartUrl = '/temporders/add-item';
 	removeItemToCartUrl = '/temporders/remove-item';
 	placeNewOrderUrl = '/temporders/place-order';
@@ -61,12 +62,18 @@ export class RootService {
 		headers: new HttpHeaders({}),
 	};
 	// User
-	getSession = (): string | null => {
-		return sessionStorage.getItem('Assistant');
+	get_session = (): string | null => {
+		return sessionStorage.getItem('USER_LOGGED');
 	}
-	isAuthenticated(): boolean {
-		const token = this.getSession();
+	is_authenticated(): boolean {
+		const token = this.get_session();
 		return typeof (token) === 'string' ? true : false;
+	}
+	get_state_checkout = (): TempCartItems[] => {
+		return JSON.parse(localStorage.getItem('tempCart')) as TempCartItems[]
+	}
+	is_checkout_state(): boolean {
+		return this.get_state_checkout().filter(r => r.qty !== 0).length > 0 ? true : false;;
 	}
 	isNewSearchQuery(query: string) {
 		if (JSON.parse(query)?.categoryID !== this.route.snapshot.queryParams?.categoryID) {
@@ -170,6 +177,24 @@ export class RootService {
 				status: string;
 			}>(`${this.nationalityUrl}`, form, this.httpOptions)
 			.pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
+	}
+	getCountryList = (): Observable<Country[]> => {
+		const form = new FormData();
+		const json = `[{
+		"loginuserID":"0",
+		"languageID":"1",
+		"searchWord":"",
+		"apiType":"Android",
+		"apiVersion":"1.0"
+		}]`;
+		form.append('json', json);
+		return this.http
+			.post<{
+				data: Country[];
+				message: string;
+				status: string;
+			}[]>(`${this.countryListUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0].data.filter(c => c.countryDialCode)), shareReplay(), retry(2), catchError(this.handleError));
 	}
 	get categories(): Observable<Category[]> {
 		if (!this.categories$) {
@@ -294,7 +319,11 @@ export class RootService {
 			}[]>(`${this.productListUrl}`, form, this.httpOptions)
 			.pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
 	}
-	orders = (temp: string): Observable<Orders[]> => {
+	orders = (temp: string): Observable<{
+		data: Orders[];
+		message: string;
+		status: string;
+	}> => {
 		const form = new FormData();
 		const json = `[{
 		"orderID":"${JSON.parse(temp).orderID}",
@@ -312,11 +341,11 @@ export class RootService {
 		form.append('json', json);
 		return this.http
 			.post<{
-				date: Orders[];
+				data: Orders[];
 				message: string;
 				status: string;
-			}>(`${this.ordersUrl}`, form, this.httpOptions)
-			.pipe(map(r => r[0].data), shareReplay(), retry(2), catchError(this.handleError));
+			}[]>(`${this.ordersUrl}`, form, this.httpOptions)
+			.pipe(map(r => r[0]), shareReplay(), retry(2), catchError(this.handleError));
 	}
 	wishlists = (temp: string): Observable<{
 		count: number;

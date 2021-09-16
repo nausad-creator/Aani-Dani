@@ -7,8 +7,8 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Nationality, UserUpdate, USER_RESPONSE } from 'src/app/interface';
-import { selectNationalyList, State } from 'src/app/reducers';
+import { Country, Nationality, UserUpdate, USER_RESPONSE } from 'src/app/interface';
+import { selectCountryList, selectNationalyList, State } from 'src/app/reducers';
 export const MY_CUSTOM_FORMATS = {
 	fullPickerInput: 'DD MMM, YYYY',
 	parseInput: 'DD MMM, YYYY',
@@ -103,9 +103,12 @@ export const MY_CUSTOM_FORMATS = {
 					<label for="phone">{{'mobile_number' | translate}}<span
 							class="required-field"></span></label>
 					<div class="form-row">
-						<div class="col-md-4 form-group"><input type="text"
-								formControlName="countryCode" class="form-control w-100"
-								name="cCode" id="phone" placeholder="Code" readonly>
+						<div class="col-md-4 form-group"><ng-select [items]="countries$ | async"
+							formControlName="countryCode"
+           						bindLabel="countryDialCode" [closeOnSelect]="true" [searchable]="false"
+							[clearable]="false" class="customCountry"
+							bindValue="countryDialCode">
+							</ng-select>
 						</div>
 						<div class="col-md-8 form-group">
 							<input type="text" maxlength="10" formControlName="userMobile"
@@ -145,28 +148,43 @@ export const MY_CUSTOM_FORMATS = {
 			border-color: #E6E6E6;
 			height: calc(1.8em + .75rem + 2px);
 		      }
-		      
 		      .ng-select.custom ::ng-deep .ng-select-container .ng-placeholder {
 			color: #C2C2C2;
 		      }
-		      
 		      .ng-select.ng-select-single.custom ::ng-deep .ng-select-container {
 			padding-right: 5px;
 		      }
-		      
 		      .ng-select.custom ::ng-deep .ng-arrow-wrapper {
 			display: none
 		      }
-		      
 		      .ng-select.custom ::ng-deep .ng-clear-wrapper {
 			color: #999;
 			top: 1px;
 		      }
-		      
+		      .ng-select.ng-select-single.customCountry ::ng-deep .ng-select-container {
+			height: 37.5px;
+			font-size: 1rem;
+			background-clip: padding-box;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			background-color: #ECECEC;
+			border-color: #E6E6E6;
+			opacity: 1;
+			height: calc(1.8em + .75rem + 2px);
+      		      }
+		     .ng-select.customCountry ::ng-deep .ng-select-container .ng-placeholder {
+    			color:#C2C2C2;
+  	              }
+		     .ng-select.ng-select-single.customCountry ::ng-deep .ng-select-container {
+    			padding-right: 5px;
+	 	     }
+		     .ng-select.customCountry ::ng-deep .ng-clear-wrapper {
+    		        color: #999;
+    			top: 1px;
+	             }
 		      .noPointer {
 			pointer-events: none;
 		      }
-		      
 		      .required-field::before {
 			content: '*';
 			color: rgb(247, 83, 83);
@@ -181,6 +199,7 @@ export const MY_CUSTOM_FORMATS = {
 export class MyAccountComponent implements OnInit {
 	user: USER_RESPONSE = localStorage.getItem('USER_LOGGED') ? JSON.parse(localStorage.getItem('USER_LOGGED')) : JSON.parse(sessionStorage.getItem('USER_LOGGED')) as USER_RESPONSE;
 	nationalities$: Observable<Nationality[]> = this.store.select(selectNationalyList);
+	countries$: Observable<Country[]> = this.store.select(selectCountryList);
 	profileForm: FormGroup;
 	preventAbuse = false;
 	maxDate = new Date();

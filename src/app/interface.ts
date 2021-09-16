@@ -331,6 +331,11 @@ export interface USER_RESPONSE {
 	address: ADDRESS[];
 	settings: SETTINGS[];
 	storeID: string;
+	storeName: string;
+	stores: {
+		storeID: string;
+		storeName: string;
+	}[];
 }
 export interface SETTINGS {
 	settingsID: string;
@@ -577,4 +582,16 @@ export interface Wishlist {
 	productStatus: string;
 	productCreatedDate: string;
 	addedCartCount: number;
+}
+export interface Country {
+	countryID: string;
+	countryName: string;
+	countryISO3Code: string;
+	countryISO2Code: string;
+	countryCurrencyCode: string;
+	countryDialCode: string;
+	countryFlagImage: string;
+	countryTimezone: string;
+	countryStatus: string;
+	countryCreatedDate: string;
 }

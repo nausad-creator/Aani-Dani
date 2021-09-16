@@ -6,8 +6,8 @@ import * as moment from 'moment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { Nationality, ProductList, USER_RESPONSE } from 'src/app/interface';
-import { selectNationalyList, State } from 'src/app/reducers';
+import { Country, Nationality, ProductList, USER_RESPONSE } from 'src/app/interface';
+import { selectCountryList, selectNationalyList, State } from 'src/app/reducers';
 import { LoginComponent } from './login.component';
 import { OtpRegisterComponent } from './otp.register.component';
 
@@ -15,72 +15,149 @@ import { OtpRegisterComponent } from './otp.register.component';
 	selector: 'app-registration',
 	template: `
     <!--Modal Signup -->
-		<div class="modal-contents" [loader]="preventAbuse">
-		  <div class="modal-header">
-		   <h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'sign_up' | translate}}</h5>
-		   <button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span></button>
-		  </div>
-		  <div class="modal-body">
-			  <form class="text-left profile-form" [formGroup]="registerForm" (ngSubmit)="onClickregister(registerForm.value);"> 				 	
-				<div class="CandidateRegister">	
-				  <div class="form-row">
-					  <div class="col-md-12 col-sm-12 form-group">
-						 <input type="text" #userFullNameInput formControlName="userFullName" id="name" class="form-control" [placeholder]="'full_name' | translate">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('required')">{{'please_enter_name' | translate}}</small>
-						 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('minlength')">{{'input_fields_will_not_be_less_than_3_characters' | translate}}</small>
-                      	 			 <small class="text-danger small" *ngIf="registerForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters' | translate}}</small>
-					  </div> 
-					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" (blur)="check_email()" id="Email" #userEmailInput (keydown.space)="$event.preventDefault();" formControlName="userEmail" class="form-control" [placeholder]="'email_address' | translate">
-						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('required')">{{'please_enter_email' | translate}}</small>
-						<small class="text-danger" *ngIf="registerForm.controls['userEmail'].hasError('emailAlreadyExist')">email already exist.</small>
-						<small class="text-danger small" *ngIf="registerForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email' | translate}}</small>
-					  </div>
-					  <div class="col-md-12 col-sm-12 form-group">
-						<input type="text" (blur)="check_phone()" maxlength="10" id="phone" #userMobileInput (keydown.space)="$event.preventDefault();" formControlName="userMobile" class="form-control" [placeholder]="'mobile_number' | translate">
-						<small class="text-danger small" *ngIf="registerForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile' | translate}}</small>
-						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('mobileExist')">mobile already exist.</small>
-						<small class="text-danger" *ngIf="registerForm.controls['userMobile'].hasError('pattern') && (registerForm.controls['userMobile'].dirty || registerForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number' | translate}}</small>
-					  </div>  
-					  <div class="col-md-12 col-sm-12 form-group">
-					  	 <a class="pasword-hideshow cursr" (click)="hideNew=!hideNew"><i class="fa " [ngClass]="{'fa-eye': !hideNew, 'fa-eye-slash': hideNew}"></i></a>
-						 <input type="password" [type]=" hideNew ? 'password' : 'text' " #userPasswordInput (keydown.space)="$event.preventDefault();" formControlName="userPassword" id="defaultPassword" class="form-control" [placeholder]="'password' | translate">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userPassword'].hasError('required')">{{'please_enter_password' | translate}}</small>
-						 <small class="text-danger" *ngIf="registerForm.controls['userPassword'].hasError('pattern') && (registerForm.controls['userPassword'].dirty || registerForm.controls['userPassword'].touched)">{{'password_with_8_char_uppercase_and_number' | translate}}</small>
-					  </div>
-					  <div class="col-md-12 col-sm-12 form-group">
-					  	 <a class="pasword-hideshow cursr" (click)="hideReenter=!hideReenter"><i class="fa " [ngClass]="{'fa-eye': !hideReenter, 'fa-eye-slash': hideReenter}"></i></a>
-						 <input type="password" [type]=" hideReenter ? 'password' : 'text' " #userRePasswordInput (keydown.space)="$event.preventDefault();" formControlName="userRePassword" id="confirmtPassword" class="form-control" [placeholder]="'confirm_password' | translate">
-						 <small class="text-danger small" *ngIf="registerForm.controls['userRePassword'].hasError('required')">{{'please_re_enter_password' | translate}}</small>
-						 <small class="text-danger " *ngIf="registerForm.hasError('confirmedValidator')">{{'re_entered_password_is_not_match' | translate}}</small>
-					  </div>
-					  <div class="col-md-12 col-sm-12 form-group">
-					    <a class="pasword-hideshow cursr"><i [owlDateTimeTrigger]="dt5" class="fa fa-calendar"></i></a>
-					    <input type="text" class="form-control" #userDOBInput (keyup)="onKeyDate(userDOBInput.value)" (blur)="onBlur(userDOBInput.value)" maxlength=14 [max]="maxDate" placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob" name="userDOB" [owlDateTime]="dt5">
-                         		    <owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
-					    <small class="text-danger small" *ngIf="registerForm.controls['userDOB'].hasError('required')">{{'please_select_dob' | translate}}</small>
-					    <small class="text-danger small" *ngIf="registerForm.controls.userDOB.errors">{{registerForm.controls.userDOB.errors.message}}</small>
-					  </div>
-					  <div class="col-md-12 col-sm-12 form-group">
-					  <ng-select [closeOnSelect]="true" [searchable]="true" bindLabel="nationalityName" bindValue="nationalityID"
-                  	   			appearance="outline" #userNationInput formControlName="nationalityID" [items]="nationalities$ | async"
-                  	   			[clearable]="true" class="custom" [placeholder]="'select_nationality' | translate">
-               		   		</ng-select>
-					  <small class="text-danger small" *ngIf="registerForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality' | translate}}</small>
-					  </div>			
-				  </div> 
-				  <div class="form-row pt-3">
-					  <div class="col">
-						<button type="submit" [disabled]="preventAbuse" class="btn btn-them btn-md w-100">{{ preventAbuse ? ('wait' | translate) : ('sign_up' | translate) }}</button>
-					  </div> 
-				  </div>  	
-				  <div class="pt-3 signupbtn text-center">
-					  <span>{{'already_having_account' | translate}}?</span> <a class="cursr ml-1" (click)="openlogin()" data-toggle="modal">Login</a>
-				  </div> 
-				</div> 						
-			  </form>
-		  </div>   		
-		</div>
+<div class="modal-contents" [loader]="preventAbuse">
+	<div class="modal-header">
+		<h5 class="modal-title w-100 text-center" id="exampleModalLabel">{{'sign_up' | translate}}</h5>
+		<button type="button" (click)="!preventAbuse ? onClose() : ''" class="close" data-dismiss="modal"
+			aria-label="Close"> <span aria-hidden="true">×</span></button>
+	</div>
+	<div class="modal-body">
+		<form class="text-left profile-form" [formGroup]="registerForm"
+			(ngSubmit)="onClickregister(registerForm.value);">
+			<div class="CandidateRegister">
+				<div class="form-row">
+					<div class="col-md-12 col-sm-12 form-group">
+						<input type="text" #userFullNameInput formControlName="userFullName"
+							id="name" class="form-control"
+							[placeholder]="'full_name' | translate">
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userFullName'].hasError('required')">{{'please_enter_name'
+							| translate}}</small>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userFullName'].hasError('minlength')">{{'input_fields_will_not_be_less_than_3_characters'
+							| translate}}</small>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userFullName'].hasError('maxlength')">{{'input_fields_will_not_be_more_than_60_characters'
+							| translate}}</small>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<input type="text" (blur)="check_email()" id="Email" #userEmailInput
+							(keydown.space)="$event.preventDefault();"
+							formControlName="userEmail" class="form-control"
+							[placeholder]="'email_address' | translate">
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userEmail'].hasError('required')">{{'please_enter_email'
+							| translate}}</small>
+						<small class="text-danger"
+							*ngIf="registerForm.controls['userEmail'].hasError('emailAlreadyExist')">email
+							already exist.</small>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userEmail'].hasError('pattern')">{{'please_enter_valid_email'
+							| translate}}</small>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<div class="form-row">
+							<div class="col-sm-3 col-4">
+							<ng-select [items]="countries$ | async"
+							formControlName="countryCode"
+           						bindLabel="countryDialCode" [closeOnSelect]="true" [searchable]="false"
+							[clearable]="false" class="customCountry"
+							bindValue="countryDialCode">
+							</ng-select>
+							</div>
+							<div class="col-sm-9 col-8">
+								<input type="text" (blur)="check_phone()" maxlength="10"
+									id="phone" #userMobileInput
+									(keydown.space)="$event.preventDefault();"
+									formControlName="userMobile"
+									class="form-control"
+									[placeholder]="'mobile_number' | translate">
+								<small class="text-danger small"
+									*ngIf="registerForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile'
+									| translate}}</small>
+								<small class="text-danger"
+									*ngIf="registerForm.controls['userMobile'].hasError('mobileExist')">mobile
+									already exist.</small>
+								<small class="text-danger"
+									*ngIf="registerForm.controls['userMobile'].hasError('pattern') && (registerForm.controls['userMobile'].dirty || registerForm.controls['userMobile'].touched)">{{'please_enter_valid_mobile_number'
+									| translate}}</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<a class="pasword-hideshow cursr" (click)="hideNew=!hideNew"><i
+								class="fa "
+								[ngClass]="{'fa-eye': !hideNew, 'fa-eye-slash': hideNew}"></i></a>
+						<input type="password" [type]=" hideNew ? 'password' : 'text' "
+							#userPasswordInput (keydown.space)="$event.preventDefault();"
+							formControlName="userPassword" id="defaultPassword"
+							class="form-control" [placeholder]="'password' | translate">
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userPassword'].hasError('required')">{{'please_enter_password'
+							| translate}}</small>
+						<small class="text-danger"
+							*ngIf="registerForm.controls['userPassword'].hasError('pattern') && (registerForm.controls['userPassword'].dirty || registerForm.controls['userPassword'].touched)">{{'password_with_8_char_uppercase_and_number'
+							| translate}}</small>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<a class="pasword-hideshow cursr" (click)="hideReenter=!hideReenter"><i
+								class="fa "
+								[ngClass]="{'fa-eye': !hideReenter, 'fa-eye-slash': hideReenter}"></i></a>
+						<input type="password" [type]=" hideReenter ? 'password' : 'text' "
+							#userRePasswordInput (keydown.space)="$event.preventDefault();"
+							formControlName="userRePassword" id="confirmtPassword"
+							class="form-control"
+							[placeholder]="'confirm_password' | translate">
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userRePassword'].hasError('required')">{{'please_re_enter_password'
+							| translate}}</small>
+						<small class="text-danger "
+							*ngIf="registerForm.hasError('confirmedValidator')">{{'re_entered_password_is_not_match'
+							| translate}}</small>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<a class="pasword-hideshow cursr"><i [owlDateTimeTrigger]="dt5"
+								class="fa fa-calendar"></i></a>
+						<input type="text" class="form-control" #userDOBInput
+							(keyup)="onKeyDate(userDOBInput.value)"
+							(blur)="onBlur(userDOBInput.value)" maxlength=14 [max]="maxDate"
+							placeholder="mm/dd/yyyy*" formControlName="userDOB" id="dob"
+							name="userDOB" [owlDateTime]="dt5">
+						<owl-date-time [pickerType]="'calendar'" #dt5></owl-date-time>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['userDOB'].hasError('required')">{{'please_select_dob'
+							| translate}}</small>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls.userDOB.errors">{{registerForm.controls.userDOB.errors.message}}</small>
+					</div>
+					<div class="col-md-12 col-sm-12 form-group">
+						<ng-select [closeOnSelect]="true" [searchable]="true"
+							bindLabel="nationalityName" bindValue="nationalityID"
+							appearance="outline" #userNationInput
+							formControlName="nationalityID" [items]="nationalities$ | async"
+							[clearable]="true" class="custom"
+							[placeholder]="'select_nationality' | translate">
+						</ng-select>
+						<small class="text-danger small"
+							*ngIf="registerForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality'
+							| translate}}</small>
+					</div>
+				</div>
+				<div class="form-row pt-3">
+					<div class="col">
+						<button type="submit" [disabled]="preventAbuse"
+							class="btn btn-them btn-md w-100">{{ preventAbuse ? ('wait' |
+							translate) : ('sign_up' | translate) }}</button>
+					</div>
+				</div>
+				<div class="pt-3 signupbtn text-center">
+					<span>{{'already_having_account' | translate}}?</span> <a class="cursr ml-1"
+						(click)="openlogin()" data-toggle="modal">Login</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
   `,
 	styles: [
 		`.modal-contents {
@@ -118,6 +195,27 @@ import { OtpRegisterComponent } from './otp.register.component';
     		color: #999;
     		top: 1px;
 	}
+	.ng-select.ng-select-single.customCountry ::ng-deep .ng-select-container {
+        	height: 37.5px;
+		font-size: 1rem;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: 0.25rem;
+		background-color: #ECECEC;
+		border-color: #E6E6E6;
+		opacity: 1;
+		height: calc(1.8em + .75rem + 2px);
+      	}
+	.ng-select.customCountry ::ng-deep .ng-select-container .ng-placeholder {
+    		color:#C2C2C2;
+  	}
+	.ng-select.ng-select-single.customCountry ::ng-deep .ng-select-container {
+    		padding-right: 5px;
+	}
+	.ng-select.customCountry ::ng-deep .ng-clear-wrapper {
+    		color: #999;
+    		top: 1px;
+	}
 	::ng-deep .cdk-overlay-container {
     		z-index: 1200 !important;
   	}
@@ -136,6 +234,7 @@ export class RegistrationComponent implements OnInit {
 	preventAbuse = false;
 	list: { status: string, product: ProductList }[] = [];
 	nationalities$: Observable<Nationality[]> = this.store.select(selectNationalyList);
+	countries$: Observable<Country[]> = this.store.select(selectCountryList);
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	@ViewChild('userFullNameInput', { static: false }) userFullName: ElementRef;
 	@ViewChild('userEmailInput', { static: false }) userEmail: ElementRef;
@@ -161,6 +260,7 @@ export class RegistrationComponent implements OnInit {
 			userRePassword: [''],
 			userDOB: ['', Validators.compose([this.dateMaximum])],
 			nationalityID: [null],
+			countryCode: ['+966'],
 			languageID: ['1'],
 			loginuserID: ['0']
 		}, { validators: this.checkPasswords });

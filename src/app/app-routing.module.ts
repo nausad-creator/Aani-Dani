@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CheckoutGuard } from './check-out.guard';
 import { UserGuard } from './user.guard';
 
 const routes: Routes = [
@@ -76,6 +77,7 @@ const routes: Routes = [
 	{
 		path: 'checkout',
 		loadChildren: () => import('./checkout/checkout.module').then((m) => m.CheckoutModule),
+		canActivate: [CheckoutGuard],
 		data: {
 			seo: {
 				title: 'CHECKOUT | AANI DANI',

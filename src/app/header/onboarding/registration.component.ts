@@ -29,7 +29,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 					<div class="col-md-12 col-sm-12 form-group">
 						<input type="text" #userFullNameInput formControlName="userFullName"
 							id="name" class="form-control"
-							[placeholder]="'full_name' | translate">
+							[placeholder]="('full_name' | translate)+'*'">
 						<small class="text-danger small"
 							*ngIf="registerForm.controls['userFullName'].hasError('required')">{{'please_enter_name'
 							| translate}}</small>
@@ -44,7 +44,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 						<input type="text" (blur)="check_email()" id="Email" #userEmailInput
 							(keydown.space)="$event.preventDefault();"
 							formControlName="userEmail" class="form-control"
-							[placeholder]="'email_address' | translate">
+							[placeholder]="('email_address' | translate)+'*'">
 						<small class="text-danger small"
 							*ngIf="registerForm.controls['userEmail'].hasError('required')">{{'please_enter_email'
 							| translate}}</small>
@@ -71,7 +71,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 									(keydown.space)="$event.preventDefault();"
 									formControlName="userMobile"
 									class="form-control"
-									[placeholder]="'mobile_number' | translate">
+									[placeholder]="('mobile_number' | translate)+'*'">
 								<small class="text-danger small"
 									*ngIf="registerForm.controls['userMobile'].hasError('required')">{{'please_enter_mobile'
 									| translate}}</small>
@@ -91,7 +91,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 						<input type="password" [type]=" hideNew ? 'password' : 'text' "
 							#userPasswordInput (keydown.space)="$event.preventDefault();"
 							formControlName="userPassword" id="defaultPassword"
-							class="form-control" [placeholder]="'password' | translate">
+							class="form-control" [placeholder]="('password' | translate)+'*'">
 						<small class="text-danger small"
 							*ngIf="registerForm.controls['userPassword'].hasError('required')">{{'please_enter_password'
 							| translate}}</small>
@@ -107,7 +107,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 							#userRePasswordInput (keydown.space)="$event.preventDefault();"
 							formControlName="userRePassword" id="confirmtPassword"
 							class="form-control"
-							[placeholder]="'confirm_password' | translate">
+							[placeholder]="('confirm_password' | translate)+'*'">
 						<small class="text-danger small"
 							*ngIf="registerForm.controls['userRePassword'].hasError('required')">{{'please_re_enter_password'
 							| translate}}</small>
@@ -136,7 +136,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 							appearance="outline" #userNationInput
 							formControlName="nationalityID" [items]="nationalities$ | async"
 							[clearable]="true" class="custom"
-							[placeholder]="'select_nationality' | translate">
+							[placeholder]="('select_nationality' | translate)+'*'">
 						</ng-select>
 						<small class="text-danger small"
 							*ngIf="registerForm.controls['nationalityID'].hasError('required')">{{'please_select_nationality'

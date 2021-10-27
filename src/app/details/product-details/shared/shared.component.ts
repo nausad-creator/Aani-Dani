@@ -23,20 +23,7 @@ import { SubSink } from 'subsink';
 					<nav class="nav-menu d-none d-lg-block"
 						*ngIf="categories$ | async as categories">
 						<ul>
-							<li class="drop-down categorymenu">
-								<a class="maindrop cursr"><i
-										class="icofont-navigation-menu mr-2"></i>
-										{{'all_category' | translate}}</a>
-								<ul>
-									<li><a routerLink="/products"
-											[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}"
-											*ngFor="let category of categories">{{(root.languages$
-											| async) === 'en' ?
-											category?.categoryName :
-											category?.categoryArabicName}}</a></li>
-								</ul>
-							</li>
-							<li *ngFor="let category of categories | slice:0:5"><a
+							<li *ngFor="let category of categories | slice:0:8"><a
 									routerLink="/products"
 									[queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}">{{(root.languages$
 											| async) === 'en' ?
@@ -63,7 +50,7 @@ import { SubSink } from 'subsink';
 					</div>
 					<div class="col-md-4 borleft">
 						<app-top-sellings (change)="onChange($event); loader=true"
-							[similarproduct]="product.similarproducts"></app-top-sellings>
+							[similarproduct]="product?.similarproducts"></app-top-sellings>
 					</div>
 				</div>
 			</div>

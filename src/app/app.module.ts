@@ -20,7 +20,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { CategoriesEffects } from './effects/categories.effects';
 import { HomeEffects } from './effects/home.effects';
 import { NgProgressModule } from 'ngx-progressbar';
-import { NgProgressHttpModule } from 'ngx-progressbar/http';
 import { HeaderModule } from './header/header.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
@@ -40,6 +39,7 @@ import { WishlistEffects } from './effects/wishlist.effect';
 import { UserGuard } from './user.guard';
 import { CheckoutGuard } from './check-out.guard';
 import { My_OrdersEffects } from './effects/my-orders.effects';
+import { NgProgressRouterModule } from 'ngx-progressbar/router';
 
 export function HttpLoaderFactory(http: HttpClient) {
 	return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -58,7 +58,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 		ModalModule.forRoot(),
 		HeaderModule,
 		NgProgressModule,
-		NgProgressHttpModule,
+		NgProgressRouterModule,
 		FormsModule,
 		CarouselModule,
 		NgSelectModule,

@@ -41,20 +41,20 @@ import { FORGOT } from 'src/app/interface';
   `,
 	styles: [
 		`.modal-contents {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      pointer-events: auto;
-      background-color: #fff;
-      background-clip: padding-box;
-      border-radius: .3rem;
-      outline: 0;
-    }
-    .required-field::before {
-      content: "*";
-      color: red;
-    }`
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			pointer-events: auto;
+			background-color: #fff;
+			background-clip: padding-box;
+			border-radius: .3rem;
+			outline: 0;
+    		}
+    		.required-field::before {
+			content: "*";
+			color: red;
+    		}`
 	]
 })
 export class ForgotComponent {

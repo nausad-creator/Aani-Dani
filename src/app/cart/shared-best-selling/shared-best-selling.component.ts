@@ -33,7 +33,7 @@ import { SubSink } from 'subsink';
 							<ng-template carouselSlide *ngFor="let item of products">
 								<div class="slider_itemBox cursr"
 									(click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})">
-									<img offset="50"
+									<img 
 										defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
 										lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
 										[errorImage]="'assets/images/error_not_found.png'"
@@ -52,7 +52,7 @@ import { SubSink } from 'subsink';
 												| number) + ' SR'}}
 											</div>
 										</div>
-										<div class="productInfo">
+										<!-- <div class="productInfo">
 											<div class="ratings">
 												<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 													*ngFor="let star of stars"></i>
@@ -60,7 +60,7 @@ import { SubSink } from 'subsink';
 											<p class="salinginfo">
 												{{(item?.productSoldCount
 												| number) + ' ' + ('people_bought_this' | translate)}}</p>
-										</div>
+										</div> -->
 										<div class="cartbox"
 											[ngClass]="{'show-counter': item?.addedCartCount>0}">
 											<a class="addcart-btn shopingcart-tbtn btn"

@@ -30,7 +30,7 @@ import { SubSink } from 'subsink';
 								(click)="openModal(templateRemove, product); $event.stopPropagation();"
 								class="mr-2 cursr"><i
 									class="icofont-close-circled"></i></a> <img
-								offset="50"
+								
 								defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 								lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 								[errorImage]="'assets/images/error_not_found.png'"

@@ -52,8 +52,8 @@
   "search_products": "Search products...",
   "search": "Search",
   "deliver_to": "Deliver to",
-  "best_selling_items": "Bestselling Items",
-  "shop_by_categories": "Shop by Categories",
+  "best_selling_items": "Best Sellers",
+  "shop_by_categories": "All Products",
   "explore": "Explore",
   "our_partners": "Our Partners",
   "call_us": "CALL US",
@@ -225,5 +225,7 @@
   "fresh_title": "Fresh",
   "select_store": "Select Store",
   "stores_list": "Stores List",
-  "please_select_store": "Please select store"
+  "please_select_store": "Please select store",
+  "calories": "Calories",
+  "of": "of"
 }

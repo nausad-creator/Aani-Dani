@@ -9,12 +9,12 @@ import { RootService } from 'src/app/root.service';
         <div class="card">
             <div class="prInfo row align-items-center">
                 <div class="col-lg-5 col-md-5">
-                    <div class="bigIng"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '452px', height: '323px', 'border-radius': '10px' }"></ngx-skeleton-loader></div>	
+                    <div class="bigIng"><ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '96%', height: '280px', 'border-radius': '10px' }"></ngx-skeleton-loader></div>	
                 </div>	
                 <div class="col-lg-7 col-md-7">	
                     <div class="detailInfo">
                       <ngx-skeleton-loader count="1" [theme]="{ height: '22px', 'margin-bottom': '0px', width: '50%' }"></ngx-skeleton-loader>	
-                        <div class="productInfo mt-2" *ngIf="(root.languages$ | async) === 'ar'">
+                        <!-- <div class="productInfo mt-2" *ngIf="(root.languages$ | async) === 'ar'">
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px' }"></ngx-skeleton-loader>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'margin-right': '5px', 'border-radius': '50px' }"></ngx-skeleton-loader>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-right': '5px' }"></ngx-skeleton-loader>
@@ -31,7 +31,7 @@ import { RootService } from 'src/app/root.service';
 			  <ngx-skeleton-loader count="1" [theme]="{ height: '17px', 'margin-bottom': '0px', width: '3%', 'border-radius': '50px', 'margin-left': '5px' }"></ngx-skeleton-loader>
                           <br>
                           <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '25%' }"></ngx-skeleton-loader>
-                          </div>
+                          </div> -->
                           <div class="align-items-center detailPrice mt-2">
                               <div class="price_text mt-3">
                               <ngx-skeleton-loader count="1" [theme]="{ height: '23px', 'margin-bottom': '0px', width: '26%', 'border-radius': '5px' }"></ngx-skeleton-loader>
@@ -57,7 +57,7 @@ import { RootService } from 'src/app/root.service';
                         <div class="tab-content" id="myTabContent">
                           <div class="tab-pane fade show active" id="Discription" role="tabpanel" aria-labelledby="home-tab">
                               <div class="p-3">
-                                <ngx-skeleton-loader count="5" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="3" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
                                 <ngx-skeleton-loader count="2" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '100%' }"></ngx-skeleton-loader>
                                 <ngx-skeleton-loader count="1" [theme]="{ height: '11px', 'margin-bottom': '0px', width: '95%' }"></ngx-skeleton-loader>
                               </div>

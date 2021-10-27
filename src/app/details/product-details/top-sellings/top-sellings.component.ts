@@ -29,7 +29,7 @@ import { SubSink } from 'subsink';
         <owl-carousel-o [options]="caseOptions">
             <ng-template carouselSlide *ngFor="let item of similarproduct">
               <div class="slider_itemBox text-center cursr" (click)="change.emit({categoryID: item?.categoryID, productID: item?.productID}); onScroll()">
-              <img offset="50" class="w-auto m-auto"
+              <img  class="w-auto m-auto"
                     defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
                     lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
                     [errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme" [title]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme">
@@ -39,12 +39,12 @@ import { SubSink } from 'subsink';
                             <div class="price_text">{{(item?.productPrice | number) + ' SR'}}</div>
                             <div class="mrp_text">{{(item?.productPriceVat | number) + ' SR'}}</div>					  		
                         </div>
-                        <div class="productInfo">
+                        <!-- <div class="productInfo">
                             <div class="ratings">
                             <i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
                             </div>
                             <p class="salinginfo">{{(item?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
-                        </div>		
+                        </div>		 -->
                         
                         <div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
                         <a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> {{'add_to_cart' | translate}}</a>

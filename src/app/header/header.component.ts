@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { StoreListComponent } from './onboarding/store-list.component';
 import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
+import { bounceAnimation } from 'angular-animations';
 
 @Component({
 	selector: 'app-header',
@@ -135,7 +136,7 @@ import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 				</div>
 				<div class="cart-topbtn d-flex">
 					<a routerLink="/cart" class="btn user-cart-btrn">
-						<i class="fas fa-shopping-basket"></i><span class="counter-addon"
+						<i class="fas fa-shopping-basket" [@bounce]="isUpdated"></i><span class="counter-addon"
 							*ngIf="(orders$ | async)?.cart[0]?.count > 0">{{(orders$ | async)?.cart[0]?.count}}</span></a>
 					<span class="cartamount align-self-center" *ngIf="(orders$ | async)?.cart[0]?.total > 0">{{((orders$ | async)?.cart[0]?.total |
 						number) + ' SR'}}</span>
@@ -152,10 +153,14 @@ import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 		`.disable-anchor-tag { 
 			pointer-events: none; 
 		}`
+	],
+	animations: [
+		bounceAnimation(),
 	], changeDetection: ChangeDetectionStrategy.Default
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 	selected: string;
+	isUpdated: boolean;
 	subs = new SubSink();
 	user: USER_RESPONSE;
 	bsModal: BsModalRef;
@@ -178,6 +183,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === 'update_header') {
+				this.animate();
 				this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 				this.root.update_user_status$.next('not_found');
 			}
@@ -201,6 +207,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.setupForm();
 		// language default
 		this.root.languages$.subscribe(lang => lang === 'ar' ? this.selected = '2' : this.selected = '1');
+	}
+	animate = () => {
+		this.isUpdated = false;
+		setTimeout(() => {
+			this.isUpdated = true;
+		}, 1);
 	}
 	ngOnInit(): void {
 		this.cart();

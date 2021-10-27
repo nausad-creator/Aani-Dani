@@ -27,7 +27,7 @@ import { SubSink } from 'subsink';
 			<a class="image-popup-no-margins" id="magnific" target="_blank"
 				[title]="(root.languages$ | async) === 'en' ?  product?.productName : product?.productArabicNme"
 				href="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}">
-				<img offset="0"
+				<img 
 					lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{product?.productImage}}"
 					[errorImage]="'assets/images/error_not_found.png'"
 					[alt]="(root.languages$ | async) === 'en' ? product?.productName : product?.productArabicNme"
@@ -56,7 +56,7 @@ import { SubSink } from 'subsink';
 		<div class="detailInfo">
 			<h4 class="" *ngIf="product"><b>{{(root.languages$ | async) === 'en' ? product?.productName :
 					product?.productArabicNme}}</b></h4>
-			<div class="productInfo">
+			<!-- <div class="productInfo">
 				<div class="ratings">
 					<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
 						*ngFor="let star of stars"></i>
@@ -64,7 +64,7 @@ import { SubSink } from 'subsink';
 				</div>
 				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' ' +
 					('people_bought_this' | translate)}}</p>
-			</div>
+			</div> -->
 			<div class="d-flex align-items-center detailPrice">
 				<div class="price_text" *ngIf="product">{{(product?.productPrice | number) + ' SR'}}
 				</div>
@@ -86,6 +86,9 @@ import { SubSink } from 'subsink';
 								class="counter-plus btn">+</button>
 						</div>
 					</div>
+				</div>
+				<div class="cartbox prl pb-2">
+					<a [title]="'checkout' | translate" class="btn-secondary btn btn-md" id="addcart-2">{{'Fast Pay'}}</a>
 				</div>
 				<div class="cartbox prl pb-2" *ngIf="product?.addedCartCount>0">
 					<a [title]="'checkout' | translate" routerLink="/checkout" class="btn-secondary btn btn-md" id="addcart-2">{{'checkout' | translate}}</a>
@@ -129,7 +132,7 @@ import { SubSink } from 'subsink';
 	]
 })
 export class DetailsComponent implements OnInit, OnDestroy {
-	@Input() product: ProductListDetails;
+	@Input() product?: ProductListDetails;
 	stars: number[] = [1, 2, 3, 4, 5];
 	logged_user: USER_RESPONSE = null;
 	tempOrderID: string;
@@ -179,7 +182,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		($('#magnific') as any).magnificPopup({
 			type: 'image',
 			closeOnContentClick: true,
-			closeBtnInside: true,
+			closeBtnInside: false,
 			fixedContentPos: true,
 			tLoading: 'Loading...', // Text that is displayed during loading. Can contain %curr% and %total% keys
 			mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side

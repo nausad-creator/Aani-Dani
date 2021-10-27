@@ -25,21 +25,7 @@ import { change, filter_sort, initial, search_global } from 'src/app/global';
 					<nav class="nav-menu d-none d-lg-block"
 						*ngIf="categories$ | async as categories">
 						<ul>
-							<li class="drop-down categorymenu">
-								<a class="maindrop cursr"><i
-										class="icofont-navigation-menu mr-2"></i>
-									{{'all_category' | translate}}</a>
-								<ul>
-									<li><a class="cursr"
-											(click)="onChange(category);"
-											*ngFor="let category of categories">{{(root.languages$
-											| async) === 'en' ?
-											category?.categoryName :
-											category?.categoryArabicName}}</a>
-									</li>
-								</ul>
-							</li>
-							<li *ngFor="let category of categories | slice:0:5"><a [ngClass]="{'active': category.categoryID===route.snapshot.queryParams?.categoryID}" class="cursr"
+							<li *ngFor="let category of categories | slice:0:8"><a [ngClass]="{'active': category.categoryID===route.snapshot.queryParams?.categoryID}" class="cursr"
 									(click)="onChange(category);">{{(root.languages$
 									| async) === 'en' ?
 									category?.categoryName :

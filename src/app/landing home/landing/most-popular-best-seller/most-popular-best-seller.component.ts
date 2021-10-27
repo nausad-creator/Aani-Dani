@@ -25,7 +25,7 @@ import { RootService } from 'src/app/root.service';
               <div class="slider_itemBox cursr" routerLink="/products" [queryParams]="{page: '0', categoryID: category?.categoryID, categoryName: category?.categoryName+'_'+category?.categoryArabicName}" [@fadeIn]>
                     <div class="form-row">
                         <div class="col-4">
-                            <div class="catImgBox"><img offset="50"
+                            <div class="catImgBox"><img 
             			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category?.categoryImage}}"
             			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/category/{{category?.categoryImage}}"
             			[errorImage]="'assets/images/error_not_found.png'" [alt]="category?.categoryName" [title]="category?.categoryName"> </div>

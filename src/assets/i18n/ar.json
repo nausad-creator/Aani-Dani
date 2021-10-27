@@ -52,8 +52,8 @@
   "search_products": "البجث عن منتج...",
   "search": "البحث",
   "deliver_to": "التوصيل الى",
-  "best_selling_items": "العناصر الأكثر مبيعًا",
-  "shop_by_categories": "تسوق حسب الفئات",
+  "best_selling_items": "أفضل البائعين",
+  "shop_by_categories": "جميع المنتجات",
   "explore": "استكشف",
   "our_partners": "شركائنا",
   "call_us": "أتصل بنا",
@@ -225,5 +225,7 @@
   "fresh_title": "طازج",
   "select_store": "حدد المتجر",
   "stores_list": "قائمة المتاجر",
-  "please_select_store": "الرجاء تحديد المتجر"
+  "please_select_store": "الرجاء تحديد المتجر",
+  "calories": "سعرات حراريه",
+  "of": "من"
 }

@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CookieService } from 'ngx-cookie-service';
-import { map, take } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { ADDRESS, ProductList, USER_RESPONSE } from 'src/app/interface';
 import { RootService } from 'src/app/root.service';
 import { AddressListComponent } from './address-list.component';
 import { AlertComponent } from './alert.component';
@@ -89,19 +87,19 @@ import { RegistrationComponent } from './registration.component';
   `,
 	styles: [
 		`.modal-contents {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		pointer-events: auto;
-		background-color: #fff;
-		background-clip: padding-box;
-		border-radius: .3rem;
-		outline: 0;
-	}
-	.required-field::before {
-    		content: "*";
-    		color: red;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			pointer-events: auto;
+			background-color: #fff;
+			background-clip: padding-box;
+			border-radius: .3rem;
+			outline: 0;
+		}
+		.required-field::before {
+			content: "*";
+			color: red;
   	}`
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })

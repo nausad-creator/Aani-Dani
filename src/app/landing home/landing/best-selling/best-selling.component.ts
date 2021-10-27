@@ -1,5 +1,5 @@
 import { trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
@@ -31,7 +31,7 @@ import { SubSink } from 'subsink';
                 <owl-carousel-o [options]="caseOptions">
                 <ng-template carouselSlide *ngFor="let item of products">
                   <div class="slider_itemBox cursr" (click)="clickOnNavigate({categoryID: item?.categoryID, productID: item?.productID})">
-                  <img offset="50"
+                  <img 
             			defaultImage="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
             			lazyLoad="http://164.52.209.69/aanidani/backend/web/uploads/products/{{item?.productImage}}"
             			[errorImage]="'assets/images/error_not_found.png'" [alt]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme" [title]="(root.languages$ | async) === 'en' ? item?.productName : item?.productArabicNme">
@@ -41,12 +41,12 @@ import { SubSink } from 'subsink';
                                 <div class="price_text">{{(item?.productPrice | number) + ' SR'}}</div>
                                 <div class="mrp_text">{{(item?.productPriceVat | number) + ' SR'}}</div>					  		
                             </div>
-                            <div class="productInfo">
+                            <!-- <div class="productInfo">
                                 <div class="ratings">
                                     <i [ngClass]="star <= item?.productRatingAvg ? 'fas fa-star' : 'far fa-star'" *ngFor="let star of stars"></i>
                                 </div>
                                 <p class="salinginfo">{{(item?.productSoldCount | number) + ' ' + ('people_bought_this' | translate)}}</p>
-                            </div>		
+                            </div>		 -->
                             <div class="cartbox" [ngClass]="{'show-counter': item?.addedCartCount>0}">
                               <a class="addcart-btn shopingcart-tbtn btn" (click)="addToCart(item); $event.stopPropagation();" id="addcart-1"><i class="icofont-shopping-cart"></i> {{'add_to_cart' | translate}}</a>
                               <div class="contercontern">

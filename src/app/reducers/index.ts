@@ -5,7 +5,7 @@ import { AboutUsState, about_usReducer, faqsReducer, FaqsState, PrivacyPolicySta
 import { homeReducer, HomeState } from './home.reducer';
 import { my_orders_reducer, MY_ORDERS_STATE } from './my-orders.reducers';
 import { CountryReducer, CountryState, LabelsReducer, LabelsState, LanguageReducer, LanguageState, NationalityReducer, NationalityState, TempCartReducer, TempCartState } from './others.reducer';
-import { productReducer, ProductsState } from './products.reducer';
+import { productReducer, productReducerFastPay, ProductsState, ProductStateFastPay } from './products.reducer';
 import { OrdersReducer, OrdersState } from './temp-orders.reducer';
 import { wishlistReducer, WISHLIST_STATE } from './wishlists.reducers';
 
@@ -19,6 +19,7 @@ export interface State {
 	nationalities: NationalityState,
 	countries: CountryState,
 	tempCart: TempCartState,
+	fastPay: ProductStateFastPay,
 	language: LanguageState,
 	labels: LabelsState,
 	products: ProductsState,
@@ -37,6 +38,7 @@ export const reducers: ActionReducerMap<State> = {
 	nationalities: NationalityReducer,
 	countries: CountryReducer,
 	tempCart: TempCartReducer,
+	fastPay: productReducerFastPay,
 	language: LanguageReducer,
 	labels: LabelsReducer,
 	products: productReducer,
@@ -56,6 +58,7 @@ const selectFaqsState = (state: State) => state.faqs;
 const selectTermsConditionsState = (state: State) => state.terms_conditions;
 const selectPrivacyPolicyState = (state: State) => state.privacy_policy;
 const selectTempCartState = (state: State) => state.tempCart;
+const selectFastPayState = (state: State) => state.fastPay;
 const selectLanguageState = (state: State) => state.language;
 const selectLabelsState = (state: State) => state.labels;
 const selectProductState = (state: State) => state.products;
@@ -78,5 +81,6 @@ export const selectNationalyList = createSelector(selectNationalityState, (state
 export const selectCountryList = createSelector(selectCountryState, (state: CountryState) => state.CountryList);
 export const selectProductList = createSelector(selectProductState, (state: ProductsState) => state);
 export const selectTempOrdersList = createSelector(selectOrdersState, (state: OrdersState) => state);
+export const selectFastPay = createSelector(selectFastPayState, (state: ProductStateFastPay) => state);
 export const selectWishList = createSelector(selectWishlistState, (state: WISHLIST_STATE) => state.wishLists$);
 export const select_my_orders = createSelector(selectMyOrdersState, (state: MY_ORDERS_STATE) => state.my_orders$);

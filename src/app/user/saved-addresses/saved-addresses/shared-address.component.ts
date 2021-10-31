@@ -192,7 +192,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 			addressBuildingName: [''],
 			addressBlockNo: [''],
 			addressIsDefault: [this.user.address.length === 0 ? 'Yes' : 'No'],
-			addressMobile: ['', Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')],
+			addressMobile: ['', Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')],
 			addressStreetName: [''],
 			addressLongi: [''],
 			addressLati: [''],
@@ -386,7 +386,7 @@ export class SharedAddressComponent implements OnInit, OnChanges, OnDestroy {
 				return invalid = true;
 			}
 			if (key === 'addressMobile' && !this.addressAddEditForm.get(`${key}`).value) {
-				this.addressAddEditForm.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]);
+				this.addressAddEditForm.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')]);
 				this.addressAddEditForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
 				return invalid = true;
 			}

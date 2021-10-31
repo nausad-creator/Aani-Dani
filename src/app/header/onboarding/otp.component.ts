@@ -10,6 +10,7 @@ interface List {
 	res: FORGOT
 	msg: string;
 	status: string;
+	product?: { productID: string, qty?: string, productPrice: string }
 }
 interface Otp {
 	loginrestaurantID: string;
@@ -231,12 +232,22 @@ export class OtpComponent implements OnInit {
 	}
 	openForgot = () => {
 		this.onClose();
-		this.bsModal = this.modal.show(ForgotComponent, { id: 100 });
+		const initialState = {
+			list: [{
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
+			}]
+		};
+		this.bsModal = this.modal.show(ForgotComponent, { id: 100, initialState });
 	}
 	openReset = (res: USER_RESPONSE) => {
 		this.onClose();
 		const initialState = {
-			list: [res]
+			list: [{
+				res: res,
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
+			}]
 		};
 		this.bsModal = this.modal.show(ResetComponent, { id: 102, initialState });
 	}

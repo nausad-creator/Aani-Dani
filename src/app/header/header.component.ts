@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SubSink } from 'subsink';
 import { LoginComponent } from './onboarding/login.component';
@@ -7,10 +7,10 @@ import { AuthenticationService } from '../authentication.service';
 import { RootService } from '../root.service';
 import { Observable, of } from 'rxjs';
 import { catchError, mergeMap, map, debounceTime, distinctUntilChanged, delay } from 'rxjs/operators';
-import { ADDRESS, Language, ProductList, USER_RESPONSE } from '../interface';
+import { ADDRESS, Language, USER_RESPONSE } from '../interface';
 import { CookieService } from 'ngx-cookie-service';
 import { AddressListComponent } from './onboarding/address-list.component';
-import { TitleCasePipe } from '@angular/common';
+import { DOCUMENT, TitleCasePipe } from '@angular/common';
 import { selectLanguage, selectTempOrdersList, State } from '../reducers';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -18,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StoreListComponent } from './onboarding/store-list.component';
 import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { bounceAnimation } from 'angular-animations';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-header',
@@ -66,14 +67,14 @@ import { bounceAnimation } from 'angular-animations';
 			<div
 				class="right-links col-md-5 col-6 order-3 order-md-3 d-flex spcial_lins_top justify-content-end">
 				<div class="callUs align-self-center" *ngIf="user && defaultAddress && user?.storeName">
-					<a role="button" [delay]="200" placement="bottom" (click)="openStores(user?.stores, user?.address, {}, 'false')" [popover]="user?.storeName" triggers="mouseenter:mouseleave"
+					<a role="button" [delay]="200" placement="bottom" (click)="openStores(user?.stores, user?.address, {productID: '0', qty: '0', productPrice: ''}, 'header')" [popover]="user?.storeName" triggers="mouseenter:mouseleave"
 						[popoverTitle]="'Store Name'" class="pl-0 pr-md-0 cursr">
 						<img src="assets/images/shop.png" alt="store" width="20px;"></a>
 				</div>
 				<div class="selectedAddres d-none d-md-block" *ngIf="user && defaultAddress">
 					<div class="callUs">
 						<a class="d-flex cursr"
-							(click)="openAddress(user?.address, {}, 'false')">
+							(click)="openAddress(user?.address, {productID: '0', qty: '0', productPrice: ''}, 'header')">
 							<div class="callicon align-self-center pt-2"><i
 									class="icofont-google-map"></i></div>
 							<div class="callnumber"><small>{{'deliver_to' |
@@ -136,7 +137,7 @@ import { bounceAnimation } from 'angular-animations';
 				</div>
 				<div class="cart-topbtn d-flex">
 					<a routerLink="/cart" class="btn user-cart-btrn">
-						<i class="fas fa-shopping-basket" [@bounce]="isUpdated"></i><span class="counter-addon"
+						<i class="fas fa-shopping-basket" [@bounce]="(orders$ | async)?.onAdd"></i><span class="counter-addon"
 							*ngIf="(orders$ | async)?.cart[0]?.count > 0">{{(orders$ | async)?.cart[0]?.count}}</span></a>
 					<span class="cartamount align-self-center" *ngIf="(orders$ | async)?.cart[0]?.total > 0">{{((orders$ | async)?.cart[0]?.total |
 						number) + ' SR'}}</span>
@@ -161,16 +162,16 @@ import { bounceAnimation } from 'angular-animations';
 export class HeaderComponent implements OnInit, OnDestroy {
 	selected: string;
 	isUpdated: boolean;
-	subs = new SubSink();
 	user: USER_RESPONSE;
 	bsModal: BsModalRef;
 	searchForm: FormGroup;
 	defaultAddress: string;
+	subs = new SubSink();
 	@Input() isSearch: boolean;
 	@Output() search = new EventEmitter<string>();
 	@Output() key_up = new EventEmitter<string>();
 	language$: Observable<Language[]> = this.store.select(selectLanguage);
-	orders$: Observable<{ status: string; cart: { count: number; total: number; } }[]> = of([{ status: 'false', cart: { count: 0, total: 0 } }]);
+	orders$: Observable<{ status: string; onAdd: boolean; cart: { count: number; total: number; } }[]> = of([{ status: 'false', onAdd: false, cart: { count: 0, total: 0 } }]);
 	constructor(
 		public route: ActivatedRoute,
 		private modal: BsModalService,
@@ -179,15 +180,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private cookie: CookieService,
 		private titlecasePipe: TitleCasePipe,
 		private fb: FormBuilder,
-		private store: Store<State>) {
-		// for updating user
-		this.subs.add(this.root.update$.subscribe(status => {
-			if (status === 'update_header') {
-				this.animate();
-				this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
-				this.root.update_user_status$.next('not_found');
-			}
-		}));
+		private store: Store<State>,
+		private translate: TranslateService,
+		@Inject(DOCUMENT) private document: Document) {
 		// user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
@@ -208,12 +203,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		// language default
 		this.root.languages$.subscribe(lang => lang === 'ar' ? this.selected = '2' : this.selected = '1');
 	}
-	animate = () => {
-		this.isUpdated = false;
-		setTimeout(() => {
-			this.isUpdated = true;
-		}, 1);
-	}
 	ngOnInit(): void {
 		this.cart();
 		this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
@@ -225,12 +214,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		});
 	}
 	cart = () => {
-		this.orders$ = this.getOrdersTempUpdates() as Observable<{ status: string; cart: { count: number; total: number; } }[]>;
+		this.orders$ = this.getOrdersTempUpdates() as Observable<{ status: string; onAdd: boolean; cart: { count: number; total: number; } }[]>;
 	}
 	getOrdersTempUpdates = () => {
 		return this.store.select(selectTempOrdersList).pipe(
 			map((res) => {
 				return {
+					onAdd: res.onAdd,
 					status: res.orders$[0].status,
 					cart: res.orders$[0].data.map(o => {
 						return {
@@ -241,12 +231,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				}
 			}),
 			catchError(() => of([{
+				onAdd: false,
 				status: 'false',
 				cart: {
 					count: 0,
 					total: 0
 				}
 			}]))) as Observable<{
+				onAdd: boolean;
 				status: string;
 				cart: {
 					count: number;
@@ -267,7 +259,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 	onChangeLang = (lang: string) => {
+		let htmlTag = this.document.getElementsByTagName("html")[0] as HTMLHtmlElement;
+		let existingLink = this.document.getElementById("langCss") as HTMLLinkElement;
+		let bundleName = lang === "ar" ? "arabicStyle.css" : "englishStyle.css";
+		existingLink.href = bundleName;
+		htmlTag.dir = lang === "ar" ? "rtl" : "ltr";
 		this.root.update_user_language$.next(lang);
+		localStorage.setItem('lang', lang);
+		this.translate.use(lang);
 	}
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
@@ -275,8 +274,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	openLogin = () => {
 		const initialState = {
 			list: [{
-				status: 'Header',
-				product: null
+				status: 'header',
+				product: { productID: '0', qty: '0', productPrice: '' }
 			}]
 		};
 		this.bsModal = this.modal.show(LoginComponent, { id: 99, initialState });
@@ -301,7 +300,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-	openAddress = (add: ADDRESS[], product?: ProductList, status?: string) => {
+	openAddress = (add: ADDRESS[], product?: { productID: string, qty?: string, productPrice: string }, status?: string) => {
 		const initialState = {
 			list: [{
 				status: status,
@@ -314,7 +313,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	openStores = (stores: {
 		storeID: string;
 		storeName: string;
-	}[], add: ADDRESS[], product?: ProductList, status?: string) => {
+	}[], add: ADDRESS[], product?: { productID: string, qty?: string, productPrice: string }, status?: string) => {
 		const initialState = {
 			list: [{
 				status: status,
@@ -331,11 +330,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.auth.logout();
 		data.loginuserID = '0';
 		this.defaultAddress = '';
-		tepmOrder.loginuserID = '0';
 		this.cookie.delete('Temp_Order_ID');
 		setTimeout(() => {
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 			this.root.forceReload();
 		}, 100);
 	}

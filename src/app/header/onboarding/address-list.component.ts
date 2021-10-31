@@ -67,7 +67,7 @@ import { StoreListComponent } from './store-list.component';
 })
 export class AddressListComponent implements OnInit, OnDestroy {
 	error: string = '';
-	list: { status: string, product: ProductList, address: ADDRESS[] }[] = [];
+	list: { status: string, product: { productID: string, qty?: string, productPrice?: string }, address: ADDRESS[] }[] = [];
 	preventAbuse = false;
 	logged_user: USER_RESPONSE = null;
 	checked_address: string;

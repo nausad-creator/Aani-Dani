@@ -111,7 +111,7 @@ export const MY_CUSTOM_FORMATS = {
 							</ng-select>
 						</div>
 						<div class="col-md-8 form-group">
-							<input type="text" maxlength="10" formControlName="userMobile"
+							<input type="text" minlength="9" maxlength="10" formControlName="userMobile"
 								class="form-control w-100" name="phone" id="phonecode"
 								[placeholder]="'mobile_number' | translate">
 							<small class="text-danger small"
@@ -237,7 +237,7 @@ export class MyAccountComponent implements OnInit {
 			userEmail: [this.user.userEmail ? this.user.userEmail : null, Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)],
 			nationalityID: [this.user.nationalityID && this.user.nationalityID !== '0' ? this.user.nationalityID : null],
 			userDOB: [this.user.userDOB ? moment(`${this.user.userDOB}`).toDate() : null],
-			userMobile: [this.user.userMobile ? this.user.userMobile : null, Validators.compose([Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')])],
+			userMobile: [this.user.userMobile ? this.user.userMobile : null, Validators.compose([Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')])],
 			userProfilePicture: [this.user.userProfilePicture ? this.user.userProfilePicture : null],
 			countryCode: [this.user.userCountryCode]
 		});
@@ -338,7 +338,7 @@ export class MyAccountComponent implements OnInit {
 				return invalid = true;
 			}
 			if (key === 'userMobile' && !this.profileForm.get(`${key}`).value) {
-				this.profileForm.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$')]);
+				this.profileForm.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')]);
 				this.profileForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
 				return invalid = true;
 			}

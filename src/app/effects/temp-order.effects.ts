@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
-import { AddTempOrders, FailureTempOrders, LoadInitial, ResetTempOrders, SearchEndedSuccess, SearchNewQuery, SearchStart, TempOrdersActionTypes } from '../actions/temp-orders.acton';
+import { AddTempOrders, AddToCart, FailureTempOrders, LoadInitial, ResetTempOrders, SearchEndedSuccess, SearchNewQuery, SearchStart, SearchStartAddToCart, TempOrdersActionTypes } from '../actions/temp-orders.acton';
 import { State } from '../reducers';
 import { RootService } from '../root.service';
 
@@ -21,10 +21,17 @@ export class OrdersEffects {
 			map((r) => new ResetTempOrders(r.query)),
 			map((a) => new SearchStart(a.query)));
 	});
+	addToCart$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(TempOrdersActionTypes.ADD_TO_CART),
+			map((r) => new ResetTempOrders(r.query)),
+			map((a) => new SearchStartAddToCart(a.query)));
+	});
 	fetchOrders$ = createEffect((): Observable<SearchEndedSuccess> => {
 		return this.actions$.pipe(
 			ofType(
-				TempOrdersActionTypes.SEARCH_START
+				TempOrdersActionTypes.SEARCH_START,
+				TempOrdersActionTypes.SEARCH_START_ADD_TO_CART
 			),
 			withLatestFrom(this.store.select(state => state.tempOrders)),
 			switchMap(action => this.root.ordersTemp(action[0].query).pipe(
@@ -58,7 +65,7 @@ export class OrdersEffects {
 		);
 	});
 	constructor(
-		private actions$: Actions<LoadInitial | SearchNewQuery | SearchEndedSuccess | SearchStart>,
+		private actions$: Actions<LoadInitial | SearchNewQuery | AddToCart | SearchEndedSuccess | SearchStart | SearchStartAddToCart>,
 		private root: RootService,
 		private store: Store<State>,) { }
 

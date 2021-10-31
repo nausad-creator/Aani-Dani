@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { ADDRESS, ProductList, USER_RESPONSE } from 'src/app/interface';
+import { tepmOrder } from 'src/app/global';
+import { ADDRESS, USER_RESPONSE } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { AddressListComponent } from './address-list.component';
 import { AlertComponent } from './alert.component';
@@ -108,7 +112,7 @@ export class LoginComponent implements OnInit {
 	logIn: FormGroup;
 	error: string;
 	hide = true;
-	list: { status: string, product?: ProductList }[] = [];
+	list: { status: string, product?: { productID: string, qty?: string, productPrice: string } }[] = [];
 	preventAbuse = false;
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	@ViewChild('emailInput', { static: false }) emailInput: ElementRef;
@@ -119,10 +123,11 @@ export class LoginComponent implements OnInit {
 		private fb: FormBuilder,
 		private auth: AuthenticationService,
 		private cd: ChangeDetectorRef,
-		private root: RootService) {
+		private root: RootService,
+		private store: Store<State>) {
 		// for Login
 		this.logIn = this.fb.group({
-			userMobile: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
+			userMobile: ['', Validators.compose([Validators.pattern(/^(\d{9,10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
 			userPassword: [''],
 			languageID: ['1'],
 			terms: [false],
@@ -148,11 +153,12 @@ export class LoginComponent implements OnInit {
 						sessionStorage.setItem('USER_LOGGED', JSON.stringify(success));
 						localStorage.removeItem('USER_LOGGED');
 					}
+					tepmOrder.loginuserID = success.userID;
 					this.auth.updateUser(success);
 					this.preventAbuse = false;
 					setTimeout(() => {
 						this.root.forceReload();
-						if (this.list[0].status === 'Location') {
+						if (this.list[0].status === 'fast_pay' || this.list[0].status === 'product_list' || this.list[0].status === 'best_selling' || this.list[0].status === 'top_selling' || this.list[0].status === 'wishlist' || this.list[0].status === 'details') {
 							if (success.address.length > 0) {
 								this.onClose();
 								this.openAddress(success.address, this.list[0].product, this.list[0].status);
@@ -163,12 +169,12 @@ export class LoginComponent implements OnInit {
 									this.modal.show(AlertComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
 								}, 700);
 							}
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 						}
-						if (this.list[0].status === 'Header') {
+						if (this.list[0].status === 'header') {
 							this.triggerEvent('Confirmed');
-							this.root.update_user_status$.next('update_header');
 							this.root.update_user_status$.next('refresh_or_reload');
+							this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 							this.onClose();
 						}
 						this.logIn.reset();
@@ -199,7 +205,7 @@ export class LoginComponent implements OnInit {
 			);
 		});
 	}
-	openAddress = (add: ADDRESS[], product: ProductList, status: string) => {
+	openAddress = (add: ADDRESS[], product: { productID: string, qty?: string, productPrice: string }, status: string) => {
 		const initialState = {
 			list: [{
 				status: status,
@@ -273,15 +279,21 @@ export class LoginComponent implements OnInit {
 		this.onClose();
 		const initialState = {
 			list: [{
-				status: 'Location',
-				product: this.list[0].product
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
 			}]
 		};
 		this.bsModal = this.modal.show(RegistrationComponent, { id: 999, initialState });
 	}
 	openForgot = () => {
 		this.onClose();
-		this.bsModal = this.modal.show(ForgotComponent, { id: 100 });
+		const initialState = {
+			list: [{
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
+			}]
+		};
+		this.bsModal = this.modal.show(ForgotComponent, { id: 100, initialState });
 	}
 	ngOnInit(): void {
 	}

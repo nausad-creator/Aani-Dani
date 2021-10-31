@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { AddProducts, FailureProducts, FilterQuery, FilterStart, GlobalSearchStart, LoadInitial, ProductActionTypes, ResetProducts, SearchEndedSuccess, SearchGlobal, SearchNewQuery, SearchStart, SortingQuery, SortStart } from '../actions/products.action';
+import { catchError, filter, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { AddProductFastPay, AddProducts, FailureProductFastPay, FailureProducts, FilterQuery, FilterStart, GlobalSearchStart, LoadInitial, LoadInitialFastPay, ProductActionTypes, ResetProducts, SearchEndedSuccess, SearchEndedSuccessFastPay, SearchGlobal, SearchNewQuery, SearchNewQueryFastPay, SearchStart, SearchStartFastPay, SortingQuery, SortStart } from '../actions/products.action';
 import { State } from '../reducers';
 import { RootService } from '../root.service';
 
@@ -70,12 +70,49 @@ export class ProductsEffects {
 			map((a) => new AddProducts(a.payload))
 		);
 	});
+	// fast pay
+	loadFastPay$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(ProductActionTypes.LOAD_INITIAL_FAST_PAY),
+			map((a) => new SearchStartFastPay(a.query)));
+	});
+	changeFastPay$ = createEffect(() => {
+		return this.actions$.pipe(
+			ofType(ProductActionTypes.SEARCH_NEW_QUERY_FAST_PAY),
+			map((a) => new SearchStartFastPay(a.query)));
+	});
+	fetchProductFastPay$ = createEffect((): Observable<SearchEndedSuccessFastPay> => {
+		return this.actions$.pipe(
+			ofType(
+				ProductActionTypes.SEARCH_START_FAST_PAY
+			),
+			withLatestFrom(this.store.select(state => state.fastPay.data)),
+			switchMap(action => this.root.productLists(action[0].query).pipe(
+				map(data => new SearchEndedSuccessFastPay({
+					data: data?.data?.length > 0 ? data.data : [],
+					message: data?.message,
+					status: data?.status
+				}),
+					catchError((err) => of(new FailureProductFastPay(err)))
+				), take(1))
+			)
+		);
+	});
+	successProductFastPay$ = createEffect(() => {
+		return this.actions$.pipe(ofType(ProductActionTypes.SEARCH_ENDED_SUCCESS_FAST_PAY),
+			map((a) => new AddProductFastPay(a.payload))
+		);
+	});
 	constructor(
 		private actions$: Actions<
 			SearchNewQuery |
 			SearchStart |
+			SearchNewQueryFastPay |
+			SearchStartFastPay |
 			SearchEndedSuccess |
 			LoadInitial |
+			SearchEndedSuccessFastPay |
+			LoadInitialFastPay |
 			FilterQuery |
 			SortingQuery |
 			FilterStart |

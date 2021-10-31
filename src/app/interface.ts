@@ -411,8 +411,8 @@ export interface ADDRESS {
 export interface FORGOT {
 	userMobile: string;
 	userID: string;
-	status: string;
-	message: string;
+	status?: string;
+	message?: string;
 }
 export interface TempOrders {
 	orderdetails: OrderDetailsTemp[],

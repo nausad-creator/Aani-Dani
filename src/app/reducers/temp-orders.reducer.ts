@@ -8,6 +8,7 @@ export interface OrdersState {
 		message: string
 	}[];
 	isSearching: boolean;
+	onAdd: boolean;
 }
 export const initialState: OrdersState = {
 	orders$: [{
@@ -15,7 +16,8 @@ export const initialState: OrdersState = {
 		message: '',
 		status: ''
 	}],
-	isSearching: false
+	isSearching: false,
+	onAdd: false
 };
 
 export function OrdersReducer(state = initialState, action: OrdersActions): OrdersState {
@@ -28,23 +30,37 @@ export function OrdersReducer(state = initialState, action: OrdersActions): Orde
 			return Object.assign({}, state, {
 				query: action.query
 			});
+		case TempOrdersActionTypes.ADD_TO_CART:
+			return Object.assign({}, state, {
+				query: action.query
+			});
 		case TempOrdersActionTypes.SEARCH_START:
-			return { ...state, isSearching: true }
+			return {
+				...state,
+				isSearching: true
+			}
+		case TempOrdersActionTypes.SEARCH_START_ADD_TO_CART:
+			return {
+				...state,
+				onAdd: true
+			}
 		case TempOrdersActionTypes.SEARCH_ENDED_SUCCESS:
-			return { ...state, isSearching: false }
+			return {
+				...state,
+				onAdd: false,
+				isSearching: false
+			}
 		case TempOrdersActionTypes.LOAD_INITIAL:
 			return Object.assign({}, state, {
 				query: action.query
 			});
 		case TempOrdersActionTypes.RESET:
 			return Object.assign({}, state, {
-				orders$: {
+				orders$: [{
 					data: [],
-					itemscount: '0',
-					bestselling: [],
 					message: '',
 					status: ''
-				}
+				}],
 			});
 		default:
 			return state;

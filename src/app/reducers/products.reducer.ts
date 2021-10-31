@@ -31,6 +31,21 @@ export const initialState: ProductsState = {
 	isFilter: false,
 	isSorting: false
 };
+// fast pay
+export interface ProductStateFastPay {
+	data: ProductList[];
+	message: string;
+	status: string;
+	query: string;
+	isSearch: boolean;
+}
+export const initialStateFastPay: ProductStateFastPay = {
+	data: [],
+	message: '',
+	status: '',
+	query: '',
+	isSearch: false
+};
 
 export function productReducer(state = initialState, action: ProductActions): ProductsState {
 	switch (action.type) {
@@ -92,6 +107,34 @@ export function productReducer(state = initialState, action: ProductActions): Pr
 			});
 		case ProductActionTypes.REMOVE:
 			return state;
+		default:
+			return state;
+	}
+}
+// fast pay
+export function productReducerFastPay(state = initialStateFastPay, action: ProductActions): ProductStateFastPay {
+	switch (action.type) {
+		case ProductActionTypes.ADD_FAST_PAY:
+			return Object.assign({}, state, {
+				data: action?.payload?.data,
+				message: action?.payload?.message,
+				status: action?.payload?.status,
+			});
+		case ProductActionTypes.SEARCH_NEW_QUERY_FAST_PAY:
+			return Object.assign({}, state, {
+				query: action?.query
+			});
+		case ProductActionTypes.SEARCH_START_FAST_PAY:
+			return { ...state, isSearch: true }
+		case ProductActionTypes.SEARCH_ENDED_SUCCESS_FAST_PAY:
+			return {
+				...state,
+				isSearch: false
+			}
+		case ProductActionTypes.LOAD_INITIAL_FAST_PAY:
+			return Object.assign({}, state, {
+				query: action?.query
+			});
 		default:
 			return state;
 	}

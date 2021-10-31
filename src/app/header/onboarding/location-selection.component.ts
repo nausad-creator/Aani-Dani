@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ProductList } from 'src/app/interface';
 import { LoginComponent } from './login.component';
 
 @Component({
@@ -36,7 +35,7 @@ import { LoginComponent } from './login.component';
 	], changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocationSelectionComponent implements OnInit {
-	list: { product: ProductList }[] = [];
+	list: { product: { productID: string, qty?: string, productPrice: string }, status: string }[] = [];
 	event_location_selection: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	constructor(
 		private modal: BsModalService,
@@ -51,8 +50,8 @@ export class LocationSelectionComponent implements OnInit {
 		this.onClose();
 		const initialState = {
 			list: [{
-				status: 'Location',
-				product: this.list[0].product
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
 			}]
 		};
 		this.modal.show(LoginComponent, { id: 99, initialState });

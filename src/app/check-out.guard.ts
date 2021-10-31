@@ -12,7 +12,7 @@ export class CheckoutGuard implements CanActivate {
 		route: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean | UrlTree {
 		const s = this.service.is_checkout_state() as boolean;
-		if (s) {
+		if (s || (route.queryParams?.fast_pay && route.queryParams?.p !== '0')) {
 			return true;
 		} else {
 			return this.router.createUrlTree(['/'], { queryParams: { state: false } });

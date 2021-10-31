@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
+import { AddToCart } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { tepmOrder } from 'src/app/global';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
 import { LocationSelectionComponent } from 'src/app/header/onboarding/location-selection.component';
 import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE, Wishlist } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -67,12 +71,12 @@ import { SubSink } from 'subsink';
 	]
 })
 export class SharedWishlistComponent implements OnInit {
-	subs = new SubSink();
 	tempOrderID: string;
 	bModalRef: BsModalRef;
-	@Input() wishList: Wishlist[];
 	stars: number[] = [1, 2, 3, 4, 5];
 	logged_user: USER_RESPONSE = null;
+	subs = new SubSink();
+	@Input() wishList: Wishlist[];
 	@Output() remove_fav = new EventEmitter<string>();
 	constructor(
 		private router: Router,
@@ -80,7 +84,8 @@ export class SharedWishlistComponent implements OnInit {
 		private auth: AuthenticationService,
 		private root: RootService,
 		private cookie: CookieService,
-		private modal: BsModalService
+		private modal: BsModalService,
+		private store: Store<State>,
 	) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
@@ -96,7 +101,7 @@ export class SharedWishlistComponent implements OnInit {
 			}
 			if (this.logged_user.address.length > 0) {
 				if (!this.logged_user.storeID) {
-					this.openAddress(this.logged_user.address, item);
+					this.openAddress(this.logged_user.address, { productID: item.productID, qty: '1', productPrice: item.productPrice }, 'wishlist');
 				}
 				if (this.logged_user.storeID) {
 					if (this.tempOrderID !== '0') {
@@ -104,7 +109,7 @@ export class SharedWishlistComponent implements OnInit {
 						if (res === 'Added_sucessfully') {
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 						}
 					}
 					if (this.tempOrderID === '0') {
@@ -113,7 +118,7 @@ export class SharedWishlistComponent implements OnInit {
 						if (res.message === 'Added_sucessfully') {
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 						}
 					}
 				}
@@ -122,16 +127,17 @@ export class SharedWishlistComponent implements OnInit {
 		if (!this.logged_user) {
 			const initialState = {
 				list: [{
-					product: item
+					status: 'wishlist',
+					product: { productID: item.productID, qty: '1', productPrice: item.productPrice }
 				}]
 			};
 			this.bModalRef = this.modal.show(LocationSelectionComponent, { id: 399, initialState });
 		}
 	}
-	openAddress = (add: ADDRESS[], product: ProductList) => {
+	openAddress = (add: ADDRESS[], product: { productID: string, qty?: string, productPrice: string }, status: string) => {
 		const initialState = {
 			list: [{
-				status: 'Location',
+				status: status,
 				product: product,
 				address: add
 			}]
@@ -142,8 +148,9 @@ export class SharedWishlistComponent implements OnInit {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
-				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
+				tepmOrder.loginuserID = user.userID;
+				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 			}
 			if (user === null) {
 				this.logged_user = null;
@@ -190,7 +197,7 @@ export class SharedWishlistComponent implements OnInit {
 		if (res === 'Added_sucessfully') {
 			this.root.forceReload();
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 		}
 	}
 	addItemToCart = (pro: ProductList) => {
@@ -222,7 +229,7 @@ export class SharedWishlistComponent implements OnInit {
 		if (res === 'Deleted_sucessfully') {
 			this.root.forceReload(); // empty cached cart
 			this.root.update_user_status$.next('refresh_or_reload'); // update all cart values
-			this.root.update_user_status$.next('update_header'); // update header
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder))); // update header
 		}
 	}
 	deleteItemFromCart = (pro: ProductList) => {

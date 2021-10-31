@@ -1,15 +1,16 @@
 import { trigger } from '@angular/animations';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { shakeOnEnterAnimation } from 'angular-animations';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { AddToCart } from 'src/app/actions/temp-orders.acton';
 import { SEARCH_NEW_QUERY } from 'src/app/actions/wishlist.action';
 import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { wishlist } from 'src/app/global';
+import { tepmOrder, wishlist } from 'src/app/global';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
 import { LocationSelectionComponent } from 'src/app/header/onboarding/location-selection.component';
@@ -56,15 +57,6 @@ import { SubSink } from 'subsink';
 		<div class="detailInfo">
 			<h4 class="" *ngIf="product"><b>{{(root.languages$ | async) === 'en' ? product?.productName :
 					product?.productArabicNme}}</b></h4>
-			<!-- <div class="productInfo">
-				<div class="ratings">
-					<i [ngClass]="star <= product?.productRatingAvg ? 'fas fa-star' : 'far fa-star'"
-						*ngFor="let star of stars"></i>
-					<span>{{product?.productRatingCount | number}}</span>
-				</div>
-				<p class="salinginfo" *ngIf="product">{{(product?.productSoldCount | number) + ' ' +
-					('people_bought_this' | translate)}}</p>
-			</div> -->
 			<div class="d-flex align-items-center detailPrice">
 				<div class="price_text" *ngIf="product">{{(product?.productPrice | number) + ' SR'}}
 				</div>
@@ -88,7 +80,7 @@ import { SubSink } from 'subsink';
 					</div>
 				</div>
 				<div class="cartbox prl pb-2">
-					<a [title]="'checkout' | translate" class="btn-secondary btn btn-md" id="addcart-2">{{'Fast Pay'}}</a>
+					<a [title]="'checkout' | translate" (click)="logged_user?.storeID ? navigate(product?.productID) : fastPay(product?.productID)" class="btn-secondary btn btn-md" id="addcart-3">{{'Fast Pay'}}</a>
 				</div>
 				<div class="cartbox prl pb-2" *ngIf="product?.addedCartCount>0">
 					<a [title]="'checkout' | translate" routerLink="/checkout" class="btn-secondary btn btn-md" id="addcart-2">{{'checkout' | translate}}</a>
@@ -97,7 +89,6 @@ import { SubSink } from 'subsink';
 					<a [title]="'continue_shopping' | translate" routerLink='/' class="btn-outline-secondary btn btn-md">{{'continue_shopping' | translate}}</a>
 				</div>
 			</div>
-
 			<div class="wishlistConten d-flex align-items-center">
 				<div class="pr-4">
 					<a class="cursr"
@@ -122,10 +113,7 @@ import { SubSink } from 'subsink';
 	</div>
 </div>
   `,
-	styles: [
-		`a img { cursor: -webkit-zoom-in;  cursor: zoom-in; }
-		`
-	],
+	styles: [`a img { cursor: -webkit-zoom-in;  cursor: zoom-in; }`],
 	animations: [
 		trigger('fadeIn', fadeIn()),
 		shakeOnEnterAnimation()
@@ -161,11 +149,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
 	};
 	constructor(
 		private store: Store<State>,
-		public route: ActivatedRoute,
 		private auth: AuthenticationService,
 		private root: RootService,
 		private cookie: CookieService,
-		private modal: BsModalService
+		private modal: BsModalService,
+		private router: Router
 	) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
@@ -177,6 +165,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 		this.checkStatus();
+	}
+	navigate = (p: string) => {
+		if (this.logged_user.storeID) {
+			this.router.navigate(['/checkout'], { queryParams: { fast_pay: true, p: p } })
+		}
 	}
 	openG = () => {
 		($('#magnific') as any).magnificPopup({
@@ -254,9 +247,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
-				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
+				tepmOrder.loginuserID = user.userID;
 				wishlist.loginuserID = user.userID;
+				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 			}
 			if (user === null) {
 				this.logged_user = null;
@@ -270,7 +264,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 			}
 			if (this.logged_user.address.length > 0) {
 				if (!this.logged_user.storeID) {
-					this.openAddress(this.logged_user.address, item);
+					this.openAddress(this.logged_user.address, { productID: item.productID, qty: '1', productPrice: item.productPrice }, 'details');
 				}
 				if (this.logged_user.storeID) {
 					if (this.tempOrderID !== '0') {
@@ -278,7 +272,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 						if (res === 'Added_sucessfully') {
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 						}
 					}
 					if (this.tempOrderID === '0') {
@@ -287,7 +281,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 						if (res.message === 'Added_sucessfully') {
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 						}
 					}
 				}
@@ -296,16 +290,38 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		if (!this.logged_user) {
 			const initialState = {
 				list: [{
-					product: item
+					status: 'details',
+					product: { productID: item.productID, qty: '1', productPrice: item.productPrice }
 				}]
 			};
 			this.bModalRef = this.modal.show(LocationSelectionComponent, { id: 399, initialState });
 		}
 	}
-	openAddress = (add: ADDRESS[], product: ProductList) => {
+	fastPay = async (p: string) => {
+		if (this.logged_user) {
+			if (this.logged_user.address.length === 0) {
+				this.modal.show(AlertComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
+			}
+			if (this.logged_user.address.length > 0) {
+				if (!this.logged_user.storeID) {
+					this.openAddress(this.logged_user.address, { productID: p, qty: '1', productPrice: '' }, 'fast_pay');
+				}
+			}
+		}
+		if (!this.logged_user) {
+			const initialState = {
+				list: [{
+					status: 'fast_pay',
+					product: { productID: p, qty: '1', productPrice: '' }
+				}]
+			};
+			this.bModalRef = this.modal.show(LocationSelectionComponent, { id: 399, initialState });
+		}
+	}
+	openAddress = (add: ADDRESS[], product: { productID: string, qty?: string, productPrice: string }, status: string) => {
 		const initialState = {
 			list: [{
-				status: 'Location',
+				status: status,
 				product: product,
 				address: add
 			}]
@@ -345,7 +361,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		if (res === 'Added_sucessfully') {
 			this.root.forceReload();
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 		}
 	}
 	addItemToCart = (pro: ProductList) => {
@@ -377,7 +393,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 		if (res === 'Deleted_sucessfully') {
 			this.root.forceReload(); // empty cached cart
 			this.root.update_user_status$.next('refresh_or_reload'); // update all cart values
-			this.root.update_user_status$.next('update_header'); // update header
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder))); // update header
 		}
 	}
 	deleteItemFromCart = (pro: ProductList) => {

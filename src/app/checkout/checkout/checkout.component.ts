@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { LoadInitial } from 'src/app/actions/temp-orders.acton';
+import { LoadInitialFastPay } from 'src/app/actions/products.action';
+import { LoadInitial, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { tepmOrder } from 'src/app/global';
-import { TempCartItems, Category, ProductList, TempOrders, OrderDetailsTemp, USER_RESPONSE } from 'src/app/interface';
-import { selectHomeCategoryList, selectHomeBestSellingList, State, selectTempOrdersList } from 'src/app/reducers';
+import { TempCartItems, Category, TempOrders, OrderDetailsTemp, USER_RESPONSE } from 'src/app/interface';
+import { selectHomeCategoryList, State, selectTempOrdersList, selectFastPay } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 import { PaymentAlertComponent } from './payment-alert.component';
@@ -63,7 +64,6 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 								</div>
 							</div>
 						</div>
-
 						<div class="addressContent">
 							<div class="titleAssres">
 								<h5><b>{{'payment_method' | translate}}</b></h5>
@@ -84,7 +84,6 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 						<app-upi-shared (updateMode)="orderPaymentMode=$event"></app-upi-shared>
 
 					</div>
-
 					<div class="col-lg-5">
 						<app-shared-orders-details (place)="placeOrder($event);"
 							[preventAbuse]="preventAbuse"
@@ -98,11 +97,9 @@ import { SuccessPlacedOrderComponent } from './success.pop-up.component';
 			</div>
 		</div>
 	</section>
-
 </main><!-- End #main -->
 <app-footer></app-footer> <!-- Footer Section -->
-<app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->
-  `,
+<app-scroll-to-top></app-scroll-to-top> <!-- Scroll-to-top Section -->`,
 	styles: [
 	]
 })
@@ -115,35 +112,6 @@ export class CheckoutComponent implements OnInit {
 	selectedAddress: { address: string; city: string; country: string; zip_code: string; } = { address: '', city: '', country: '', zip_code: '' };
 	cart: TempCartItems[] = JSON.parse(localStorage.getItem('tempCart') ? localStorage.getItem('tempCart') : '[]') as TempCartItems[];
 	categories$: Observable<Category[]> = this.store.select(selectHomeCategoryList);
-	products$: Observable<ProductList[]> = this.store.select(selectHomeBestSellingList).pipe(
-		map(list => list.map(a => {
-			return {
-				productID: a.productID,
-				categoryID: a.categoryID,
-				subcatID: a.subcatID,
-				productName: a.productName,
-				productArabicNme: a.productArabicNme,
-				productSKU: a.productSKU,
-				productTag: a.productTag,
-				productDescription: a.productDescription,
-				productPriceVat: a.productPriceVat,
-				productPrice: a.productPrice,
-				productMOQ: a.productMOQ,
-				productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
-				productPackagesize: a.productPackagesize,
-				productReviewCount: a.productReviewCount,
-				productRatingCount: a.productRatingCount,
-				productRatingAvg: a.productRatingAvg,
-				productSoldCount: a.productSoldCount,
-				productStatus: a.productStatus,
-				productCreatedDate: a.productCreatedDate,
-				categoryName: a.categoryName,
-				isFavorite: a.isFavorite,
-				similarproducts: a.similarproducts,
-				addedCartCount: this.cart.filter(p => p.productID === a.productID).length > 0 ? this.cart.filter(p => p.productID === a.productID)[0].qty : 0,
-			}
-		}))
-	);
 	constructor(
 		private store: Store<State>,
 		readonly router: Router,
@@ -151,6 +119,7 @@ export class CheckoutComponent implements OnInit {
 		private auth: AuthenticationService,
 		private modal: BsModalService,
 		private toastr: ToastrService,
+		public route: ActivatedRoute,
 		private cookie: CookieService) { }
 	state = () => {
 		return this.store.select(selectTempOrdersList).pipe(
@@ -211,6 +180,62 @@ export class CheckoutComponent implements OnInit {
 	orders = () => {
 		this.orders$ = this.state() as Observable<{ data: TempOrders[]; status: string, message: string }[]>;
 	}
+	stateFastPay = () => {
+		return this.store.select(selectFastPay).pipe(
+			map((res) => {
+				return {
+					isSearching: res.isSearch,
+					orders: {
+						messsage: res.message,
+						status: res.status,
+						data: [{
+							orderdetails: res.data.map(a => {
+								return {
+									Price: a.productPrice,
+									Qty: '1',
+									categoryID: a.categoryID,
+									categoryName: a.categoryName,
+									productArabicNme: a.productArabicNme,
+									productCreatedDate: a.productCreatedDate,
+									productDescription: a.productDescription,
+									productID: a.productID,
+									productImage: a.productImage ? a.productImage.split(',')[0] : 'xyz.png',
+									productMOQ: a.productMOQ,
+									productName: a.productName,
+									productPackagesize: a.productPackagesize,
+									productPrice: a.productPrice,
+									productPriceVat: a.productPriceVat,
+									productRatingAvg: a.productRatingAvg.split('.')[0],
+									productRatingCount: a.productRatingCount,
+									productReviewCount: a.productReviewCount,
+									productSKU: a.productSKU,
+									productSoldCount: a.productSoldCount,
+									productStatus: a.productStatus,
+									productTag: a.productTag,
+									subcatID: a.subcatID
+								}
+							}),
+							billingDetails: {
+								delivery_Tip: 10,
+								delivery_Fee: 30,
+								item_Total: res.data.map(p => +p.productPrice).reduce((a, b) => a + b, 0),
+								vat: res.data.map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
+								net_Payable: res.data.map(p => +p.productPrice).reduce((a, b) => a + b, 0) + 30 + 10 + res.data.map(p => (+p.productPriceVat) - (+p.productPrice)).reduce((a, b) => a + b, 0),
+							},
+							temporderDate: '',
+							temporderID: '',
+							userFullName: '',
+							userID: '',
+							userMobile: '',
+						}]
+					}
+				}
+			}),
+			catchError(() => of([]))) as Observable<{ data: TempOrders[]; status: string, message: string }[]>;
+	}
+	orderFastPay = () => {
+		this.orders$ = this.stateFastPay() as Observable<{ data: TempOrders[]; status: string, message: string }[]>;
+	}
 	checkStatus = () => {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
@@ -237,10 +262,10 @@ export class CheckoutComponent implements OnInit {
 			}
 			if (user === null) {
 				this.user = null;
+				tepmOrder.loginuserID = '0';
 				Object.keys(this.selectedAddress).forEach(key => {
 					delete this.selectedAddress[key];
 				});
-				tepmOrder.loginuserID = '0';
 			}
 		}));
 	}
@@ -298,8 +323,14 @@ export class CheckoutComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.checkStatus();
-		this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
-		this.orders();
+		if (this.route.snapshot?.queryParams?.fast_pay && this.route.snapshot?.queryParams.p !== '0') {
+			tepmOrder.productID = this.route.snapshot?.queryParams.p;
+			this.store.dispatch(new LoadInitialFastPay(JSON.stringify(tepmOrder)));
+			this.orderFastPay();
+		} else {
+			this.store.dispatch(new LoadInitial(JSON.stringify(tepmOrder)));
+			this.orders();
+		}
 	}
 	search = (s: string) => {
 		this.router.navigate(['/products'], { queryParams: { page: '0', categoryID: '0', categoryName: s, q: s } })
@@ -382,7 +413,7 @@ export class CheckoutComponent implements OnInit {
 		})).subscribe(r => {
 			if (r.status === 'true') {
 				this.root.forceReload();
-				this.root.update_user_status$.next('update_header');
+				this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 			}
 		}, err => console.error(err));
 	}

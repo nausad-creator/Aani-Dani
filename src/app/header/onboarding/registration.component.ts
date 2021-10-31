@@ -66,7 +66,7 @@ import { OtpRegisterComponent } from './otp.register.component';
 							</ng-select>
 							</div>
 							<div class="col-sm-9 col-8">
-								<input type="text" (blur)="check_phone()" maxlength="10"
+								<input type="text" (blur)="check_phone()" minlength="9" maxlength="10"
 									id="phone" #userMobileInput
 									(keydown.space)="$event.preventDefault();"
 									formControlName="userMobile"
@@ -232,7 +232,7 @@ export class RegistrationComponent implements OnInit {
 	hideReenter = true;
 	maxDate = new Date();
 	preventAbuse = false;
-	list: { status: string, product: ProductList }[] = [];
+	list: { status: string, product: { productID: string, qty?: string, productPrice: string } }[] = [];
 	nationalities$: Observable<Nationality[]> = this.store.select(selectNationalyList);
 	countries$: Observable<Country[]> = this.store.select(selectCountryList);
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
@@ -255,7 +255,7 @@ export class RegistrationComponent implements OnInit {
 		this.registerForm = this.fb.group({
 			userFullName: [''],
 			userEmail: ['', Validators.compose([Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)])],
-			userMobile: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
+			userMobile: ['', Validators.compose([Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')])],
 			userPassword: ['', Validators.compose([Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)])],
 			userRePassword: [''],
 			userDOB: ['', Validators.compose([this.dateMaximum])],
@@ -452,7 +452,7 @@ export class RegistrationComponent implements OnInit {
 				return invalid = true;
 			}
 			if (key === 'userMobile' && !this.registerForm.get(`${key}`).value) {
-				this.registerForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
+				this.registerForm.get(`${key}`).setValidators([Validators.required, Validators.pattern('^((\\+971-?)|0)?[0-9]{9,10}$')]);
 				this.registerForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
 				return invalid = true;
 			}
@@ -491,7 +491,7 @@ export class RegistrationComponent implements OnInit {
 		const initialState = {
 			list: [{
 				user: res,
-				status: 'Location',
+				status: this.list[0].status,
 				product: this.list[0].product
 			}]
 		};
@@ -530,7 +530,7 @@ export class RegistrationComponent implements OnInit {
 		this.onClose();
 		const initialState = {
 			list: [{
-				status: 'Location',
+				status: this.list[0].status,
 				product: this.list[0].product
 			}]
 		};

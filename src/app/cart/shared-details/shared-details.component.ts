@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { ToastrService } from 'ngx-toastr';
+import { AddToCart, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { tepmOrder } from 'src/app/global';
 import { OrderDetailsTemp, ProductList, TempCartItems, TempOrders, USER_RESPONSE } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -115,7 +119,8 @@ export class SharedDetailsComponent implements OnInit, OnDestroy {
 		private toastr: ToastrService,
 		private modalService: BsModalService,
 		private cookie: CookieService,
-		private router: Router
+		private router: Router,
+		private store: Store<State>,
 	) { }
 	ngOnDestroy(): void {
 		this.subs.unsubscribe();
@@ -131,6 +136,7 @@ export class SharedDetailsComponent implements OnInit, OnDestroy {
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
 				this.logged_user = user;
+				tepmOrder.loginuserID = user.userID;
 				this.cd.markForCheck();
 			}
 			if (user === null) {
@@ -164,7 +170,7 @@ export class SharedDetailsComponent implements OnInit, OnDestroy {
 					qty: +pro.Qty
 				});
 				this.root.update_user_status$.next('refresh_or_reload'); // update all cart values
-				this.root.update_user_status$.next('update_header'); // update header
+				this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder))); // update header
 				this.decline();
 			}
 		}, () => console.error('Oops! Something went wrong while deleting item from cart!')));
@@ -175,7 +181,7 @@ export class SharedDetailsComponent implements OnInit, OnDestroy {
 			this.root.forceReload(); // empty cached cart
 			this.updateCart.emit({ data: '', res: Math.random() }); // update cart-list
 			this.root.update_user_status$.next('refresh_or_reload'); // update all cart values
-			this.root.update_user_status$.next('update_header'); // update header
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder))); // update header
 		}
 	}
 	deleteItemFromCart = (pro: ProductList) => {
@@ -209,7 +215,7 @@ export class SharedDetailsComponent implements OnInit, OnDestroy {
 			this.root.forceReload(); // empty cached cart
 			this.updateCart.emit({ data: '', res: Math.random() }); // update cart-list
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 		}
 	}
 	addItemToCart = (pro: ProductList) => {

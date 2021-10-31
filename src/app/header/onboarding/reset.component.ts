@@ -21,12 +21,7 @@ interface Reset {
     <!--Modal Reset Password-->
     <div class="modal-contents" [loader]="preventAbuse">
       <div class="modal-header text-center d-block position-relative" style="border: none;">
-         <a (click)="!preventAbuse ? openOTP({
-          userMobile: list[0].userMobile,
-	        userID: list[0].userID,
-	        status: 'true',
-	        message: ''
-         }) : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
+         <a (click)="!preventAbuse ? openOTP({userMobile: list[0].res.userMobile, userID: list[0].res.userID, status: 'true', message: ''}) : ''" class="backicon cursr"><img src="assets/images/back-icon.png" alt="icon"></a>
          <h5 class="modal-title" id="exampleModalLabel">{{'reset_password' | translate}}?</h5>
          <p class="mb-0" style="color: #6a7081;">{{'Please type the verification code sent to your mobile number'}}</p>
       </div>
@@ -75,7 +70,7 @@ export class ResetComponent implements OnInit {
 	new = true;
 	confirm = true;
 	preventAbuse = false;
-	list: USER_RESPONSE[] = [];
+	list: { res: USER_RESPONSE, status: string, product?: { productID: string, qty?: string, productPrice: string } }[] = [];
 	event: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	@ViewChild('userNewPassword', { static: false }) userNewPassword: ElementRef;
 	@ViewChild('userReNewPassword', { static: false }) userReNewPassword: ElementRef;
@@ -93,7 +88,7 @@ export class ResetComponent implements OnInit {
 		this.resetForm = this.fb.group({
 			userNewPassword: ['', Validators.compose([Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/)])],
 			userReNewPassword: [''],
-			loginuserID: [this.list[0].userID]
+			loginuserID: [this.list[0].res.userID]
 		}, { validators: this.checkPasswords });
 	}
 	checkPasswords = (group: FormGroup) => {
@@ -195,7 +190,8 @@ export class ResetComponent implements OnInit {
 			list: [{
 				res,
 				msg: '',
-				status: 'forget'
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
 			}]
 		};
 		this.bsModal = this.modal.show(OtpComponent, { id: 101, initialState });

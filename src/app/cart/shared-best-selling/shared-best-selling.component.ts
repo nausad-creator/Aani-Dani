@@ -1,15 +1,19 @@
 import { trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { AddToCart } from 'src/app/actions/temp-orders.acton';
 import { fadeIn } from 'src/app/animation';
 import { AuthenticationService } from 'src/app/authentication.service';
+import { tepmOrder } from 'src/app/global';
 import { AddressListComponent } from 'src/app/header/onboarding/address-list.component';
 import { AlertComponent } from 'src/app/header/onboarding/alert.component';
 import { LocationSelectionComponent } from 'src/app/header/onboarding/location-selection.component';
 import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -134,13 +138,13 @@ export class SharedBestSellingComponent implements OnInit {
 		private root: RootService,
 		private cd: ChangeDetectorRef,
 		private cookie: CookieService,
-		private modal: BsModalService
+		private modal: BsModalService,
+		private store: Store<State>,
 	) {
 		// for updating user
 		this.subs.add(this.root.update$.subscribe(status => {
 			if (status === '200') {
 				this.checkStatus();
-				this.cd.markForCheck();
 			}
 		}));
 	}
@@ -148,8 +152,9 @@ export class SharedBestSellingComponent implements OnInit {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
-				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.logged_user = user;
+				tepmOrder.loginuserID = user.userID;
+				this.tempOrderID = this.cookie.get('Temp_Order_ID') ? this.cookie.get('Temp_Order_ID') : '0';
 				this.cd.markForCheck();
 			}
 			if (user === null) {
@@ -165,7 +170,7 @@ export class SharedBestSellingComponent implements OnInit {
 			}
 			if (this.logged_user.address.length > 0) {
 				if (!this.logged_user.storeID) {
-					this.openAddress(this.logged_user.address, item);
+					this.openAddress(this.logged_user.address, { productID: item.productID, qty: '1', productPrice: item.productPrice }, 'best_selling');
 				}
 				if (this.logged_user.storeID) {
 					if (this.tempOrderID !== '0') {
@@ -174,7 +179,7 @@ export class SharedBestSellingComponent implements OnInit {
 							this.update.emit('');
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 						}
 					}
 					if (this.tempOrderID === '0') {
@@ -184,7 +189,7 @@ export class SharedBestSellingComponent implements OnInit {
 							this.update.emit('');
 							this.root.forceReload();
 							this.root.update_user_status$.next('refresh_or_reload');
-							this.root.update_user_status$.next('update_header');
+							this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 
 						}
 					}
@@ -194,16 +199,17 @@ export class SharedBestSellingComponent implements OnInit {
 		if (!this.logged_user) {
 			const initialState = {
 				list: [{
-					product: item
+					status: 'best_selling',
+					product: { productID: item.productID, qty: '1', productPrice: item.productPrice }
 				}]
 			};
 			this.bModalRef = this.modal.show(LocationSelectionComponent, { id: 399, initialState });
 		}
 	}
-	openAddress = (add: ADDRESS[], product: ProductList) => {
+	openAddress = (add: ADDRESS[], product: { productID: string, qty?: string, productPrice: string }, status: string) => {
 		const initialState = {
 			list: [{
-				status: 'Location',
+				status: status,
 				product: product,
 				address: add
 			}]
@@ -251,7 +257,7 @@ export class SharedBestSellingComponent implements OnInit {
 			this.update.emit('');
 			this.root.forceReload();
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 		}
 	}
 	addItemToCart = (pro: ProductList) => {
@@ -284,7 +290,7 @@ export class SharedBestSellingComponent implements OnInit {
 			this.update.emit('');
 			this.root.forceReload();
 			this.root.update_user_status$.next('refresh_or_reload');
-			this.root.update_user_status$.next('update_header');
+			this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 		}
 	}
 	deleteItemFromCart = (pro: ProductList) => {

@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
 	selector: 'app-scroll-to-top',
-	template: `
-    <a class="back-to-top" style="cursor: pointer;"><i class="icofont-simple-up"></i></a>
-  `,
+	template: `<a class="back-to-top" style="cursor: pointer;"><i class="icofont-simple-up"></i></a>`,
 	styles: [
 	]
 })

@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { CookieService } from 'ngx-cookie-service';
 import { map, take } from 'rxjs/operators';
+import { AddToCart, SearchNewQuery } from 'src/app/actions/temp-orders.acton';
 import { AuthenticationService } from 'src/app/authentication.service';
-import { ADDRESS, ProductList, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { tepmOrder } from 'src/app/global';
+import { ADDRESS, TempCartItems, USER_RESPONSE } from 'src/app/interface';
+import { State } from 'src/app/reducers';
 import { RootService } from 'src/app/root.service';
 import { SubSink } from 'subsink';
 
@@ -99,27 +103,29 @@ import { SubSink } from 'subsink';
 export class StoreListComponent implements OnInit, OnDestroy {
 	error: string = '';
 	list: {
-		status: string, product: ProductList, address: ADDRESS[], stores: {
+		status: string, product: { productID: string, qty?: string, productPrice?: string }, address: ADDRESS[], stores: {
 			storeID: string;
 			storeName: string;
 		}[]
 	}[] = [];
 	preventAbuse = false;
-	logged_user: USER_RESPONSE = null;
 	subs = new SubSink();
 	storeID: string;
+	logged_user: USER_RESPONSE = null;
 	@ViewChild('alert') public alert: ModalDirective;
 	event_address_list: EventEmitter<{ data: string, res: number }> = new EventEmitter();
 	constructor(
 		private bsModal: BsModalRef,
 		private router: Router,
 		private root: RootService,
+		private store: Store<State>,
 		private auth: AuthenticationService,
 		private cookie: CookieService) {
 		// getting auth user data
 		this.subs.add(this.auth.user.subscribe(user => {
 			if (user) {
 				this.logged_user = user;
+				tepmOrder.loginuserID = user.userID;
 			}
 			if (user === null) {
 				this.logged_user = null;
@@ -155,7 +161,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
 			if (r.status === 'true') {
 				this.emptyLocalCart();
 				this.root.forceReload();
-				this.root.update_user_status$.next('update_header');
+				this.store.dispatch(new SearchNewQuery(JSON.stringify(tepmOrder)));
 				this.root.update_user_status$.next('refresh_or_reload');
 				if (localStorage.getItem('USER_LOGGED')) {
 					const tempUser = JSON.parse(localStorage.getItem('USER_LOGGED')) as USER_RESPONSE;
@@ -226,14 +232,47 @@ export class StoreListComponent implements OnInit, OnDestroy {
 					this.root.update_user_status$.next('200');
 					sessionStorage.setItem('USER_LOGGED', JSON.stringify(tempUser));
 				}
-				if (this.list[0]?.status === 'true' || this.list[0]?.status === 'Location') {
-					this.add_to_cart();
-				}
-				if (this.list[0]?.status === 'false') {
-					setTimeout(() => {
+				switch (this.list[0]?.status) {
+					case 'fast_pay': {
 						this.onClose();
 						this.preventAbuse = false;
-					}, 500);
+						this.router.navigate(['/checkout'], { queryParams: { fast_pay: true, p: this.list[0]?.product?.productID } });
+						break;
+					}
+					case 'details': {
+						this.add_to_cart();
+						break;
+					}
+					case 'best_selling': {
+						this.add_to_cart();
+						break;
+					}
+					case 'product_list': {
+						this.add_to_cart();
+						break;
+					}
+					case 'top_selling': {
+						this.add_to_cart();
+						break;
+					}
+					case 'wishlist': {
+						this.add_to_cart();
+						break;
+					}
+					case 'header': {
+						setTimeout(() => {
+							this.onClose();
+							this.preventAbuse = false;
+						}, 500);
+						break;
+					}
+					default: {
+						setTimeout(() => {
+							this.onClose();
+							this.preventAbuse = false;
+						}, 500);
+						break;
+					}
 				}
 			}
 		}
@@ -274,7 +313,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
 				}) : []));
 				this.cookie.set('Temp_Order_ID', r[0].data.length > 0 ? r[0].data[0].temporderID : '0');
 				if (this.list[0]?.product) {
-					const res = await this.addItemToCart({ userID: this.logged_user?.userID, tempID: r[0].data[0].temporderID, product: this.list[0]?.product }) as string;
+					const res = await this.addItemToCart({ userID: this.logged_user?.userID, tempID: r[0]?.data[0]?.temporderID, product: this.list[0]?.product }) as string;
 					if (res === 'Added_sucessfully') {
 						this.root.update_user_status$.next('refresh_or_reload');
 					}
@@ -300,17 +339,12 @@ export class StoreListComponent implements OnInit, OnDestroy {
 			}
 			setTimeout(() => {
 				this.root.forceReload();
-				if (this.list[0]?.status === 'Location') {
-					this.root.update_user_status$.next('update_header');
-				}
-				if (this.list[0]?.status === 'Header') {
-					this.root.update_user_status$.next('update_header');
-				}
+				this.store.dispatch(new AddToCart(JSON.stringify(tepmOrder)));
 				this.onClose()
 			}, 100);
 		}, err => console.error(err)));
 	}
-	placeTempOrder = (temp: { userID: string, tempID: string, product: ProductList }) => {
+	placeTempOrder = (temp: { userID: string, tempID: string, product: { productID: string, qty?: string, productPrice?: string } }) => {
 		return new Promise((resolve, reject) => {
 			this.subs.add(this.root.placeNewOrderTemp(JSON.stringify({
 				loginuserID: temp.userID,
@@ -337,7 +371,7 @@ export class StoreListComponent implements OnInit, OnDestroy {
 			}));
 		});
 	}
-	addItemToCart = (temp: { userID: string, tempID: string, product: ProductList }) => {
+	addItemToCart = (temp: { userID: string, tempID: string, product: { productID: string, qty?: string, productPrice?: string } }) => {
 		return new Promise((resolve, reject) => {
 			this.subs.add(this.root.addItemToCartTemp(JSON.stringify({
 				loginuserID: temp.userID,

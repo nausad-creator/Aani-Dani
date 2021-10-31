@@ -8,7 +8,9 @@ export enum TempOrdersActionTypes {
 	RESET = '[ORDERS] RESET_ORDERS',
 	SEARCH_NEW_QUERY = '[ORDERS] SEARCH_NEW_QUERY',
 	SEARCH_ENDED_SUCCESS = '[ORDERS] SEARCH_ENDED_SUCCESS',
-	SEARCH_START = '[ORDERS] SEARCH_START'
+	SEARCH_START = '[ORDERS] SEARCH_START',
+	ADD_TO_CART = '[ORDERS] ADD_TO_CART',
+	SEARCH_START_ADD_TO_CART = '[ORDERS] SEARCH_START_ADD_TO_CART'
 }
 
 export class AddTempOrders implements Action {
@@ -22,6 +24,16 @@ export class AddTempOrders implements Action {
 
 export class SearchStart implements Action {
 	readonly type = TempOrdersActionTypes.SEARCH_START;
+	constructor(public query: string) { }
+}
+
+export class SearchStartAddToCart implements Action {
+	readonly type = TempOrdersActionTypes.SEARCH_START_ADD_TO_CART;
+	constructor(public query: string) { }
+}
+
+export class AddToCart implements Action {
+	readonly type = TempOrdersActionTypes.ADD_TO_CART;
 	constructor(public query: string) { }
 }
 
@@ -56,9 +68,11 @@ export class ResetTempOrders implements Action {
 
 export type OrdersActions =
 	| AddTempOrders
+	| AddToCart
 	| SearchStart
 	| LoadInitial
 	| SearchStart
+	| SearchStartAddToCart
 	| SearchEndedSuccess
 	| SearchNewQuery
 	| ResetTempOrders

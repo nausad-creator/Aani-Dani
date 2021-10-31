@@ -62,6 +62,7 @@ export class ForgotComponent {
 	preventAbuse = false;
 	error: string;
 	forgetForm: FormGroup;
+	list: { status: string, product?: { productID: string, qty?: string, productPrice: string } }[] = [];
 	@ViewChild('forgotEmail', { static: false }) forgotEmail: ElementRef;
 	constructor(
 		private modal: BsModalService,
@@ -72,7 +73,7 @@ export class ForgotComponent {
 		private cd: ChangeDetectorRef
 	) {
 		this.forgetForm = this.fb.group({
-			userEmail: ['', Validators.compose([Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
+			userEmail: ['', Validators.compose([Validators.pattern(/^(\d{9,10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)])],
 			userMobile: [''],
 			languageID: ['1'],
 			userCountryCode: ['+91']
@@ -133,7 +134,7 @@ export class ForgotComponent {
 		Object.keys(post).forEach((key: string) => {
 			if (key === 'userEmail' && !this.forgetForm.get(`${key}`).value) {
 				this.forgotEmail.nativeElement.focus();
-				this.forgetForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
+				this.forgetForm.get(`${key}`).setValidators([Validators.required, Validators.pattern(/^(\d{9,10}|\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}))$/)]);
 				this.forgetForm.get(`${key}`).updateValueAndValidity({ onlySelf: true });
 				return invalid = true;
 			}
@@ -167,7 +168,13 @@ export class ForgotComponent {
 	}
 	openforgetForm = () => {
 		this.onClose();
-		this.bsModal = this.modal.show(LoginComponent, { id: 99 });
+		const initialState = {
+			list: [{
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
+			}]
+		};
+		this.bsModal = this.modal.show(LoginComponent, { id: 99, initialState });
 	}
 	openOTP = (res: FORGOT, msg: string) => {
 		this.onClose();
@@ -175,7 +182,8 @@ export class ForgotComponent {
 			list: [{
 				res,
 				msg,
-				status: 'forget'
+				status: this.list[0]?.status,
+				product: this.list[0]?.product
 			}]
 		};
 		this.bsModal = this.modal.show(OtpComponent, { id: 101, initialState });

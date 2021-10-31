@@ -135,7 +135,20 @@ export let order = {
 export let tepmOrder = {
 	orderID: "0",
 	loginuserID: "",
-	languageID: "1"
+	languageID: "1",
+	searchWord: '',
+	productID: '0',
+	subcatID: '0',
+	categoryID: '0',
+	categoryName: '',
+	categoryArabicName: '',
+	searchkeyword: '',
+	cityName: '',
+	minPrice: '',
+	maxPrice: '',
+	sortBy: '',
+	page: '0',
+	pagesize: '1',
 }
 export let wishlist = {
 	page: "0",

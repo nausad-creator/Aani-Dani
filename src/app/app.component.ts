@@ -36,14 +36,9 @@ export class AppComponent implements OnInit, OnDestroy {
 		@Inject(DOCUMENT) private document: Document) {
 		this.checkStatus();
 		this.translate.addLangs(['en', 'ar']);
-		this.subs.add(this.root.languages$.subscribe(language => {
-			if (language) {
-				this.translate.setDefaultLang(language);
-				this.translate.use(language);
-				this.changeCssFile(language);
-				localStorage.setItem('lang', language);
-			}
-		}));
+		this.changeCssFile(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
+		this.translate.setDefaultLang(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
+		this.translate.use(localStorage.getItem('lang') ? localStorage.getItem('lang') : 'en');
 		this.store.dispatch(new LoadLanguage());
 		this.store.dispatch(new LoadLabels('1'));
 	}
@@ -146,7 +141,6 @@ export class AppComponent implements OnInit, OnDestroy {
 		let existingLink = this.document.getElementById("langCss") as HTMLLinkElement;
 		let bundleName = lang === "ar" ? "arabicStyle.css" : "englishStyle.css";
 		htmlTag.dir = lang === "ar" ? "rtl" : "ltr";
-		htmlTag.lang = lang === "ar" ? "ar" : "en";
 		if (existingLink) {
 			existingLink.href = bundleName;
 		} else {

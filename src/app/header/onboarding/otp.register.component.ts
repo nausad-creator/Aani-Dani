@@ -83,7 +83,7 @@ export class OtpRegisterComponent implements OnInit {
 	verificationForm: FormGroup;
 	error: string;
 	status: string;
-	list: { user: USER_RESPONSE, status: string, product: ProductList }[] = [];
+	list: { user: USER_RESPONSE, status: string, product: { productID: string, qty?: string, productPrice?: string } }[] = [];
 	preventAbuse = false;
 	@ViewChild('userOTP1', { static: false }) userOTP1: ElementRef;
 	@ViewChild('userOTP2', { static: false }) userOTP2: ElementRef;
@@ -148,15 +148,14 @@ export class OtpRegisterComponent implements OnInit {
 				this.root.forceReload();
 				this.preventAbuse = false;
 				this.verificationForm.reset();
-				if (this.list[0].product) {
+				if (this.list[0]?.product?.productID !== '0') {
 					this.onClose();
 					setTimeout(() => {
 						this.modal.show(AlertComponent, { id: 93, animated: false, ignoreBackdropClick: true, keyboard: false, class: 'modal-sm modal-dialog-centered' });
 					}, 700);
 				}
-				if (!this.list[0].product) {
+				if (this.list[0]?.product?.productID === '0') {
 					this.root.update_user_status$.next('refresh_or_reload');
-					this.root.update_user_status$.next('update_header');
 					this.onClose();
 				}
 			}).catch((error) => {
